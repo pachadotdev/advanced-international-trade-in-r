@@ -8,7 +8,7 @@
 * This is to read the data into Stata *
 
 set mem 30m
-insheet using c:\Empirical_Exercise\Chapter_2\hov_pub.csv
+insheet using c:\Empirical_Exercise\Chapter_2\trefler.csv
 rename v1 country
 rename v2 factor
 rename v3 AT
@@ -107,7 +107,8 @@ library(dplyr)
         intersect, setdiff, setequal, union
 
 ``` r
-library(haven)
+library(tidyr)
+library(purrr)
 
 # Extract ----
 
@@ -122,114 +123,437 @@ if (!dir.exists(dout)) {
 
 # Read ----
 
-hov_pub <- read_csv("first-edition/Chapter-2/hov_pub.csv", col_names = F) %>%
-  rename(
-    country = X1,
-    factor = X2,
-    at = X3,
-    v = X4,
-    y = X5,
-    b = X6,
-    ypc = X7,
-    pop = X8
-  )
+fout <- paste0(dout, "/trefler.rds")
+
+if (!file.exists(fout)) {
+  trefler <- read_csv("first-edition/Chapter-2/trefler.csv", col_names = F) %>%
+    rename(
+      country = X1,
+      factor = X2,
+      at = X3,
+      v = X4,
+      y = X5,
+      b = X6,
+      ypc = X7,
+      pop = X8
+    )
+
+  # Transform ----
+
+  # see https://www.stata.com/manuals/rsummarize.pdf
+  # https://www.stata.com/manuals/degen.pdf
+  # https://www.stata.com/manuals/degen.pdf
+
+  trefler <- trefler %>%
+
+    mutate(ypc_max = max(ypc)) %>%
+    mutate(
+      ratio = case_when(
+        country != "Italy" ~ ypc / ypc_max,
+        country == "Italy" ~ (ypc / ypc_max) + 0.0001
+      )
+    ) %>%
+    
+    select(-ypc_max) %>%
+    arrange(ratio) %>%
+    
+    group_by(ratio) %>%
+    mutate(indexc = cur_group_id()) %>%
+
+    group_by(factor) %>%
+    mutate(indexf = cur_group_id()) %>%
+    ungroup() %>%
+
+    mutate(
+      delta = case_when(
+        country == "Bangladesh" ~ 0.03,
+        country == "Pakistan" ~ 0.09,
+        country == "Indonesia" ~ 0.10,
+        country == "Sri Lanka" ~ 0.09,
+        country == "Thailand" ~ 0.17,
+        country == "Colombia" ~ 0.16,
+        country == "Panama" ~ 0.28,
+        country == "Yugoslavia" ~ 0.29,
+        country == "Portugal" ~ 0.14,
+        country == "Uruguay" ~ 0.11,
+        country == "Greece" ~ 0.45,
+        country == "Ireland" ~ 0.55,
+        country == "Spain" ~ 0.42,
+        country == "Israel" ~ 0.49,
+        country == "Hong Kong" ~ 0.40,
+        country == "New Zealand" ~ 0.38,
+        country == "Austria" ~ 0.60,
+        country == "Singapore" ~ 0.48,
+        country == "Italy" ~ 0.60,
+        country == "UK" ~ 0.58,
+        country == "Japan" ~ 0.70,
+        country == "Belgium" ~ 0.65,
+        country == "Trinidad" ~ 0.47,
+        country == "Netherlands" ~ 0.72,
+        country == "Finland" ~ 0.65,
+        country == "Denmark" ~ 0.73,
+        country == "West Germany" ~ 0.78,
+        country == "France" ~ 0.74,
+        country == "Sweden" ~ 0.57,
+        country == "Norway" ~ 0.69,
+        country == "Switzerland" ~ 0.79,
+        country == "Canada" ~ 0.55,
+        country == "USA" ~ 1,
+        TRUE ~ 1
+      )
+    )
+
+  # Labels ----
+
+  # Add stata-like labels to the columns
+
+  # maybe this is not the best way to do it, but it works
+  attr(trefler$country, "label") <- "Name of the country"
+  attr(trefler$factor, "label") <- "Name of the factor"
+  attr(trefler$at, "label") <- "Factor content of trade F=A*T"
+  attr(trefler$v, "label") <- "Endowment"
+  attr(trefler$y, "label") <- "GDP, World Bank, y=p*Q"
+  attr(trefler$b, "label") <- "Trade balance, World Bank b=p*T"
+  attr(trefler$ypc, "label") <- "GDP per capita, PWT"
+  attr(trefler$indexc, "label") <- "Country indentifier"
+  attr(trefler$indexf, "label") <- "Factor Indentifier"
+
+  # Save ----
+
+  saveRDS(trefler, fout)
+} else {
+  trefler <- readRDS(fout)
+}
 ```
 
-    Rows: 297 Columns: 8
+# Exercise 1
 
-    ── Column specification ────────────────────────────────────────────────────────
-    Delimiter: ","
-    chr (2): X1, X2
-    dbl (6): X3, X4, X5, X6, X7, X8
+## Feenstra’s code
 
-    ℹ Use `spec()` to retrieve the full column specification for this data.
-    ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+``` stata
+* This program is to conduct sign test, Rank test and Missing trade test *
+
+capture log close
+log using c:\Empirical_Exercise\Chapter_2\sign_rank_1.log, replace
+
+set mem 30m
+
+use C:\Empirical_Exercise\Chapter_2\trefler, clear
+
+* number of country in the dataset *
+egen C=max(indexc)
+egen F=max(indexf)
+
+* Calculate the world level of Yw, Bw and Vw *
+egen Yww=sum(Y)
+gen Yw=Yww/F
+egen Bww=sum(B)
+gen Bw=Bww/F
+egen Vfw=sum(V), by(indexf)
+
+* Calculate country share Sc *
+gen Sc=(Y-B)/(Yw-Bw)
+
+* Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)*
+gen Efc=AT-(V-Sc*Vfw)
+
+* Construct the average epsilon for a given factor *
+egen total=sum(Efc),by(indexf)
+gen ave=total/C
+
+* Construct sigma^2 and the weight *
+
+egen tot=sum((Efc-ave)^2), by(indexf)
+gen sigma2f=tot/(C-1)
+
+codebook sigma2f
+gen sigmaf=sqrt(sigma2f)
+gen weight=sigmaf*sqrt(Sc)
+
+* Using the weight, convert all the data *
+
+gen trAT=AT/(sigmaf*sqrt(Sc))
+gen trV=V/(sigmaf*sqrt(Sc))
+gen trY=Y/sqrt(Sc)
+gen trB=B/sqrt(Sc)
+gen trVfw=Vfw/sigmaf
+
+gen AThat=trV-Sc*trVfw
+gen AThat2=(V-Sc*Vfw)/weight
+
+* Correlation, should be .28 *
+
+corr trAT AThat2
+
+*************
+* Sign Test *
+*************
+
+sort indexc
+by indexc: count if trAT*AThat2>0
+
+count if trAT*AThat2>0
+display _result(1)/_N
+
+*****************
+* Missing Trade *
+*****************
+
+* Checking for the missing trade, should be .032 *
+
+quietly summarize trAT
+local varAT=_result(4)
+quietly summarize AThat
+local varHat=_result(4)
+quietly summarize AThat2
+local varHat2=_result(4)
+display `varAT'/`varHat'
+display `varAT'/`varHat2'
+
+**************
+* Rank Tests *
+**************
+
+keep country indexc indexf trAT AThat2
+
+sort indexc indexf
+reshape wide trAT AThat2, i(indexc) j(indexf)
+
+local i=1
+while `i'<9{
+    local j=`i'+1
+    while `j'<=9{
+        gen rank`i'`j'=((trAT`i'-trAT`j')*(AThat2`i'-AThat2`j')>0)
+        local j=`j'+1
+    }
+    local i=`i'+1
+}
+
+keep country indexc rank*
+reshape long rank, i(indexc) j(factor)
+egen r1=sum(rank), by(indexc)
+gen r2=r1/36
+collapse r2,by(indexc country)
+sum r2
+list
+
+log close
+exit
+```
+
+## My code
 
 ``` r
 # Transform ----
 
-# see https://www.stata.com/manuals/rsummarize.pdf
-# https://www.stata.com/manuals/degen.pdf
-# https://www.stata.com/manuals/degen.pdf
-
-hov_pub <- hov_pub %>%
-
-  mutate(ypc_max = max(ypc)) %>%
+trefler <- trefler %>%
+  
+  # Number of country in the dataset
   mutate(
-    ratio = case_when(
-      country != "Italy" ~ ypc / ypc_max,
-      country == "Italy" ~ (ypc / ypc_max) + 0.0001
-    )
+    c = max(indexc),
+    f = max(indexf)
   ) %>%
-  
-  select(-ypc_max) %>%
-  arrange(ratio) %>%
-  
-  group_by(ratio) %>%
-  mutate(indexc = cur_group_id()) %>%
 
-  group_by(factor) %>%
-  mutate(indexf = cur_group_id()) %>%
-
+  # Calculate the world level of Yw, Bw and Vw
   mutate(
-    delta = case_when(
-      country == "Bangladesh" ~ 0.03,
-      country == "Pakistan" ~ 0.09,
-      country == "Indonesia" ~ 0.10,
-      country == "Sri Lanka" ~ 0.09,
-      country == "Thailand" ~ 0.17,
-      country == "Colombia" ~ 0.16,
-      country == "Panama" ~ 0.28,
-      country == "Yugoslavia" ~ 0.29,
-      country == "Portugal" ~ 0.14,
-      country == "Uruguay" ~ 0.11,
-      country == "Greece" ~ 0.45,
-      country == "Ireland" ~ 0.55,
-      country == "Spain" ~ 0.42,
-      country == "Israel" ~ 0.49,
-      country == "Hong Kong" ~ 0.40,
-      country == "New Zealand" ~ 0.38,
-      country == "Austria" ~ 0.60,
-      country == "Singapore" ~ 0.48,
-      country == "Italy" ~ 0.60,
-      country == "UK" ~ 0.58,
-      country == "Japan" ~ 0.70,
-      country == "Belgium" ~ 0.65,
-      country == "Trinidad" ~ 0.47,
-      country == "Netherlands" ~ 0.72,
-      country == "Finland" ~ 0.65,
-      country == "Denmark" ~ 0.73,
-      country == "West Germany" ~ 0.78,
-      country == "France" ~ 0.74,
-      country == "Sweden" ~ 0.57,
-      country == "Norway" ~ 0.69,
-      country == "Switzerland" ~ 0.79,
-      country == "Canada" ~ 0.55,
-      country == "USA" ~ 1,
-      TRUE ~ 1
-    )
+    yww = sum(y),
+    yw = yww / f,
+    bww = sum(b),
+    bw = bww / f 
+  ) %>%
+
+  group_by(indexf) %>%
+  mutate(
+    vfw = sum(v)
+  ) %>%
+  ungroup() %>%
+
+  # Calculate country share Sc
+  mutate(
+    sc = (y - b) / (yw - bw)
+  ) %>%
+
+  # Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
+  mutate(
+    efc = at - (v - sc * vfw)
+  ) %>%
+
+  # Construct the average epsilon for a given factor
+  group_by(indexf) %>%
+  mutate(ave = sum(efc) / c) %>%
+
+  # Construct sigma^2 and the weight
+  mutate(
+    sigma2f = sum((efc - ave) ^ 2) / (c - 1),
+    sigmaf = sqrt(sigma2f),
+    weight = sigmaf * sqrt(sc)
+  ) %>%
+  ungroup() %>%
+
+  # Using the weight, convert all the data
+  mutate(
+    trat = at / (sigmaf * sqrt(sc)),
+    trv = v / (sigmaf * sqrt(sc)),
+    try = y / sqrt(sc),
+    trb = b / sqrt(sc),
+    trvfw = vfw / sigmaf,
+    athat = trv - sc * trvfw,
+    athat2 = (v - (sc * vfw)) / weight
+  ) %>%
+
+  arrange(country)
+
+# Correlation, should be .28
+cor(trefler$trat, trefler$athat2)
+```
+
+    [1] 0.2822883
+
+``` r
+# Sign Test ----
+
+trefler %>%
+  group_by(country, indexc) %>%
+  summarize(
+    p = sum(trat * athat2 > 0) / n()
+  )
+```
+
+    `summarise()` has grouped output by 'country'. You can override using the
+    `.groups` argument.
+
+    # A tibble: 33 × 3
+    # Groups:   country [33]
+       country    indexc     p
+       <chr>       <int> <dbl>
+     1 Austria        17 0.556
+     2 Bangladesh      1 0.333
+     3 Belgium        22 0.667
+     4 Canada         32 0.556
+     5 Colombia        6 0.333
+     6 Denmark        26 0.444
+     7 Finland        25 0.333
+     8 France         28 0.333
+     9 Greece         11 0.111
+    10 Hong Kong      15 0.667
+    # ℹ 23 more rows
+
+``` r
+trefler %>%
+  summarize(
+    p = sum(trat * athat2 > 0) / n()
+  )
+```
+
+    # A tibble: 1 × 1
+          p
+      <dbl>
+    1 0.498
+
+``` r
+# Missing Trade ----
+
+# Checking for the missing trade, should be .032
+
+trefler %>%
+  summarize(
+    varat = var(trat),
+    varhat = var(athat),
+    varhat2 = var(athat2)
+  ) %>%
+  mutate(
+    varat_varhat = varat / varhat,
+    varat_varhat2 = varat / varhat2
+  )
+```
+
+    # A tibble: 1 × 5
+      varat varhat varhat2 varat_varhat varat_varhat2
+      <dbl>  <dbl>   <dbl>        <dbl>         <dbl>
+    1  1.61   47.7    50.3       0.0338        0.0320
+
+``` r
+# Rank Tests ----
+
+trefler_wide <- trefler %>%
+  select(country, indexc, indexf, trat, athat2) %>%
+  arrange(indexc, indexf) %>%
+  pivot_wider(
+    names_from = indexf,
+    values_from = c(trat, athat2)
   )
 
-# Labels ----
+# this would be too long
+# trefler_wide <- trefler_wide %>%
+#   mutate(
+#     r12 = (trat_1 - trat_2) * (athat2_1 - athat2_2) > 0,
+#     r13 = (trat_1 - trat_3) * (athat2_1 - athat2_3) > 0,
+#     ...
+#     r89 = (trat_8 - trat_9) * (athat2_8 - athat2_9) > 0,
+#   )
 
-# Add stata-like labels to the columns
+# create all possible trat_1 - trat_2, trat_1 - trat_3, etc.
 
-# maybe this is not the best way to do it, but it works
-attr(hov_pub$country, "label") <- "Name of the country"
-attr(hov_pub$factor, "label") <- "Name of the factor"
-attr(hov_pub$at, "label") <- "Factor content of trade F=A*T"
-attr(hov_pub$v, "label") <- "Endowment"
-attr(hov_pub$y, "label") <- "GDP, World Bank, y=p*Q"
-attr(hov_pub$b, "label") <- "Trade balance, World Bank b=p*T"
-attr(hov_pub$ypc, "label") <- "GDP per capita, PWT"
-attr(hov_pub$indexc, "label") <- "Country indentifier"
-attr(hov_pub$indexf, "label") <- "Factor Indentifier"
+ranks <- expand_grid(
+  one = 1:8,
+  two = 1:9
+) %>%
+  filter(one < two)
 
-# Save ----
+trefler_rank <- map2(
+  ranks$one,
+  ranks$two,
+  function(x,y) {
+    trefler_wide %>%
+      mutate(
+        !!paste0("rank", x, y) := (!!sym(paste0("trat_", x)) -
+          !!sym(paste0("trat_", y))) *
+          (!!sym(paste0("athat2_", x)) -
+            !!sym(paste0("athat2_", y))) > 0
+    ) %>%
+    select(country, indexc, starts_with("rank"))
+  }
+) %>%
 
-fout <- paste0(dout, "/trefler.rds")
+  reduce(left_join, by = c("country", "indexc")) %>%
 
-if (!file.exists(fout)) {
-  saveRDS(hov_pub, fout)
-}
+  pivot_longer(
+    cols = starts_with("rank"),
+    names_to = "rank",
+    values_to = "value"
+  ) %>%
+
+  group_by(country, indexc) %>%
+  summarise(r1 = sum(value)) %>%
+
+  mutate(r2 = r1 / 36)
 ```
+
+    `summarise()` has grouped output by 'country'. You can override using the
+    `.groups` argument.
+
+``` r
+trefler_rank
+```
+
+    # A tibble: 33 × 4
+    # Groups:   country [33]
+       country    indexc    r1     r2
+       <chr>       <int> <int>  <dbl>
+     1 Austria        17    19 0.528 
+     2 Bangladesh      1    27 0.75  
+     3 Belgium        22    22 0.611 
+     4 Canada         32    32 0.889 
+     5 Colombia        6    29 0.806 
+     6 Denmark        26    19 0.528 
+     7 Finland        25    17 0.472 
+     8 France         28     3 0.0833
+     9 Greece         11    17 0.472 
+    10 Hong Kong      15    30 0.833 
+    # ℹ 23 more rows
+
+``` r
+mean(trefler_rank$r2)
+```
+
+    [1] 0.6026936

@@ -401,14 +401,14 @@ cor(trefler$trat, trefler$athat2)
 # Sign Test ----
 
 trefler %>%
-  group_by(indexc) %>%
+  group_by(country, indexc) %>%
   summarize(
-    p = sum(trat * athat2 > 0)
+    p = sum(trat * athat2 > 0) / n()
   )
 
 trefler %>%
   summarize(
-    p = sum(trat * athat2 > 0) / nrow(trefler)
+    p = sum(trat * athat2 > 0) / n()
   )
 
 # Missing Trade ----
@@ -481,7 +481,7 @@ trefler_rank <- map2(
 
   mutate(r2 = r1 / 36)
 
-summary(trefler_rank$r2)
-
 trefler_rank
+
+mean(trefler_rank$r2)
 ```
