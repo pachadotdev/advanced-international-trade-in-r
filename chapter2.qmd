@@ -1,14 +1,9 @@
----
-title: "Chapter 2. The Heckscher-Ohlin Model"
-format: gfm
-editor:
-  markdown:
-    wrap: 80
----
 
-# Exercise 0
+# Chapter 2. The Heckscher-Ohlin Model"
 
-## Feenstra's code
+## Exercise 0
+
+### Feenstra's code
 
 ```stata
 * This is to read the data into Stata *
@@ -91,9 +86,9 @@ save c:\Empirical_Exercise\Chapter_2\trefler,replace
 exit
 ```
 
-## My code
+### My code
 
-```{r}
+```{r ch2_ex0}
 # Packages ----
 
 library(archive)
@@ -101,6 +96,7 @@ library(readr)
 library(dplyr)
 library(tidyr)
 library(purrr)
+library(knitr)
 
 # Extract ----
 
@@ -137,7 +133,6 @@ if (!file.exists(fout)) {
   # https://www.stata.com/manuals/degen.pdf
 
   trefler <- trefler %>%
-
     mutate(ypc_max = max(ypc)) %>%
     mutate(
       ratio = case_when(
@@ -145,17 +140,13 @@ if (!file.exists(fout)) {
         country == "Italy" ~ (ypc / ypc_max) + 0.0001
       )
     ) %>%
-    
     select(-ypc_max) %>%
     arrange(ratio) %>%
-    
     group_by(ratio) %>%
     mutate(indexc = cur_group_id()) %>%
-
     group_by(factor) %>%
     mutate(indexf = cur_group_id()) %>%
     ungroup() %>%
-
     mutate(
       delta = case_when(
         country == "Bangladesh" ~ 0.03,
@@ -218,9 +209,9 @@ if (!file.exists(fout)) {
 }
 ```
 
-# Exercise 1
+## Exercise 1
 
-## Feenstra's code
+### Feenstra's code
 
 ```stata
 * This program is to conduct sign test, Rank test and Missing trade test *
@@ -333,55 +324,47 @@ log close
 exit
 ```
 
-## My code
+### My code
 
-```{r}
+```{r ch2_ex1_1}
 # Transform ----
 
 trefler <- trefler %>%
-  
   # Number of country in the dataset
   mutate(
     c = max(indexc),
     f = max(indexf)
   ) %>%
-
   # Calculate the world level of Yw, Bw and Vw
   mutate(
     yww = sum(y),
     yw = yww / f,
     bww = sum(b),
-    bw = bww / f 
+    bw = bww / f
   ) %>%
-
   group_by(indexf) %>%
   mutate(
     vfw = sum(v)
   ) %>%
   ungroup() %>%
-
   # Calculate country share Sc
   mutate(
     sc = (y - b) / (yw - bw)
   ) %>%
-
   # Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
   mutate(
     efc = at - (v - sc * vfw)
   ) %>%
-
   # Construct the average epsilon for a given factor
   group_by(indexf) %>%
   mutate(ave = sum(efc) / c) %>%
-
   # Construct sigma^2 and the weight
   mutate(
-    sigma2f = sum((efc - ave) ^ 2) / (c - 1),
+    sigma2f = sum((efc - ave)^2) / (c - 1),
     sigmaf = sqrt(sigma2f),
     weight = sigmaf * sqrt(sc)
   ) %>%
   ungroup() %>%
-
   # Using the weight, convert all the data
   mutate(
     trat = at / (sigmaf * sqrt(sc)),
@@ -392,7 +375,6 @@ trefler <- trefler %>%
     athat = trv - sc * trvfw,
     athat2 = (v - (sc * vfw)) / weight
   ) %>%
-
   arrange(country)
 
 # Correlation, should be .28
@@ -439,13 +421,13 @@ trefler_wide <- trefler %>%
 # this would be too long
 # trefler_wide <- trefler_wide %>%
 #   mutate(
-#     r12 = (trat_1 - trat_2) * (athat2_1 - athat2_2) > 0,
-#     r13 = (trat_1 - trat_3) * (athat2_1 - athat2_3) > 0,
+#     rank12 = (trat_1 - trat_2) * (athat2_1 - athat2_2) > 0,
+#     rank13 = (trat_1 - trat_3) * (athat2_1 - athat2_3) > 0,
 #     ...
-#     r89 = (trat_8 - trat_9) * (athat2_8 - athat2_9) > 0,
+#     rank89 = (trat_8 - trat_9) * (athat2_8 - athat2_9) > 0,
 #   )
 
-# create all possible trat_1 - trat_2, trat_1 - trat_3, etc.
+# create all relevant trat_1 - trat_2, trat_1 - trat_3, etc.
 
 ranks <- expand_grid(
   one = 1:8,
@@ -456,32 +438,56 @@ ranks <- expand_grid(
 trefler_rank <- map2(
   ranks$one,
   ranks$two,
-  function(x,y) {
+  function(x, y) {
     trefler_wide %>%
       mutate(
-        !!paste0("rank", x, y) := (!!sym(paste0("trat_", x)) -
-          !!sym(paste0("trat_", y))) *
-          (!!sym(paste0("athat2_", x)) -
-            !!sym(paste0("athat2_", y))) > 0
-    ) %>%
-    select(country, indexc, starts_with("rank"))
+        !!paste0("rank", x, y) :=
+          (!!sym(paste0("trat_", x)) - !!sym(paste0("trat_", y))) *
+            (!!sym(paste0("athat2_", x)) - !!sym(paste0("athat2_", y))) > 0
+      ) %>%
+      select(country, indexc, starts_with("rank"))
   }
 ) %>%
-
   reduce(left_join, by = c("country", "indexc")) %>%
-
   pivot_longer(
     cols = starts_with("rank"),
     names_to = "rank",
     values_to = "value"
   ) %>%
-
   group_by(country, indexc) %>%
   summarise(r1 = sum(value)) %>%
-
   mutate(r2 = r1 / 36)
 
 trefler_rank
 
 mean(trefler_rank$r2)
+```
+
+Now format this as a table:
+
+```{r ch2_ex1_2}
+trefler %>%
+  group_by(country, indexc) %>%
+  summarize(
+    p = sum(trat * athat2 > 0) / n()
+  ) %>%
+  arrange(indexc) %>% #same order as in the book
+  select(country, sign_hov = p) %>%
+  left_join(
+    trefler_rank %>%
+      select(country, rank_hov = r2)
+  ) %>%
+  bind_rows(
+    trefler %>%
+      summarize(
+        p = sum(trat * athat2 > 0) / n()
+      ) %>%
+      mutate(
+        country = "All countries",
+        rank_hov = mean(trefler_rank$r2)
+      ) %>%
+      select(country, sign_hov = p, rank_hov)
+  ) %>%
+  mutate_if(is.numeric, round, 2) %>% # same no of decimals as in the book
+  kable()
 ```

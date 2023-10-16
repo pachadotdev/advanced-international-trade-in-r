@@ -1,0 +1,19 @@
+project:
+  type: book
+  output-dir: docs
+
+execute: 
+  echo: true
+  warning: false
+  message: false
+  
+book:
+  title: "Advanced International Trade in R"
+  chapters:
+    - index.qmd
+    - chapter2.qmd
+    
+format:
+  html:
+    theme: [cosmo]
+    number-sections: false
