@@ -329,7 +329,7 @@ exit
 ```{r ch2_ex1_1}
 # Transform ----
 
-trefler <- trefler %>%
+trefler <- readRDS(fout) %>%
   # Number of country in the dataset
   mutate(
     c = max(indexc),
@@ -368,11 +368,6 @@ trefler <- trefler %>%
   # Using the weight, convert all the data
   mutate(
     trat = at / (sigmaf * sqrt(sc)),
-    trv = v / (sigmaf * sqrt(sc)),
-    try = y / sqrt(sc),
-    trb = b / sqrt(sc),
-    trvfw = vfw / sigmaf,
-    athat = trv - sc * trvfw,
     athat2 = (v - (sc * vfw)) / weight
   ) %>%
   arrange(country)
@@ -400,11 +395,9 @@ trefler %>%
 trefler %>%
   summarize(
     varat = var(trat),
-    varhat = var(athat),
     varhat2 = var(athat2)
   ) %>%
   mutate(
-    varat_varhat = varat / varhat,
     varat_varhat2 = varat / varhat2
   )
 
@@ -463,7 +456,7 @@ trefler_rank
 mean(trefler_rank$r2)
 ```
 
-Now format this as a table:
+### Extra step: formatting the table
 
 ```{r ch2_ex1_2}
 trefler %>%
@@ -491,3 +484,271 @@ trefler %>%
   mutate_if(is.numeric, round, 2) %>% # same no of decimals as in the book
   kable()
 ```
+
+## Exercise 2
+
+### Feenstra's code
+
+```stata
+* This program is to conduct sign test, Rank test and Missing trade test *
+* using delta *
+
+capture log close
+log using c:\Empirical_Exercise\Chapter_2\sign_rank_2.log, replace
+
+set mem 30m
+
+use c:\Empirical_Exercise\Chapter_2\trefler, clear
+
+* number of country in the dataset *
+egen C=max(indexc)
+egen F=max(indexf)
+
+* Calculate the world level of Yw, Bw and Vw *
+egen Yww=sum(Y)
+gen Yw=Yww/F
+egen Bww=sum(B)
+gen Bw=Bww/F
+egen Vfw=sum(V), by(indexf)
+egen Vw=sum(delta*V), by(indexf)
+
+* Calculate country share Sc *
+gen Sc=(Y-B)/(Yw-Bw)
+
+* Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
+
+gen Efc=delta*AT-(delta*V-Sc*Vw)
+
+* Construct the average epsilon for a given factor *
+egen total=sum(Efc),by(indexf)
+gen ave=total/C
+
+* Construct sigma^2 and the weight *
+
+egen tot=sum((Efc-ave)^2), by(indexf)
+gen sigma2f=tot/(C-1)
+
+codebook sigma2f
+gen sigmaf=sqrt(sigma2f)
+gen weight=sigmaf*sqrt(Sc)
+
+* Using the weight, convert all the data *
+
+gen trAT=delta*AT/weight
+gen AThat2=(delta*V-Sc*Vw)/weight
+
+* Correlation *
+
+corr trAT AThat2
+
+*************
+* Sign Test *
+*************
+
+sort indexc
+by indexc: count if trAT*AThat2>0
+
+count if trAT*AThat2>0
+display _result(1)/_N
+
+*****************
+* Missing Trade *
+*****************
+
+quietly summarize trAT
+local varAT=_result(4)
+quietly summarize AThat
+local varHat=_result(4)
+quietly summarize AThat2
+local varHat2=_result(4)
+display `varAT'/`varHat'
+display `varAT'/`varHat2'
+
+*************
+* Rank Test *
+*************
+
+keep country indexc indexf trAT AThat2
+
+sort indexc indexf
+reshape wide trAT AThat2, i(indexc) j(indexf)
+
+local i=1
+while `i'<9{
+	local j=`i'+1
+	while `j'<=9{
+		gen rank`i'`j'=((trAT`i'-trAT`j')*(AThat2`i'-AThat2`j')>0)
+		local j=`j'+1
+	}
+	local i=`i'+1
+}
+
+keep country indexc rank*
+reshape long rank, i(indexc) j(factor)
+egen r1=sum(rank), by(indexc)
+gen r2=r1/36
+collapse r2,by(indexc country)
+sum r2
+list
+
+log close
+exit
+```
+
+### My code
+
+```{r ch2_ex2_1}
+# Transform ----
+
+trefler <- readRDS(fout) %>%
+  # Number of country in the dataset
+  mutate(
+    c = max(indexc),
+    f = max(indexf)
+  ) %>%
+  # Calculate the world level of Yw, Bw and Vw
+  mutate(
+    yww = sum(y),
+    yw = yww / f,
+    bww = sum(b),
+    bw = bww / f
+  ) %>%
+  group_by(indexf) %>%
+  mutate(
+    vfw = sum(v),
+    vw = sum(delta * v)
+  ) %>%
+  ungroup() %>%
+  # Calculate country share Sc
+  mutate(
+    sc = (y - b) / (yw - bw)
+  ) %>%
+  # Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
+  mutate(
+    efc = delta * at - (delta * v - sc * vw)
+  ) %>%
+  # Construct the average epsilon for a given factor
+  group_by(indexf) %>%
+  mutate(ave = sum(efc) / c) %>%
+  # Construct sigma^2 and the weight
+  mutate(
+    sigma2f = sum((efc - ave)^2) / (c - 1),
+    sigmaf = sqrt(sigma2f),
+    weight = sigmaf * sqrt(sc)
+  ) %>%
+  ungroup() %>%
+  # Using the weight, convert all the data
+  mutate(
+    trat = delta * at / weight,
+    athat2 = (delta * v - (sc * vw)) / weight
+  )
+
+# Correlation should be .41
+cor(trefler$trat, trefler$athat2)
+
+# Sign Test ----
+
+trefler %>%
+  group_by(country, indexc) %>%
+  summarize(
+    p = sum(trat * athat2 > 0) / n()
+  )
+
+trefler %>%
+  summarize(
+    p = sum(trat * athat2 > 0) / n()
+  )
+
+# Missing Trade ----
+
+# Checking for the missing trade, should be .07
+
+trefler %>%
+  summarize(
+    varat = var(trat),
+    varhat2 = var(athat2)
+  ) %>%
+  mutate(
+    varat_varhat2 = varat / varhat2
+  )
+
+# Rank Tests ----
+
+trefler_wide <- trefler %>%
+  select(country, indexc, indexf, trat, athat2) %>%
+  arrange(indexc, indexf) %>%
+  pivot_wider(
+    names_from = indexf,
+    values_from = c(trat, athat2)
+  )
+
+ranks <- expand_grid(
+  one = 1:8,
+  two = 1:9
+) %>%
+  filter(one < two)
+
+trefler_rank <- map2(
+  ranks$one,
+  ranks$two,
+  function(x, y) {
+    trefler_wide %>%
+      mutate(
+        !!paste0("rank", x, y) :=
+          (!!sym(paste0("trat_", x)) - !!sym(paste0("trat_", y))) *
+            (!!sym(paste0("athat2_", x)) - !!sym(paste0("athat2_", y))) > 0
+      ) %>%
+      select(country, indexc, starts_with("rank"))
+  }
+) %>%
+  reduce(left_join, by = c("country", "indexc")) %>%
+  pivot_longer(
+    cols = starts_with("rank"),
+    names_to = "rank",
+    values_to = "value"
+  ) %>%
+  group_by(country, indexc) %>%
+  summarise(r1 = sum(value)) %>%
+  mutate(r2 = r1 / 36)
+
+trefler_rank
+
+mean(trefler_rank$r2)
+```
+
+### Extra step: formatting the table
+
+```{r ch2_ex2_2}
+trefler %>%
+  group_by(country, indexc) %>%
+  summarize(
+    p = sum(trat * athat2 > 0) / n()
+  ) %>%
+  arrange(indexc) %>% #same order as in the book
+  select(country, sign_hov = p) %>%
+  left_join(
+    trefler_rank %>%
+      select(country, rank_hov = r2)
+  ) %>%
+  bind_rows(
+    trefler %>%
+      summarize(
+        p = sum(trat * athat2 > 0) / n()
+      ) %>%
+      mutate(
+        country = "All countries",
+        rank_hov = mean(trefler_rank$r2)
+      ) %>%
+      select(country, sign_hov = p, rank_hov)
+  ) %>%
+  mutate_if(is.numeric, round, 2) %>% # same no of decimals as in the book
+  kable()
+```
+
+### Notes
+
+The Stata code that I run returns the same values as R. However:
+
+* Austria should have values 0.67 and 0.47. I got 0.67 and 0.44.
+* France should have values 0.33 and 0.22. I got 0.33 and 0.19.
+* Switzerland should have values 0.89 and 0.47. I got 0.89 and 0.50.
