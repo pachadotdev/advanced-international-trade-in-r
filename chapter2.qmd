@@ -1,7 +1,10 @@
 
 # Chapter 2. The Heckscher-Ohlin Model"
 
-## Exercise 0
+In these exercises, you will reproduce some of the empirical results from Trefler (1993, 1995).  To complete the exercise, the Excel file `hov_pub.csv` should be stored in the directory:
+`c:\Empirical_Exercise\Chapter_2\hov_pub.csv`.  After this, run the STATA program `hov_pub.do`, which will create a new STATA data file `trefler.dta`.
+
+## Read and transform the data
 
 ### Feenstra's code
 
@@ -9,7 +12,8 @@
 * This is to read the data into Stata *
 
 set mem 30m
-insheet using c:\Empirical_Exercise\Chapter_2\trefler.csv
+* insheet using c:\Empirical_Exercise\Chapter_2\trefler.csv *
+insheet using "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\hov_pub.csv"
 rename v1 country
 rename v2 factor
 rename v3 AT
@@ -81,7 +85,8 @@ label var YPC "GDP per capita, PWT"
 label var indexc "Country indentifier"
 label var indexf "Factor Indentifier"
 
-save c:\Empirical_Exercise\Chapter_2\trefler,replace
+* save c:\Empirical_Exercise\Chapter_2\trefler,replace *
+save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler", replace
 
 exit
 ```
@@ -114,7 +119,7 @@ if (!dir.exists(dout)) {
 fout <- paste0(dout, "/trefler.rds")
 
 if (!file.exists(fout)) {
-  trefler <- read_csv("first-edition/Chapter-2/trefler.csv", col_names = F) %>%
+  trefler <- read_csv("first-edition/Chapter-2/hov_pub.csv", col_names = F) %>%
     rename(
       country = X1,
       factor = X2,
@@ -190,7 +195,7 @@ if (!file.exists(fout)) {
 
   # Add stata-like labels to the columns
 
-  # maybe this is not the best way to do it, but it works
+  # Maybe this is not the best way to do it, but it works
   attr(trefler$country, "label") <- "Name of the country"
   attr(trefler$factor, "label") <- "Name of the factor"
   attr(trefler$at, "label") <- "Factor content of trade F=A*T"
@@ -209,7 +214,9 @@ if (!file.exists(fout)) {
 }
 ```
 
-## Exercise 1
+## Exercise 1  
+
+Given identical technologies across countries, run the program `sign_rank_1.do` to conduct the sign test, rank test, and test for missing trade. Use the results in `sign_rank_1.log` to replicate columns (2) and (4) in Table 2.5.
 
 ### Feenstra's code
 
@@ -217,11 +224,13 @@ if (!file.exists(fout)) {
 * This program is to conduct sign test, Rank test and Missing trade test *
 
 capture log close
-log using c:\Empirical_Exercise\Chapter_2\sign_rank_1.log, replace
+* log using c:\Empirical_Exercise\Chapter_2\sign_rank_1.log, replace *
+log using "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\sign_rank_1.log", replace
 
 set mem 30m
 
-use C:\Empirical_Exercise\Chapter_2\trefler, clear
+* use C:\Empirical_Exercise\Chapter_2\trefler, clear *
+use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler", clear
 
 * number of country in the dataset *
 egen C=max(indexc)
@@ -411,7 +420,7 @@ trefler_wide <- trefler %>%
     values_from = c(trat, athat2)
   )
 
-# this would be too long
+# This would be too long
 # trefler_wide <- trefler_wide %>%
 #   mutate(
 #     rank12 = (trat_1 - trat_2) * (athat2_1 - athat2_2) > 0,
@@ -428,6 +437,9 @@ ranks <- expand_grid(
 ) %>%
   filter(one < two)
 
+# The syntax here is based on internal R developer functions, but these
+# allow to create columns with minimal lines of code and avoids more complicated
+# bracket syntax
 trefler_rank <- map2(
   ranks$one,
   ranks$two,
@@ -487,6 +499,8 @@ trefler %>%
 
 ## Exercise 2
 
+Given uniform technological differences across countries, run the program `sign_rank_2.do` to redo the sign test, rank test, and missing trade.  Use the results in `sign_rank_2.log` to replicate column (3) and (5), given column (6) in Table 2.5.
+
 ### Feenstra's code
 
 ```stata
@@ -494,11 +508,13 @@ trefler %>%
 * using delta *
 
 capture log close
-log using c:\Empirical_Exercise\Chapter_2\sign_rank_2.log, replace
+* log using c:\Empirical_Exercise\Chapter_2\sign_rank_2.log, replace *
+log using "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\sign_rank_2.log", replace
 
 set mem 30m
 
-use c:\Empirical_Exercise\Chapter_2\trefler, clear
+* use c:\Empirical_Exercise\Chapter_2\trefler, clear *
+use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler", clear
 
 * number of country in the dataset *
 egen C=max(indexc)
@@ -724,7 +740,7 @@ trefler %>%
   summarize(
     p = sum(trat * athat2 > 0) / n()
   ) %>%
-  arrange(indexc) %>% #same order as in the book
+  arrange(indexc) %>% # same order as in the book
   select(country, sign_hov = p) %>%
   left_join(
     trefler_rank %>%
@@ -752,3 +768,273 @@ The Stata code that I run returns the same values as R. However:
 * Austria should have values 0.67 and 0.47. I got 0.67 and 0.44.
 * France should have values 0.33 and 0.22. I got 0.33 and 0.19.
 * Switzerland should have values 0.89 and 0.47. I got 0.89 and 0.50.
+
+## Exercise 3
+
+Allowing all factors in each country to have different productivities, now run the program `compute_pi.do` to compute factor productivities $\pi_k^i$ as Trefler (1993).  Note that there are 9 factors in the original data set, but these are now aggregated to just 4 factors, which are labor (endowment 1), capital (endowment 2), cropland (endowment 3) and pasture (endowment 4).  Using the results in `pi_.log` or alternatively in the data files `pi_1.dta, pi_2.dta, pi_3.dta, pi_4.dta` to answer the following:
+
+(a)  Which factor has the most negative productivities estimated?
+(b)  What is the correlation between the estimated labor productivity and the productivities of other factors?  What is the correlation between each factor productivity and GDP per-capita (which you can find in the file `trefler.dta`)?
+
+### Feenstra's code
+
+```stata
+* This program is to compute pai, the factor productivity *
+
+capture log close
+* log using c:\Empirical_Exercise\Chapter_2\pi.log,replace *
+log using "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi.log", replace
+
+set mem 30m
+
+* use c:\Empirical_Exercise\Chapter_2\trefler, clear *
+use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler", clear
+
+* number of country in the dataset *
+egen C=max(indexc)
+egen F=max(indexf)
+
+* Calculate the world level of Yw, Bw and Vw *
+egen Yww=sum(Y)
+gen Yw=Yww/F
+egen Bww=sum(B)
+gen Bw=Bww/F
+egen Vfw=sum(V), by(indexf)
+
+* Calculate country share Sc *
+gen Sc=(Y-B)/(Yw-Bw)
+
+* Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
+gen Efc=AT-(V-Sc*Vfw)
+
+* Construct the average epsilon for a given factor *
+egen total=sum(Efc),by(indexf)
+gen ave=total/C
+
+* Construct sigma^2 and the weight *
+
+egen tot=sum((Efc-ave)^2), by(indexf)
+gen sigma2f=tot/(C-1)
+
+codebook sigma2f
+gen sigmaf=sqrt(sigma2f)
+gen weight=sigmaf*sqrt(Sc)
+
+* Using the weight, convert all the data *
+
+gen trAT=AT/(sigmaf*sqrt(Sc))
+gen trV=V/(sigmaf*sqrt(Sc))
+gen trY=Y/sqrt(Sc)
+gen trB=B/sqrt(Sc)
+gen trVfw=Vfw/sigmaf
+
+gen AThat=trV-Sc*trVfw
+gen AThat2=(V-Sc*Vfw)/weight
+
+* Construct Aggregate Labor Endowment *
+
+preserve
+keep if indexf==7 |indexf==8 | indexf==9
+gen en=2
+replace en=3 if indexf==8
+replace en=4 if indexf==9
+keep country factor AT V en indexc Sc
+
+* save c:\Empirical_Exercise\Chapter_2\indexf_189,replace *
+save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_189", replace
+
+restore
+
+preserve
+drop if indexf==7 |indexf==8 | indexf==9
+
+egen v_l=sum(V), by(country)
+egen AT_l=sum(AT), by(country)
+
+drop V AT factor
+rename v_l V
+rename AT_l AT
+gen en=1
+collapse (mean)AT V en indexc Sc, by(country)
+gen str5 factor="Labor"
+* save c:\Empirical_Exercise\Chapter_2\indexf_L,replace *
+save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_L", replace
+
+restore
+
+* use c:\Empirical_Exercise\Chapter_2\indexf_189,clear *
+use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_189", clear
+
+* append using c:\Empirical_Exercise\Chapter_2\indexf_L *
+append using "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_L"
+sort indexc en
+* save c:\Empirical_Exercise\Chapter_2\pi,replace *
+save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi", replace
+
+************************************
+* Compute Pi: factor productivity *
+************************************
+
+* use c:\Empirical_Exercise\Chapter_2\pi, clear *
+use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi", clear
+
+gen p_0=1
+gen p_1=1
+
+local i=1
+while `i'<=4{
+	preserve
+	keep if en==`i'
+	local j=1
+	while `j'<51{
+		replace p_0=p_1
+		gen Vp=p_0*V
+		egen Vpw=sum(Vp)
+		replace p_1=(AT+Sc*Vpw)/V
+		replace p_1=1 if country=="USA"
+		drop Vp Vpw
+		local j=`j'+1
+	}
+	keep en country indexc p_1
+	* save c:\Empirical_Exercise\Chapter_2\pi_`i',replace *
+  save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_`i'", replace
+	restore
+	local i=`i'+1
+}
+
+local i=1
+while `i'<=4{
+	* use c:\Empirical_Exercise\Chapter_2\pi_`i',clear *
+  use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_`i'", clear
+	sort en indexc
+	by en: list en indexc country p_1
+	local i=`i'+1
+}
+
+log close
+
+exit
+```
+
+### My code
+
+```{r ch2_ex3}
+trefler <- readRDS(fout) %>%
+  # Number of country in the dataset
+  mutate(
+    c = max(indexc),
+    f = max(indexf)
+  ) %>%
+  # Calculate the world level of Yw, Bw and Vw
+  mutate(
+    yww = sum(y),
+    yw = yww / f,
+    bww = sum(b),
+    bw = bww / f
+  ) %>%
+  group_by(indexf) %>%
+  mutate(
+    vfw = sum(v),
+    vw = sum(delta * v)
+  ) %>%
+  ungroup() %>%
+  # Calculate country share Sc
+  mutate(
+    sc = (y - b) / (yw - bw)
+  ) %>%
+  # Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
+  mutate(
+    efc = delta * at - (delta * v - sc * vw)
+  ) %>%
+  # Construct the average epsilon for a given factor
+  group_by(indexf) %>%
+  mutate(ave = sum(efc) / c) %>%
+  # Construct sigma^2 and the weight
+  mutate(
+    sigma2f = sum((efc - ave)^2) / (c - 1),
+    sigmaf = sqrt(sigma2f),
+    weight = sigmaf * sqrt(sc)
+  ) %>%
+  ungroup() %>%
+  # Using the weight, convert all the data
+  mutate(
+    trat = delta * at / weight,
+    athat2 = (delta * v - (sc * vw)) / weight
+  )
+
+# No need to save changes and restore
+trefler2 <- trefler %>%
+  # Construct Aggregate Labor Endowment
+  filter(indexf %in% 7:9) %>%
+  mutate(
+    en = case_when(
+      indexf == 7 ~ 2,
+      indexf == 8 ~ 3,
+      indexf == 9 ~ 4
+    )
+  ) %>%
+  select(country, factor, indexf, at, v, en, indexc, sc)
+
+trefler3 <- trefler %>%
+  filter(!(indexf %in% 7:9)) %>%
+  group_by(country) %>%
+  # No need to create v_l and at_l to then rename and then collapse
+  summarise(
+    v = sum(v),
+    at = sum(at),
+    sc = mean(sc),
+    indexc = mean(indexc)
+  ) %>%
+  mutate(
+    en = 1,
+    factor = "Labor"
+  )
+
+trefler3 <- trefler2 %>%
+  select(-indexf) %>%
+  bind_rows(trefler3) %>%
+  arrange(indexc, en)
+
+# Compute Pi: factor productivity
+# No need to save intermediate outputs, we proceed with iteration
+trefler4 <- map_df(
+  unique(trefler3$en),
+  function(x) {
+    d <- trefler3 %>%
+      filter(en == x) %>%
+      mutate(p0 = 1, p1 = 1)
+
+    iter <- 50
+
+    for (i in seq_len(iter)) {
+      d <- d %>%
+        mutate(
+          p0 = p1,
+          vp = p0 * v,
+          vpw = sum(vp),
+          p1 = ifelse(country == "USA", 1, (at + sc * vpw) / v)
+        ) %>%
+        select(-vp, -vpw)
+    }
+
+    # Tidy alternative to the for loop
+    # d <- accumulate(seq_len(iter), .init = d, ~ .x %>%
+    #   mutate(
+    #     p0 = p1,
+    #     p1 = ifelse(country == "USA", 1, (at + sc * sum(p1 * v)) / v)
+    #   )) %>%
+    #   .[[iter + 1]]
+
+    d %>%
+      select(en, country, indexc, p1)
+  }
+)
+```
+
+### Extra step: formatting the tables
+
+```{r ch2_ex3_2}
+trefler4 %>%
+  arrange(country, en) %>%
+  kable()
+```

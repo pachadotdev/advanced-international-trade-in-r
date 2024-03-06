@@ -1,0 +1,1718 @@
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi.log
+  log type:  text
+ opened on:   6 Mar 2024, 10:16:50
+
+. set mem 30m
+no; data in memory would be lost
+r(4);
+
+. use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler", clear
+
+. egen C=max(indexc)
+
+. 
+. egen F=max(indexf)
+
+. egen Yww=sum(Y)
+
+. 
+. gen Yw=Yww/F
+
+. 
+. egen Bww=sum(B)
+
+. 
+. gen Bw=Bww/F
+
+. 
+. egen Vfw=sum(V), by(indexf)
+
+. gen Sc=(Y-B)/(Yw-Bw)
+
+. gen Efc=AT-(V-Sc*Vfw)
+
+. egen total=sum(Efc),by(indexf)
+
+. 
+. gen ave=total/C
+
+. egen tot=sum((Efc-ave)^2), by(indexf)
+
+. 
+. gen sigma2f=tot/(C-1)
+
+. codebook sigma2f
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+sigma2f                                                                                                                                                                                (unlabeled)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [98198290,7.112e+22]         units:  10
+         unique values:  9                        missing .:  0/297
+
+            tabulation:  Freq.  Value
+                            33  98198288
+                            33  2.419e+08
+                            33  7.455e+11
+                            33  9.191e+11
+                            33  1.210e+12
+                            33  4.383e+12
+                            33  2.106e+13
+                            33  1.009e+14
+                            33  7.112e+22
+
+. 
+. gen sigmaf=sqrt(sigma2f)
+
+. 
+. gen weight=sigmaf*sqrt(Sc)
+
+. gen trAT=AT/(sigmaf*sqrt(Sc))
+
+. 
+. gen trV=V/(sigmaf*sqrt(Sc))
+
+. 
+. gen trY=Y/sqrt(Sc)
+
+. 
+. gen trB=B/sqrt(Sc)
+
+. 
+. gen trVfw=Vfw/sigmaf
+
+. 
+. 
+. 
+. gen AThat=trV-Sc*trVfw
+
+. 
+. gen AThat2=(V-Sc*Vfw)/weight
+
+. preserve
+
+. 
+. keep if indexf==7 |indexf==8 | indexf==9
+(198 observations deleted)
+
+. 
+. gen en=2
+
+. 
+. replace en=3 if indexf==8
+(33 real changes made)
+
+. 
+. replace en=4 if indexf==9
+(33 real changes made)
+
+. 
+. keep country factor AT V en indexc Sc
+
+. use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_189", replace
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_189.dta not found
+r(601);
+
+. save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_189", replace
+(note: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_189.dta not found)
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_189.dta saved
+
+. restore
+
+. preserve
+
+. 
+. drop if indexf==7 |indexf==8 | indexf==9
+(99 observations deleted)
+
+. 
+. 
+. 
+. egen v_l=sum(V), by(country)
+
+. 
+. egen AT_l=sum(AT), by(country)
+
+. drop V AT factor
+
+. 
+. rename v_l V
+
+. 
+. rename AT_l AT
+
+. 
+. gen en=1
+
+. 
+. collapse (mean)AT V en indexc Sc, by(country)
+
+. 
+. gen str5 factor="Labor"
+
+. save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_L", replace
+(note: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_L.dta not found)
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_L.dta saved
+
+. restore
+
+. use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_189", clear
+
+. append using c:\Empirical_Exercise\Chapter_2\indexf_L
+file c:\Empirical_Exercise\Chapter_2\indexf_L not found
+r(601);
+
+. 
+. sort indexc en
+
+. append using "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_L"
+indexc was byte now float
+
+. sort indexc en
+
+. use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_189", clear
+
+. append using "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_L"
+indexc was byte now float
+
+. sort indexc en
+
+. use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi", clear
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi.dta not found
+r(601);
+
+. save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi", replace
+(note: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi.dta not found)
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi.dta saved
+
+. use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi", clear
+
+. gen p_0=1
+
+. 
+. gen p_1=1
+
+. local i=1
+
+. 
+. while `i'<=4{
+  2. 
+. preserve
+  3. 
+. keep if en==`i'
+  4. 
+. local j=1
+  5. 
+. while `j'<51{
+  6. 
+. replace p_0=p_1
+  7. 
+. gen Vp=p_0*V
+  8. 
+. egen Vpw=sum(Vp)
+  9. 
+. replace p_1=(AT+Sc*Vpw)/V
+ 10. 
+. replace p_1=1 if country=="USA"
+ 11. 
+. drop Vp Vpw
+ 12. 
+. local j=`j'+1
+ 13. 
+. }
+ 14. 
+. keep en country indexc p_1
+ 15. 
+. * save c:\Empirical_Exercise\Chapter_2\pi_`i',replace *
+. 
+.   save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_"`i', replace
+ 16. 
+. restore
+ 17. 
+. local i=`i'+1
+ 18. 
+. }
+(99 observations deleted)
+(0 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(30 real changes made)
+(1 real change made)
+(29 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+invalid '1' 
+r(198);
+
+. 
+. 
+. 
+. local i=1
+
+. 
+. while `i'<=4{
+  2. 
+. * use c:\Empirical_Exercise\Chapter_2\pi_`i',clear *
+. 
+.   use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_"`i', clear
+  3. 
+. sort en indexc
+  4. 
+. by en: list en indexc country p_1
+  5. 
+. local i=`i'+1
+  6. 
+. }
+invalid '1' 
+r(198);
+
+. use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi", clear
+
+. gen p_0=1
+
+. 
+. gen p_1=1
+
+. 
+. 
+. 
+. local i=1
+
+. while `i'<=4{
+  2. 
+. preserve
+  3. 
+. keep if en==`i'
+  4. 
+. local j=1
+  5. 
+. while `j'<51{
+  6. 
+. replace p_0=p_1
+  7. 
+. gen Vp=p_0*V
+  8. 
+. egen Vpw=sum(Vp)
+  9. 
+. replace p_1=(AT+Sc*Vpw)/V
+ 10. 
+. replace p_1=1 if country=="USA"
+ 11. 
+. drop Vp Vpw
+ 12. 
+. local j=`j'+1
+ 13. 
+. }
+ 14. 
+. keep en country indexc p_1
+ 15. 
+. * save c:\Empirical_Exercise\Chapter_2\pi_`i',replace *
+. 
+.   save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_"`i', replace
+ 16. 
+. restore
+ 17. 
+. local i=`i'+1
+ 18. 
+. }
+already preserved
+r(621);
+
+. use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi", clear
+
+. 
+. 
+. 
+. gen p_0=1
+
+. 
+. gen p_1=1
+
+. 
+. 
+. 
+. local i=1
+
+. 
+. while `i'<=4{
+  2. 
+. preserve
+  3. 
+. keep if en==`i'
+  4. 
+. local j=1
+  5. 
+. while `j'<51{
+  6. 
+. replace p_0=p_1
+  7. 
+. gen Vp=p_0*V
+  8. 
+. egen Vpw=sum(Vp)
+  9. 
+. replace p_1=(AT+Sc*Vpw)/V
+ 10. 
+. replace p_1=1 if country=="USA"
+ 11. 
+. drop Vp Vpw
+ 12. 
+. local j=`j'+1
+ 13. 
+. }
+ 14. 
+. keep en country indexc p_1
+ 15. 
+. * save c:\Empirical_Exercise\Chapter_2\pi_`i',replace *
+. 
+.   save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_`i', replace
+ 16. 
+. restore
+ 17. 
+. local i=`i'+1
+ 18. 
+. }
+already preserved
+r(621);
+
+. 
+. 
+. 
+. local i=1
+
+. 
+. while `i'<=4{
+  2. 
+. * use c:\Empirical_Exercise\Chapter_2\pi_`i',clear *
+. 
+.   use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_"`i', clear
+  3. 
+. sort en indexc
+  4. 
+. by en: list en indexc country p_1
+  5. 
+. local i=`i'+1
+  6. 
+. }
+invalid '1' 
+r(198);
+
+. use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi", clear
+
+. 
+. 
+. 
+. gen p_0=1
+
+. 
+. gen p_1=1
+
+. 
+. 
+. 
+. local i=1
+
+. 
+. while `i'<=4{
+  2. 
+. preserve
+  3. 
+. keep if en==`i'
+  4. 
+. local j=1
+  5. 
+. while `j'<51{
+  6. 
+. replace p_0=p_1
+  7. 
+. gen Vp=p_0*V
+  8. 
+. egen Vpw=sum(Vp)
+  9. 
+. replace p_1=(AT+Sc*Vpw)/V
+ 10. 
+. replace p_1=1 if country=="USA"
+ 11. 
+. drop Vp Vpw
+ 12. 
+. local j=`j'+1
+ 13. 
+. }
+ 14. 
+. keep en country indexc p_1
+ 15. 
+. * save c:\Empirical_Exercise\Chapter_2\pi_`i',replace *
+. 
+.   save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_"`i', replace
+ 16. 
+. restore
+ 17. 
+. local i=`i'+1
+ 18. 
+. }
+already preserved
+r(621);
+
+. use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi", clear
+
+. 
+. 
+. 
+. gen p_0=1
+
+. 
+. gen p_1=1
+
+. 
+. 
+. 
+. local i=1
+
+. preserve
+already preserved
+r(621);
+
+. 
+. keep if en==`i'
+(99 observations deleted)
+
+. 
+. local j=1
+
+. 
+. while `j'<51{
+  2. 
+. replace p_0=p_1
+  3. 
+. gen Vp=p_0*V
+  4. 
+. egen Vpw=sum(Vp)
+  5. 
+. replace p_1=(AT+Sc*Vpw)/V
+  6. 
+. replace p_1=1 if country=="USA"
+  7. 
+. drop Vp Vpw
+  8. 
+. local j=`j'+1
+  9. 
+. }
+(0 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(30 real changes made)
+(1 real change made)
+(29 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+
+. keep en country indexc p_1
+
+. 
+. * save c:\Empirical_Exercise\Chapter_2\pi_`i',replace *
+
+. 
+.   save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_"`i', replace
+invalid '1' 
+r(198);
+
+. save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_`i'", replace
+(note: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_1.dta not found)
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_1.dta saved
+
+. restore\
+varlist not allowed
+r(101);
+
+. restore
+
+. use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi", clear
+
+. 
+. 
+. 
+. gen p_0=1
+
+. 
+. gen p_1=1
+
+. 
+. 
+. 
+. local i=1
+
+. 
+. while `i'<=4{
+  2. 
+. preserve
+  3. 
+. keep if en==`i'
+  4. 
+. local j=1
+  5. 
+. while `j'<51{
+  6. 
+. replace p_0=p_1
+  7. 
+. gen Vp=p_0*V
+  8. 
+. egen Vpw=sum(Vp)
+  9. 
+. replace p_1=(AT+Sc*Vpw)/V
+ 10. 
+. replace p_1=1 if country=="USA"
+ 11. 
+. drop Vp Vpw
+ 12. 
+. local j=`j'+1
+ 13. 
+. }
+ 14. 
+. keep en country indexc p_1
+ 15. 
+. * save c:\Empirical_Exercise\Chapter_2\pi_`i',replace *
+. 
+.   save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_`i'", replace
+ 16. 
+. restore
+ 17. 
+. local i=`i'+1
+ 18. 
+. }
+(99 observations deleted)
+(0 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(30 real changes made)
+(1 real change made)
+(29 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_1.dta saved
+(99 observations deleted)
+(0 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(note: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_2.dta not found)
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_2.dta saved
+(99 observations deleted)
+(0 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(32 real changes made)
+(1 real change made)
+(31 real changes made)
+(31 real changes made)
+(1 real change made)
+(30 real changes made)
+(29 real changes made)
+(1 real change made)
+(28 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(note: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_3.dta not found)
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_3.dta saved
+(99 observations deleted)
+(0 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(28 real changes made)
+(1 real change made)
+(27 real changes made)
+(31 real changes made)
+(1 real change made)
+(30 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(note: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_4.dta not found)
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_4.dta saved
+
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. local i=1
+
+. 
+. while `i'<=4{
+  2. 
+. * use c:\Empirical_Exercise\Chapter_2\pi_`i',clear *
+. 
+.   use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_`i'", clear
+  3. 
+. sort en indexc
+  4. 
+. by en: list en indexc country p_1
+  5. 
+. local i=`i'+1
+  6. 
+. }
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-> en = 1
+
+     +---------------------------------------+
+     | en   indexc        country        p_1 |
+     |---------------------------------------|
+  1. |  1        1     Bangladesh   .0165219 |
+  2. |  1        2       Pakistan   .0394124 |
+  3. |  1        3      Indonesia   .0432824 |
+  4. |  1        4      Sri Lanka   .0344432 |
+  5. |  1        5       Thailand    .048902 |
+     |---------------------------------------|
+  6. |  1        6       Colombia   .1940833 |
+  7. |  1        7         Panama   .2279774 |
+  8. |  1        8     Yugoslavia   .1997569 |
+  9. |  1        9       Portugal   .1759864 |
+ 10. |  1       10        Uruguay   .2029693 |
+     |---------------------------------------|
+ 11. |  1       11         Greece   .3140718 |
+ 12. |  1       12        Ireland   .4166084 |
+ 13. |  1       13          Spain   .4172725 |
+ 14. |  1       14         Israel   .6131932 |
+ 15. |  1       15      Hong Kong   .3781684 |
+     |---------------------------------------|
+ 16. |  1       16    New Zealand   .5850298 |
+ 17. |  1       17        Austria   .5694186 |
+ 18. |  1       18      Singapore   .4873306 |
+ 19. |  1       19          Italy   .5907437 |
+ 20. |  1       20             UK   .6332356 |
+     |---------------------------------------|
+ 21. |  1       21          Japan    .604921 |
+ 22. |  1       22        Belgium   .7233988 |
+ 23. |  1       23       Trinidad    .448344 |
+ 24. |  1       24    Netherlands   .7933354 |
+ 25. |  1       25        Finland   .6969619 |
+     |---------------------------------------|
+ 26. |  1       26        Denmark   .7061784 |
+ 27. |  1       27   West Germany   .7691833 |
+ 28. |  1       28         France    .735665 |
+ 29. |  1       29         Sweden   .7270576 |
+ 30. |  1       30         Norway   .7816517 |
+     |---------------------------------------|
+ 31. |  1       31    Switzerland   .9317446 |
+ 32. |  1       32         Canada   .7799865 |
+ 33. |  1       33            USA          1 |
+     +---------------------------------------+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-> en = 2
+
+     +---------------------------------------+
+     | en   indexc        country        p_1 |
+     |---------------------------------------|
+  1. |  2        1     Bangladesh   .9119021 |
+  2. |  2        2       Pakistan   .4867497 |
+  3. |  2        3      Indonesia    .250653 |
+  4. |  2        4      Sri Lanka   .1259789 |
+  5. |  2        5       Thailand   .3929541 |
+     |---------------------------------------|
+  6. |  2        6       Colombia   .4856291 |
+  7. |  2        7         Panama   .3224079 |
+  8. |  2        8     Yugoslavia   .2985477 |
+  9. |  2        9       Portugal    .297107 |
+ 10. |  2       10        Uruguay   .4060566 |
+     |---------------------------------------|
+ 11. |  2       11         Greece   .4401574 |
+ 12. |  2       12        Ireland   .4783922 |
+ 13. |  2       13          Spain    .519489 |
+ 14. |  2       14         Israel   .5049116 |
+ 15. |  2       15      Hong Kong   .5150965 |
+     |---------------------------------------|
+ 16. |  2       16    New Zealand   .6197254 |
+ 17. |  2       17        Austria    .542198 |
+ 18. |  2       18      Singapore   .3209652 |
+ 19. |  2       19          Italy   .5122213 |
+ 20. |  2       20             UK   .8159872 |
+     |---------------------------------------|
+ 21. |  2       21          Japan   .6502131 |
+ 22. |  2       22        Belgium   .6457499 |
+ 23. |  2       23       Trinidad   .4193396 |
+ 24. |  2       24    Netherlands   .7513015 |
+ 25. |  2       25        Finland   .6453199 |
+     |---------------------------------------|
+ 26. |  2       26        Denmark    .703564 |
+ 27. |  2       27   West Germany   .6629313 |
+ 28. |  2       28         France   .6150761 |
+ 29. |  2       29         Sweden   .9445322 |
+ 30. |  2       30         Norway   .6199874 |
+     |---------------------------------------|
+ 31. |  2       31    Switzerland   .6079721 |
+ 32. |  2       32         Canada   .7359194 |
+ 33. |  2       33            USA          1 |
+     +---------------------------------------+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-> en = 3
+
+     +----------------------------------------+
+     | en   indexc        country         p_1 |
+     |----------------------------------------|
+  1. |  3        1     Bangladesh    .0230836 |
+  2. |  3        2       Pakistan    .0975686 |
+  3. |  3        3      Indonesia    .1641388 |
+  4. |  3        4      Sri Lanka    .2300839 |
+  5. |  3        5       Thailand    .3002517 |
+     |----------------------------------------|
+  6. |  3        6       Colombia    .5963939 |
+  7. |  3        7         Panama    .5834956 |
+  8. |  3        8     Yugoslavia    .3189657 |
+  9. |  3        9       Portugal    -.383313 |
+ 10. |  3       10        Uruguay    .5709916 |
+     |----------------------------------------|
+ 11. |  3       11         Greece    .6072472 |
+ 12. |  3       12        Ireland    1.480371 |
+ 13. |  3       13          Spain    .2365766 |
+ 14. |  3       14         Israel    2.517195 |
+ 15. |  3       15      Hong Kong    -229.073 |
+     |----------------------------------------|
+ 16. |  3       16    New Zealand    7.520329 |
+ 17. |  3       17        Austria    1.159659 |
+ 18. |  3       18      Singapore   -25.49224 |
+ 19. |  3       19          Italy    .6419317 |
+ 20. |  3       20             UK     1.47654 |
+     |----------------------------------------|
+ 21. |  3       21          Japan    4.292305 |
+ 22. |  3       22        Belgium    .4575562 |
+ 23. |  3       23       Trinidad    -.904206 |
+ 24. |  3       24    Netherlands    9.091455 |
+ 25. |  3       25        Finland      .67896 |
+     |----------------------------------------|
+ 26. |  3       26        Denmark    1.759899 |
+ 27. |  3       27   West Germany    1.054174 |
+ 28. |  3       28         France    1.558952 |
+ 29. |  3       29         Sweden     .907351 |
+ 30. |  3       30         Norway    1.812922 |
+     |----------------------------------------|
+ 31. |  3       31    Switzerland     3.74253 |
+ 32. |  3       32         Canada    .4738446 |
+ 33. |  3       33            USA           1 |
+     +----------------------------------------+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-> en = 4
+
+     +----------------------------------------+
+     | en   indexc        country         p_1 |
+     |----------------------------------------|
+  1. |  4        1     Bangladesh    1.256177 |
+  2. |  4        2       Pakistan    .4731916 |
+  3. |  4        3      Indonesia    .4576648 |
+  4. |  4        4      Sri Lanka    .7949094 |
+  5. |  4        5       Thailand    16.93923 |
+     |----------------------------------------|
+  6. |  4        6       Colombia    .1271541 |
+  7. |  4        7         Panama    .2973391 |
+  8. |  4        8     Yugoslavia    .6397428 |
+  9. |  4        9       Portugal    1.639775 |
+ 10. |  4       10        Uruguay    .0984165 |
+     |----------------------------------------|
+ 11. |  4       11         Greece    .5059133 |
+ 12. |  4       12        Ireland    .6129137 |
+ 13. |  4       13          Spain    1.017669 |
+ 14. |  4       14         Israel     2.15672 |
+ 15. |  4       15      Hong Kong   -879.5381 |
+     |----------------------------------------|
+ 16. |  4       16    New Zealand    .3673215 |
+ 17. |  4       17        Austria    1.975304 |
+ 18. |  4       18      Singapore    795.1004 |
+ 19. |  4       19          Italy    3.145272 |
+ 20. |  4       20             UK    2.242249 |
+     |----------------------------------------|
+ 21. |  4       21          Japan    100.5984 |
+ 22. |  4       22        Belgium    6.886858 |
+ 23. |  4       23       Trinidad     4.62197 |
+ 24. |  4       24    Netherlands    13.09784 |
+ 25. |  4       25        Finland    22.29664 |
+     |----------------------------------------|
+ 26. |  4       26        Denmark    28.72834 |
+ 27. |  4       27   West Germany    6.864776 |
+ 28. |  4       28         France    3.166397 |
+ 29. |  4       29         Sweden     7.64686 |
+ 30. |  4       30         Norway    34.59857 |
+     |----------------------------------------|
+ 31. |  4       31    Switzerland    3.335021 |
+ 32. |  4       32         Canada    .9541135 |
+ 33. |  4       33            USA           1 |
+     +----------------------------------------+
+
+
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. log close
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi.log
+  log type:  text
+ closed on:   6 Mar 2024, 10:50:50
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
