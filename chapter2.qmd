@@ -117,6 +117,7 @@ if (!dir.exists(dout)) {
 # Read ----
 
 fout <- paste0(dout, "/trefler.rds")
+fout2 <- paste0(dout, "/trefler_desc.rds")
 
 if (!file.exists(fout)) {
   trefler <- read_csv("first-edition/Chapter-2/hov_pub.csv", col_names = F) %>%
@@ -137,6 +138,23 @@ if (!file.exists(fout)) {
   # https://www.stata.com/manuals/degen.pdf
   # https://www.stata.com/manuals/degen.pdf
 
+  # Create an auxiliary table for delta values
+  delta_values <- tibble(
+    country = c(
+      "Bangladesh", "Pakistan", "Indonesia", "Sri Lanka", "Thailand",
+      "Colombia", "Panama", "Yugoslavia", "Portugal", "Uruguay", "Greece",
+      "Ireland", "Spain", "Israel", "Hong Kong", "New Zealand", "Austria",
+      "Singapore", "Italy", "UK", "Japan", "Belgium", "Trinidad", "Netherlands",
+      "Finland", "Denmark", "West Germany", "France", "Sweden", "Norway",
+      "Switzerland", "Canada", "USA"
+    ),
+    delta = c(
+      0.03, 0.09, 0.10, 0.09, 0.17, 0.16, 0.28, 0.29, 0.14, 0.11, 0.45,
+      0.55, 0.42, 0.49, 0.40, 0.38, 0.60, 0.48, 0.60, 0.58, 0.70, 0.65, 0.47,
+      0.72, 0.65, 0.73, 0.78, 0.74, 0.57, 0.69, 0.79, 0.55, 1
+    )
+  )
+
   trefler <- trefler %>%
     mutate(ypc_max = max(ypc)) %>%
     mutate(
@@ -152,65 +170,32 @@ if (!file.exists(fout)) {
     group_by(factor) %>%
     mutate(indexf = cur_group_id()) %>%
     ungroup() %>%
-    mutate(
-      delta = case_when(
-        country == "Bangladesh" ~ 0.03,
-        country == "Pakistan" ~ 0.09,
-        country == "Indonesia" ~ 0.10,
-        country == "Sri Lanka" ~ 0.09,
-        country == "Thailand" ~ 0.17,
-        country == "Colombia" ~ 0.16,
-        country == "Panama" ~ 0.28,
-        country == "Yugoslavia" ~ 0.29,
-        country == "Portugal" ~ 0.14,
-        country == "Uruguay" ~ 0.11,
-        country == "Greece" ~ 0.45,
-        country == "Ireland" ~ 0.55,
-        country == "Spain" ~ 0.42,
-        country == "Israel" ~ 0.49,
-        country == "Hong Kong" ~ 0.40,
-        country == "New Zealand" ~ 0.38,
-        country == "Austria" ~ 0.60,
-        country == "Singapore" ~ 0.48,
-        country == "Italy" ~ 0.60,
-        country == "UK" ~ 0.58,
-        country == "Japan" ~ 0.70,
-        country == "Belgium" ~ 0.65,
-        country == "Trinidad" ~ 0.47,
-        country == "Netherlands" ~ 0.72,
-        country == "Finland" ~ 0.65,
-        country == "Denmark" ~ 0.73,
-        country == "West Germany" ~ 0.78,
-        country == "France" ~ 0.74,
-        country == "Sweden" ~ 0.57,
-        country == "Norway" ~ 0.69,
-        country == "Switzerland" ~ 0.79,
-        country == "Canada" ~ 0.55,
-        country == "USA" ~ 1,
-        TRUE ~ 1
-      )
-    )
+    left_join(delta_values)
 
   # Labels ----
 
-  # Add stata-like labels to the columns
+  # Create a separate table with the variables description
 
-  # Maybe this is not the best way to do it, but it works
-  attr(trefler$country, "label") <- "Name of the country"
-  attr(trefler$factor, "label") <- "Name of the factor"
-  attr(trefler$at, "label") <- "Factor content of trade F=A*T"
-  attr(trefler$v, "label") <- "Endowment"
-  attr(trefler$y, "label") <- "GDP, World Bank, y=p*Q"
-  attr(trefler$b, "label") <- "Trade balance, World Bank b=p*T"
-  attr(trefler$ypc, "label") <- "GDP per capita, PWT"
-  attr(trefler$indexc, "label") <- "Country indentifier"
-  attr(trefler$indexf, "label") <- "Factor Indentifier"
+  trefler_desc <- tibble(
+    variable = c(
+      "country", "factor", "at", "v", "y", "b", "ypc", "indexc",
+      "indexf"
+    ),
+    description = c(
+      "Name of the country", "Name of the factor",
+      "Factor content of trade F=A*T", "Endowment", "GDP, World Bank, y=p*Q",
+      "Trade balance, World Bank b=p*T", "GDP per capita, PWT",
+      "Country indentifier", "Factor Indentifier"
+    )
+  )
 
   # Save ----
 
   saveRDS(trefler, fout)
+  saveRDS(trefler_desc, fout2)
 } else {
   trefler <- readRDS(fout)
+  trefler_desc <- readRDS(fout2)
 }
 ```
 
