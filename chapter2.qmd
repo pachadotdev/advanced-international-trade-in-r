@@ -382,7 +382,9 @@ trefler <- readRDS(fout) %>%
   arrange(country)
 
 # Correlation, should be .28
-cor(trefler$trat, trefler$athat2)
+trefler %>%
+  select(trat, athat2) %>%
+  cor()
 
 # Sign Test ----
 
@@ -432,40 +434,36 @@ trefler_wide <- trefler %>%
 # create all relevant trat_1 - trat_2, trat_1 - trat_3, etc.
 
 ranks <- expand_grid(
-  one = 1:8,
-  two = 1:9
+  x = 1:8,
+  y = 1:9
 ) %>%
-  filter(one < two)
+  filter(x < y)
 
 # The syntax here is based on internal R developer functions, but these
 # allow to create columns with minimal lines of code and avoids more complicated
 # bracket syntax
-trefler_rank <- map2(
-  ranks$one,
-  ranks$two,
+trefler_rank <- map2_df(
+  pull(ranks, x),
+  pull(ranks, y),
   function(x, y) {
     trefler_wide %>%
       mutate(
-        !!paste0("rank", x, y) :=
-          (!!sym(paste0("trat_", x)) - !!sym(paste0("trat_", y))) *
-            (!!sym(paste0("athat2_", x)) - !!sym(paste0("athat2_", y))) > 0
+        name = paste0("rank", x, y),
+        value = (!!sym(paste0("trat_", x)) - !!sym(paste0("trat_", y))) *
+          (!!sym(paste0("athat2_", x)) - !!sym(paste0("athat2_", y))) > 0
       ) %>%
-      select(country, indexc, starts_with("rank"))
+      select(country, indexc, name, value)
   }
 ) %>%
-  reduce(left_join, by = c("country", "indexc")) %>%
-  pivot_longer(
-    cols = starts_with("rank"),
-    names_to = "rank",
-    values_to = "value"
-  ) %>%
   group_by(country, indexc) %>%
   summarise(r1 = sum(value)) %>%
   mutate(r2 = r1 / 36)
 
 trefler_rank
 
-mean(trefler_rank$r2)
+trefler_rank %>%
+  pull(r2) %>%
+  mean()
 ```
 
 ### Extra step: formatting the table
@@ -476,7 +474,7 @@ trefler %>%
   summarize(
     p = sum(trat * athat2 > 0) / n()
   ) %>%
-  arrange(indexc) %>% #same order as in the book
+  arrange(indexc) %>% # same order as in the book
   select(country, sign_hov = p) %>%
   left_join(
     trefler_rank %>%
@@ -489,7 +487,7 @@ trefler %>%
       ) %>%
       mutate(
         country = "All countries",
-        rank_hov = mean(trefler_rank$r2)
+        rank_hov = mean(pull(trefler_rank, r2))
       ) %>%
       select(country, sign_hov = p, rank_hov)
   ) %>%
@@ -660,7 +658,9 @@ trefler <- readRDS(fout) %>%
   )
 
 # Correlation should be .41
-cor(trefler$trat, trefler$athat2)
+trefler %>%
+  select(trat, athat2) %>%
+  cor()
 
 # Sign Test ----
 
@@ -699,37 +699,33 @@ trefler_wide <- trefler %>%
   )
 
 ranks <- expand_grid(
-  one = 1:8,
-  two = 1:9
+  x = 1:8,
+  y = 1:9
 ) %>%
-  filter(one < two)
+  filter(x < y)
 
-trefler_rank <- map2(
-  ranks$one,
-  ranks$two,
+trefler_rank <- map2_df(
+  pull(ranks, x),
+  pull(ranks, y),
   function(x, y) {
     trefler_wide %>%
       mutate(
-        !!paste0("rank", x, y) :=
-          (!!sym(paste0("trat_", x)) - !!sym(paste0("trat_", y))) *
-            (!!sym(paste0("athat2_", x)) - !!sym(paste0("athat2_", y))) > 0
+        name = paste0("rank", x, y),
+        value = (!!sym(paste0("trat_", x)) - !!sym(paste0("trat_", y))) *
+          (!!sym(paste0("athat2_", x)) - !!sym(paste0("athat2_", y))) > 0
       ) %>%
-      select(country, indexc, starts_with("rank"))
+      select(country, indexc, name, value)
   }
 ) %>%
-  reduce(left_join, by = c("country", "indexc")) %>%
-  pivot_longer(
-    cols = starts_with("rank"),
-    names_to = "rank",
-    values_to = "value"
-  ) %>%
   group_by(country, indexc) %>%
   summarise(r1 = sum(value)) %>%
   mutate(r2 = r1 / 36)
 
 trefler_rank
 
-mean(trefler_rank$r2)
+trefler_rank %>%
+  pull(r2) %>%
+  mean()
 ```
 
 ### Extra step: formatting the table
@@ -753,7 +749,7 @@ trefler %>%
       ) %>%
       mutate(
         country = "All countries",
-        rank_hov = mean(trefler_rank$r2)
+        rank_hov = mean(pull(trefler_rank, r2))
       ) %>%
       select(country, sign_hov = p, rank_hov)
   ) %>%
@@ -998,7 +994,9 @@ trefler3 <- trefler2 %>%
 # Compute Pi: factor productivity
 # No need to save intermediate outputs, we proceed with iteration
 trefler4 <- map_df(
-  unique(trefler3$en),
+  trefler3 %>%
+    distinct(en) %>%
+    pull(),
   function(x) {
     d <- trefler3 %>%
       filter(en == x) %>%
@@ -1026,7 +1024,7 @@ trefler4 <- map_df(
     #   .[[iter + 1]]
 
     d %>%
-      select(en, country, indexc, p1)
+      select(country, indexc, en, p1)
   }
 )
 ```
