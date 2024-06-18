@@ -1,5 +1,5 @@
 
-# Chapter 2. The Heckscher-Ohlin Model"
+# Chapter 2. The Heckscher-Ohlin Model
 
 In these exercises, you will reproduce some of the empirical results from Trefler (1993, 1995).  To complete the exercise, the Excel file `hov_pub.csv` should be stored in the directory:
 `c:\Empirical_Exercise\Chapter_2\hov_pub.csv`.  After this, run the STATA program `hov_pub.do`, which will create a new STATA data file `trefler.dta`.
@@ -109,9 +109,7 @@ fzip <- "first-edition/Chapter-2.zip"
 dout <- gsub("\\.zip$", "", fzip)
 
 if (!dir.exists(dout)) {
-  archive_extract("first-edition/Chapter-2.zip",
-    dir = "first-edition/Chapter-2"
-  )
+  archive_extract(fzip, dir = dout)
 }
 
 # Read ----

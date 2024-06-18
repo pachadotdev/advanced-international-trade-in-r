@@ -1,0 +1,723 @@
+
+# Chapter 4. Trade in Intermediate Inputs and Wages
+
+## Data Description
+
+Here are some variable definitions in data file `data_Chp4` to help you in the
+replication exercise.  The variable names also give you a hint as to the naming
+conventions used by Feenstra & Hanson with their other variables.
+
+### Sources
+
+#### NBER productivity dataset (Bartelsman, Becker, Gray):
+
+| Variable | Description |
+|----------|-------------|
+| sic      | Standard Industrial Classification (4-digit manufacturing) |
+| year     | Year ranges from 58 to 97 |
+| emp      | Total employment in 1000s |
+| pay      | Total payroll in $1,000,000 |
+| prode    | Production workers in 1000s |
+| prodh    | Production worker hours in 1,000,000 |
+| prodw    | Production worker wages in $1,000,000 |
+| vship    | Total value of shipments in $1,000,000 |
+| material | Total cost of materials in $1,000,000 |
+| vadd     | Total value added in $1,000,000 |
+| invest   | Total capital expenditure in $1,000,000 |
+| invent   | End-of-year inventories in $1,000,000 |
+| energy   | Cost of electric & fuels in $1,000,000 |
+| cap      | Total real capital stock in $1,000,000 |
+| equip    | Real capital: equipment in $1,000,000 |
+| plant    | Real capital: structures in $1,000,000 |
+| piship   | Deflator for VSHIP 1987=1.000 |
+| pimat    | Deflator for MATCOST 1987=1.000 |
+| piinv    | Deflator for INVEST 1987=1.000 |
+| pien     | Deflator for ENERGY 1987=1.000 |
+
+#### Other variables created by Feenstra and Hanson:
+
+The prefix "a" generally denotes an average of that variable over two periods.
+
+The prefix "d" indicates annual average change in that variable x 100.
+
+| Variable | Description |
+|----------|-------------|
+| sic72    | 4 digit SIC code |
+| sic2     | 2 digit SIC code |
+| ptfp     | primary TFP |
+| err      | error as defined in (4.26) of Chapter 4, or (3) in Feenstra and Hanson (1999) |
+| simat1a  | Share of imported materials (broad outsourcing) |
+| simat1b  | share of imported materials from inside 2-digit industry (narrow outsourcing) |
+| diffout  | = simat1a – simat1b = share of imported materials from outside 2-digit industry |
+| imat     | imported materials |
+| amsh     | average material share |
+| aosh     | average energy share |
+| adlhw    | annual change in log production wage |
+| adlnw    | annual chage in log non-production wage |
+| adlpk    | annual change in log capital price |
+| amesh    | aosh + amsh |
+| apsh     | average production share |
+| ansh     | average non-production share |
+| aksh     | average capital share |
+| nwsh     | nonproduction share of the total wages |
+| dlpvad    | change in log value-added                                                                            |
+| dlpmx     | change in log material price                                                                         |
+| dlpe      | change in log energy price                                                                           |
+| dlp       | change in log price                                                                                  |
+| dlky      | change in log capital stock to real shipments ratio                                                  |
+| dly       | change in log real shipments                                                                         |
+| mvshipsh  | industry share of total manufacturing shipments, averaged over the first and last period             |
+| dsimat1b  | change in outsourcing (narrow); that is, change in imported inputs from the same 2-digit industry divided by total materials purchases |
+| dsimat1a  | change in outsourcing (broad); that is, imported inputs divided by total material purchases           |
+| dofsh     | change in office equipment/total capital (capital=pstk x ex post rental price)                       |
+| dofsh1    | change in office equipment/total capital (capital=pstk x ex ante rental price)                       |
+| dhtsh     | change in High-tech capital/total capital (capital=pstk x ex post rental price)                       |
+| dhtsh1    | change in High-tech capital/total capital (capital=pstk x ex ante rental price)                       |
+| ci        | computer investment/total investment                                                                 |
+
+## Exercise 1
+
+Download the NBER productivity dataset at http://www.nber.org/nberces/nbprod96.htm, compute the relative wage and relative employment for 1958 – 1996, and reconstruct Figure 4.1 and 4.2.
+
+Note: Given this data, you need to first compute the wage rates in production and nonproduction sectors using the following formula ($i$ denotes the industry):
+
+\begin{align}
+  \text{Production worker wage rate} &= \frac{\sum_i \text{production worker wage bill}_i}{\sum_i \text{production workers}_i} \\
+  \text{Non production worker wage rate} &= \frac{\sum_i \text{non production worker wage bill}_i}{\sum_i \text{non production workers}_i} \\
+  &= \frac{\sum_i (\text{total pay roll}_i - \text{production worker wage bill}_i)}{\sum_i (\text{total employment}_i - \text{production workers}_i)}
+\end{align}
+
+### Feenstra's code
+
+
+```stata
+set mem 300m
+
+log using c:\Empirical_Exercise\Chapter_4\log_4_2.log,replace
+
+use c:\Empirical_Exercise\Chapter_4\data_Chp4,clear
+drop if year==1972|year==1987
+drop if sic72==2067|sic72==2794|sic72==3483
+
+egen wagebill=sum(pay), by(year)
+gen share=pay/wagebill
+
+sort sic72 year
+by sic72: gen lagshare=share[_n-1]
+gen ashare=(share+lagshare)/2
+
+by sic72: gen lagnwsh=nwsh[_n-1]
+gen chanwsh=(nwsh-lagnwsh)*100/11
+
+gen wchanwsh=chanwsh*ashare
+gen wdlky=dlky*ashare
+gen wdly=dly*ashare
+gen wdsimat1a=dsimat1a*ashare
+gen wdsimat1b=dsimat1a*ashare
+gen diffout=dsimat1a-dsimat1b
+gen wdiffout=(dsimat1a-dsimat1b)*ashare
+gen wcosh_exp=dofsh*ashare
+gen htsh_exp=dhtsh-dofsh
+gen whtsh_exp=(dhtsh-dofsh)*ashare
+gen wcosh_exa=dofsh1*ashare
+gen htsh_exa=dhtsh1-dofsh1
+gen whtsh_exa=(dhtsh1-dofsh1)*ashare
+gen wcosh=ci*ashare
+gen whtsh=dhtsh*ashare
+
+* Check with the first column of Table 4.4 *
+
+tabstat wchanwsh wdlky wdly wdsimat1a wcosh_exp whtsh_exp wcosh_exa whtsh_exa wcosh whtsh, stats(sum)
+
+* Reproduce the rest of the columns in Table 4.4 *
+
+regress chanwsh dlky dly dsimat1a dofsh htsh_exp [aw=ashare], cluster (sic2)
+
+regress chanwsh dlky dly dsimat1a dofsh1 htsh_exa [aw=ashare], cluster (sic2)
+
+regress chanwsh dlky dly dsimat1a ci dhtsh [aw=ashare], cluster (sic2)
+
+* To instead distinguish narrow and other outsourcing, we can reproduce column (1) of table III in Feenstra and Hanson, 1999 *
+
+tabstat wchanwsh wdlky wdly wdsimat1b wdiffout wcosh_exp whtsh_exp wcosh_exa whtsh_exa wcosh whtsh, stats(sum)
+
+* Reproduce the rest of the columns in Table III *
+
+regress chanwsh dlky dly dsimat1b diffout dofsh htsh_exp [aw=ashare], cluster (sic2)
+
+regress chanwsh dlky dly dsimat1b diffout dofsh1 htsh_exa [aw=ashare], cluster (sic2)
+
+regress chanwsh dlky dly dsimat1b diffout ci dhtsh [aw=ashare], cluster (sic2)
+
+log close
+
+clear
+exit
+```
+
+### My code
+
+```{r ch2_ex1}
+# Packages ----
+
+library(archive)
+library(haven)
+library(dplyr)
+library(lmtest)
+library(sandwich)
+
+# Extract ----
+
+fzip <- "first-edition/Chapter-4.zip"
+dout <- gsub("\\.zip$", "", fzip)
+
+if (!dir.exists(dout)) {
+  archive_extract(fzip, dir = dout)
+}
+
+# Read and transform ----
+
+fout <- paste0(dout, "/datachp4.rds")
+
+if (!file.exists(fout)) {
+  datachp4 <- read_dta(paste0(dout, "/data_Chp4.dta"))
+  saveRDS(datachp4, fout)
+} else {
+  datachp4 <- readRDS(fout) %>%
+    filter(!year %in% c(1972, 1987)) %>%
+    filter(!sic72 %in% c(2067, 2794, 3483)) %>%
+    group_by(year) %>%
+    mutate(wagebill = sum(pay)) %>%
+    ungroup() %>%
+    mutate(share = pay / wagebill) %>%
+    arrange(sic72, year) %>%
+    group_by(sic72) %>%
+    mutate(
+      lagshare = lag(share),
+      ashare = (share + lagshare) / 2,
+      lagnwsh = lag(nwsh),
+      chanwsh = (nwsh - lagnwsh) * 100 / 11
+    ) %>%
+    ungroup() %>%
+    mutate(
+      wchanwsh = chanwsh * ashare,
+      wdlky = dlky * ashare,
+      wdly = dly * ashare,
+      wdsimat1a = dsimat1a * ashare,
+      wdsimat1b = dsimat1a * ashare,
+      diffout = dsimat1a - dsimat1b,
+      wdiffout = (dsimat1a - dsimat1b) * ashare,
+      wcosh_exp = dofsh * ashare,
+      htsh_exp = dhtsh - dofsh,
+      whtsh_exp = (dhtsh - dofsh) * ashare,
+      wcosh_exa = dofsh1 * ashare,
+      htsh_exa = dhtsh1 - dofsh1,
+      whtsh_exa = (dhtsh1 - dofsh1) * ashare,
+      wcosh = ci * ashare,
+      whtsh = dhtsh * ashare
+    )
+}
+
+# Check with the first column of Table 4.4 ----
+
+datachp4 %>%
+  select(wchanwsh:whtsh) %>%
+  summarise_all(sum, na.rm = T)
+
+# Reproduce the rest of the columns in Table 4.4 ----
+
+reg1 <- lm(
+  chanwsh ~ dlky + dly + dsimat1a + dofsh + htsh_exp,
+  data = datachp4,
+  weights = datachp4$ashare
+)
+
+# summary(reg1) # no clustered robust standard errors
+coeftest(reg1, vcov = vcovCL(reg1, cluster = datachp4$sic2))
+
+reg2 <- lm(
+  chanwsh ~ dlky + dly + dsimat1a + dofsh1 + htsh_exa,
+  data = datachp4,
+  weights = datachp4$ashare
+)
+
+coeftest(reg2, vcov = vcovCL(reg2, cluster = datachp4$sic2))
+
+reg3 <- lm(
+  chanwsh ~ dlky + dly + dsimat1a + ci + dhtsh,
+  data = datachp4,
+  weights = datachp4$ashare
+)
+
+coeftest(reg3, vcov = vcovCL(reg3, cluster = datachp4$sic2))
+
+# To instead distinguish narrow and other outsourcing, we can reproduce column
+# (1) of table III in Feenstra and Hanson, 1999 ----
+
+datachp4 %>%
+  select(wchanwsh:whtsh) %>%
+  summarise_all(sum, na.rm = T)
+
+# Reproduce the rest of the columns in Table III ----
+
+reg4 <- lm(
+  chanwsh ~ dlky + dly + dsimat1b + diffout + dofsh + htsh_exp,
+  data = datachp4,
+  weights = datachp4$ashare
+)
+
+coeftest(reg4, vcov = vcovCL(reg4, cluster = datachp4$sic2))
+
+reg5 <- lm(
+  chanwsh ~ dlky + dly + dsimat1b + diffout + dofsh1 + htsh_exa,
+  data = datachp4,
+  weights = datachp4$ashare
+)
+
+coeftest(reg5, vcov = vcovCL(reg5, cluster = datachp4$sic2))
+
+reg6 <- lm(
+  chanwsh ~ dlky + dly + dsimat1b + diffout + ci + dhtsh,
+  data = datachp4,
+  weights = datachp4$ashare
+)
+
+coeftest(reg6, vcov = vcovCL(reg6, cluster = datachp4$sic2))
+```
+
+## Exercise 2
+
+Run the STATA program `Problem_4_2.do` to reproduce the regressions in Table 4.4 (which is simplified from Table III in Feenstra and Hanson, 1999). Then answer:
+
+a. What weights are used in these regressions?
+b. How are the results affected if these weights are not used?
+
+### Feenstra's code
+
+```stata
+set mem 3m
+
+log using c:\Empirical_Exercise\Chapter_4\log_4_3a.log,replace
+
+use c:\Empirical_Exercise\Chapter_4\data_Chp4.dta, clear
+
+keep if year==1990
+drop if sic72==2067
+drop if sic72==2794
+drop if sic72==3483
+gen etfp=ptfp-err
+gen adj1=1/(1-amesh)
+gen etfp1=adj1*etfp
+gen dlpvad1=adj1*dlpvad
+gen apsh1=adj1*apsh
+gen ansh1=adj1*ansh
+gen aksh1=adj1*aksh
+gen mshxpr=amsh*dlpmx
+gen eshxpr=aosh*dlpe
+
+* Reproduce Table 4.5 *
+
+gen dlp34=dlp-mshxpr-eshxpr
+
+regress dlp34 ptfp apsh ansh aksh [aw=mvshipsh], robust
+
+preserve
+drop if sic72==3573
+regress dlp34 ptfp apsh ansh aksh [aw=mvshipsh], robust
+
+regress dlp apsh ansh aksh mshxpr eshxpr [aw=mvshipsh], robust
+restore
+
+regress dlpvad1 etfp1 apsh1 ansh1 aksh1 [aw=mvshipsh],robust noconstant
+
+regress dlp etfp apsh ansh aksh mshxpr eshxpr [aw=mvshipsh], robust
+
+log close
+clear
+exit
+```
+
+### My code
+
+```{r ch2_ex2}
+# Read and transform ----
+
+datachp4 <- readRDS(fout) %>%
+  filter(year == 1990) %>%
+  filter(!sic72 %in% c(2067, 2794, 3483)) %>%
+  mutate(
+    etfp = ptfp - err,
+    adj1 = 1 / (1 - amesh),
+    etfp1 = adj1 * etfp,
+    dlpvad1 = adj1 * dlpvad,
+    apsh1 = adj1 * apsh,
+    ansh1 = adj1 * ansh,
+    aksh1 = adj1 * aksh,
+    mshxpr = amsh * dlpmx,
+    eshxpr = aosh * dlpe
+  )
+
+# Reproduce Table 4.5 ----
+
+datachp4 <- datachp4 %>%
+  mutate(dlp34 = dlp - mshxpr - eshxpr)
+
+reg1 <- lm(
+  dlp34 ~ ptfp + apsh + ansh + aksh,
+  data = datachp4,
+  weights = datachp4$mvshipsh
+)
+
+# HC1 is the Stata default
+coeftest(reg1, vcov = vcovHC(reg1, type = "HC1"))
+
+# there is no equivalent to the Stata command "preserve" in R
+# therefore, I make a copy of the data and drop the observations
+
+datachp4_2 <- datachp4 %>%
+  filter(sic72 != 3573)
+
+reg2 <- lm(
+  dlp34 ~ ptfp + apsh + ansh + aksh,
+  data = datachp4_2,
+  weights = datachp4_2$mvshipsh
+)
+
+coeftest(reg2, vcov = vcovHC(reg2, type = "HC1"))
+
+reg3 <- lm(
+  dlp ~ apsh + ansh + aksh + mshxpr + eshxpr,
+  data = datachp4_2,
+  weights = datachp4_2$mvshipsh
+)
+
+coeftest(reg3, vcov = vcovHC(reg3, type = "HC1"))
+
+reg4 <- lm(
+  dlpvad1 ~ etfp1 + apsh1 + ansh1 + aksh1 + 0,
+  data = datachp4,
+  weights = datachp4$mvshipsh
+)
+
+coeftest(reg4, vcov = vcovHC(reg4, type = "HC1"))
+
+# regress dlp etfp apsh ansh aksh mshxpr eshxpr [aw=mvshipsh], robust
+
+reg5 <- lm(
+  dlp ~ etfp + apsh + ansh + aksh + mshxpr + eshxpr,
+  data = datachp4,
+  weights = datachp4$mvshipsh
+)
+
+coeftest(reg5, vcov = vcovHC(reg5, type = "HC1"))
+```
+
+## Exercise 3
+
+Run the STATA program `Problem_4_3a.do` to reproduce the regressions in Table 4.5 (i.e. Table I in Feenstra and Hansen, 1999). Then run `Problem_4_3b.do` to perform the two-step regression, Table IV and Table V in Feenstra and Hanson (1999).  Note that Table V is obtained using the coefficients in the first column of Table IV.
+
+### Feenstra's code
+
+```stata
+set mem 3m
+capture log close
+log using c:\Empirical_Exercise\Chapter_4\log_4_3b.log,replace
+
+use c:\Empirical_Exercise\Chapter_4\data_Chp4, clear
+
+keep if year==1990
+drop if sic72==2067
+drop if sic72==2794
+drop if sic72==3483
+gen etfp=ptfp-err
+gen adj1=1/(1-amesh)
+gen etfp1=adj1*etfp
+gen dlpvad1=adj1*dlpvad
+gen apsh1=adj1*apsh
+gen ansh1=adj1*ansh
+gen aksh1=adj1*aksh
+gen t4dlpvad=(dlpvad+etfp)*adj1
+preserve
+
+* Reproduce the first column of Table IV  *
+* generating difference measure of outsourcing *
+
+gen dsimatd1=dsimat1a-dsimat1b
+
+* generating difference measure of high tech share *
+
+gen dhtdsh=dhtsh-dofsh
+
+* check whether we are using the right variable as described in table II *
+
+sum dsimatd1 dhtdsh dofsh [aw=mvshipsh]
+
+regress t4dlpvad dsimat1b dsimatd1 dofsh dhtdsh [aw=mvshipsh], cluster(sic2)
+
+* Reproduce Table V using the coefficients in column(1) of Table IV *
+
+gen wt=mvshipsh^.5
+gen apsh5=apsh1*wt
+gen ansh5=ansh1*wt
+gen aksh5=aksh1*wt
+gen narrout=dsimat1b*wt*_coef[dsimat1b]
+gen diffout=dsimatd1*wt*_coef[dsimatd1]
+gen comsh=dofsh*wt*_coef[dofsh]
+gen difcom=dhtdsh*wt*_coef[dhtdsh]
+
+sum narrout diffout comsh difcom
+
+regress narrout apsh5 ansh5 aksh5, noconstant
+regress diffout apsh5 ansh5 aksh5, noconstant
+regress comsh apsh5 ansh5 aksh5, noconstant
+regress difcom apsh5 ansh5 aksh5, noconstant
+
+restore
+
+* Reproduce column (2) of Table IV *
+
+preserve
+
+* generating difference measure of outsourcing *
+
+gen dsimatd1=dsimat1a-dsimat1b
+
+* generate difference measure of high tech share with ex ante rental price *
+
+gen dhtdsh1=dhtsh1-dofsh1
+
+* check whether we are using the right variable as described in table II *
+
+sum dsimatd1 dhtdsh1 dofsh1 [aw=mvshipsh]
+
+regress t4dlpvad dsimat1b dsimatd1 dofsh1 dhtdsh1 [aw=mvshipsh], cluster(sic2)
+
+* Reproduce column (3) of Table IV *
+
+* generating difference measure of high tech share *
+
+gen dhtdsh=dhtsh-dofsh
+
+regress t4dlpvad dsimat1b dsimatd1 ci dhtsh [aw=mvshipsh], cluster(sic2)
+
+log close
+clear
+
+exit
+```
+
+### My code
+
+```{r ch2_ex3}
+# Packages ----
+
+library(tidyr)
+
+# Read and transform ----
+
+datachp4 <- readRDS(fout) %>%
+  filter(year == 1990) %>%
+  filter(!sic72 %in% c(2067, 2794, 3483)) %>%
+  mutate(
+    etfp = ptfp - err,
+    adj1 = 1 / (1 - amesh),
+    etfp1 = adj1 * etfp,
+    dlpvad1 = adj1 * dlpvad,
+    apsh1 = adj1 * apsh,
+    ansh1 = adj1 * ansh,
+    aksh1 = adj1 * aksh,
+    t4dlpvad = (dlpvad + etfp) * adj1
+  )
+
+# Reproduce the first column of Table IV
+# generating difference measure of outsourcing ----
+
+datachp4_2 <- datachp4 %>%
+  mutate(dsimatd1 = dsimat1a - dsimat1b)
+
+# Generating difference measure of high tech share ----
+
+datachp4_2 <- datachp4_2 %>%
+  mutate(dhtdsh = dhtsh - dofsh)
+
+# Check whether we are using the right variable as described in table II ----
+
+# sum dsimatd1 dhtdsh dofsh [aw=mvshipsh] is particularly hard to replicate
+
+datachp4_2_1 <- datachp4_2 %>%
+  select(dsimatd1, dhtdsh, dofsh) %>%
+  summarise_all(list(nobs = length, min = min, max = max, sd = sd)) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "variable",
+    values_to = "value"
+  ) %>%
+  separate(variable, into = c("var", "stat"), sep = "_") %>%
+  pivot_wider(
+    names_from = stat,
+    values_from = value
+  )
+
+datachp4_2_2 <- datachp4_2 %>%
+  summarise(weight = sum(mvshipsh)) %>%
+  bind_cols(var = c("dsimatd1", "dhtdsh", "dofsh"))
+
+datachp4_2_3 <- datachp4_2 %>%
+  mutate(across(c(dsimatd1, dhtdsh, dofsh), ~ . * mvshipsh)) %>%
+  select(dsimatd1, dhtdsh, dofsh) %>%
+  summarise_all(list(wsum = sum)) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "variable",
+    values_to = "value"
+  ) %>%
+  separate(variable, into = c("var", "stat"), sep = "_") %>%
+  pivot_wider(
+    names_from = stat,
+    values_from = value
+  )
+
+datachp4_2_1 %>%
+  left_join(datachp4_2_2) %>%
+  left_join(datachp4_2_3)
+
+reg1 <- lm(
+  t4dlpvad ~ dsimat1b + dsimatd1 + dofsh + dhtdsh,
+  data = datachp4_2,
+  weights = datachp4_2$mvshipsh
+)
+
+coeftest(reg1, vcov = vcovCL(reg1, cluster = datachp4_2$sic2))
+
+# Reproduce Table V using the coefficients in column(1) of Table IV ----
+
+datachp4_2 <- datachp4_2 %>%
+  mutate(
+    wt = sqrt(mvshipsh),
+    apsh5 = apsh1 * wt,
+    ansh5 = ansh1 * wt,
+    aksh5 = aksh1 * wt,
+    narrout = dsimat1b * wt * coef(reg1)["dsimat1b"],
+    diffout = dsimatd1 * wt * coef(reg1)["dsimatd1"],
+    comsh = dofsh * wt * coef(reg1)["dofsh"],
+    difcom = dhtdsh * wt * coef(reg1)["dhtdsh"]
+  )
+
+datachp4_2 %>%
+  select(narrout:difcom) %>%
+  summarise_all(
+    list(nobs = length, mean = mean, sd = sd, min = min, max = max)
+  ) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "variable",
+    values_to = "value"
+  ) %>%
+  separate(variable, into = c("var", "stat"), sep = "_") %>%
+  pivot_wider(
+    names_from = stat,
+    values_from = value
+  )
+
+reg2 <- lm(
+  narrout ~ apsh5 + ansh5 + aksh5 + 0,
+  data = datachp4_2
+)
+
+summary(reg2)
+
+reg3 <- lm(
+  diffout ~ apsh5 + ansh5 + aksh5 + 0,
+  data = datachp4_2
+)
+
+summary(reg3)
+
+reg4 <- lm(
+  comsh ~ apsh5 + ansh5 + aksh5 + 0,
+  data = datachp4_2
+)
+
+summary(reg4)
+
+reg5 <- lm(
+  difcom ~ apsh5 + ansh5 + aksh5 + 0,
+  data = datachp4_2
+)
+
+summary(reg5)
+
+# Reproduce column (2) of Table IV ----
+
+## Generating difference measure of outsourcing ----
+
+datachp4 <- datachp4 %>%
+  mutate(dsimatd1 = dsimat1a - dsimat1b)
+
+## Generate difference measure of high tech share with ex ante rental price ----
+
+datachp4 <- datachp4 %>%
+  mutate(dhtdsh1 = dhtsh1 - dofsh1)
+
+## Check whether we are using the right variable as described in table II ----
+
+datachp4 %>%
+  select(dsimatd1, dhtdsh1, dofsh1) %>%
+  summarise_all(list(nobs = length, min = min, max = max, sd = sd)) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "variable",
+    values_to = "value"
+  ) %>%
+  separate(variable, into = c("var", "stat"), sep = "_") %>%
+  pivot_wider(
+    names_from = stat,
+    values_from = value
+  ) %>%
+  left_join(
+    datachp4 %>%
+      summarise(weight = sum(mvshipsh)) %>%
+      bind_cols(var = c("dsimatd1", "dhtdsh1", "dofsh1"))
+  ) %>%
+  left_join(
+    datachp4 %>%
+      mutate(across(c(dsimatd1, dhtdsh1, dofsh1), ~ . * mvshipsh)) %>%
+      select(dsimatd1, dhtdsh1, dofsh1) %>%
+      summarise_all(list(wsum = sum)) %>%
+      pivot_longer(
+        cols = everything(),
+        names_to = "variable",
+        values_to = "value"
+      ) %>%
+      separate(variable, into = c("var", "stat"), sep = "_") %>%
+      pivot_wider(
+        names_from = stat,
+        values_from = value
+      )
+  )
+
+# regress t4dlpvad dsimat1b dsimatd1 dofsh1 dhtdsh1 [aw=mvshipsh], cluster(sic2)
+
+reg2 <- lm(
+  t4dlpvad ~ dsimat1b + dsimatd1 + dofsh1 + dhtdsh1,
+  data = datachp4,
+  weights = datachp4$mvshipsh
+)
+
+coeftest(reg2, vcov = vcovCL(reg2, cluster = datachp4$sic2))
+
+# Reproduce column (3) of Table IV ----
+
+## Generating difference measure of high tech share ----
+
+datachp4 <- datachp4 %>%
+  mutate(dhtdsh = dhtsh - dofsh)
+
+reg3 <- lm(
+  t4dlpvad ~ dsimat1b + dsimatd1 + ci + dhtsh,
+  data = datachp4,
+  weights = datachp4$mvshipsh
+)
+
+coeftest(reg3, vcov = vcovCL(reg3, cluster = datachp4$sic2))
+```

@@ -12,6 +12,7 @@ book:
   chapters:
     - index.qmd
     - chapter2.qmd
+    - chapter4.qmd
     
 format:
   html:
