@@ -1,0 +1,326 @@
+
+# Chapter 5. Increasing Returns and the Gravity Equation Empirical Exercise
+
+## Documentation
+
+US-Canada data for Anderson and van Wincoop (2002) 
+
+There are a total of 63 US-Canada regions (states, District of Columbia, provinces and territories). They are listed below.  The regressions, however, are based on the same 40 states and provinces as in McCallum (these are indicated with a star below). 
+
+1. Alabama*
+2. Alaska         
+3. Arizona*
+4. Arkansas     
+5. California*
+6. Colorado     
+7. Connecticut 
+8. Delaware     
+9. Florida*
+10. Georgia*
+11. Hawaii       
+12. Idaho*
+13. Illinois*
+14. Indiana*
+15. Iowa         
+16. Kansas     
+17. Kentucky*
+18. Louisiana*
+19. Maine*
+20. Maryland*  
+21. Massachusetts*
+22. Michigan*      
+23. Minnesota*    
+24. Mississippi     
+25. Missouri*      
+26. Montana*      
+27. Nebraska        
+28. Nevada           
+29. New Hampshire*
+30. New Jersey*      
+31. New Mexico     
+32. New York*       
+33. North Carolina*
+34. North Dakota*  
+35. Ohio*            
+36. Oklahoma     
+37. Oregon         
+38. Pennsylvania*
+39. Rhode Island 
+40. South Carolina  
+41. South Dakota    
+42. Tennessee*      
+43. Texas*          
+44. Utah             
+45. Vermont*    
+46. Virginia*     
+47. Washington*   
+48. West Virginia  
+49. Wisconsin*     
+50. Wyoming        
+51. Dist. of Col.    
+52. Alberta*         
+53. British Columbia*
+54. Manitoba*        
+55. New Brunswick *
+56. Newfoundland*
+57. NW Territories 
+58. Nova Scotia*    
+59. Ontario*         
+60. Prince Edward Island*
+61. Quebec*           
+62. Saskatchewan*
+63. Yukon Territory
+
+Data files:
+
+1. dist.csv: Contains distances between the 40 regions listed above. The distances are in kilometers and are between the capitals of the regions. 
+2. gdp_ce_93.csv and gdp_ci_93.csv: Contains nominal GDP in millions of Canadian dollars in 1993 for the 40 regions above. 
+3. trade_93.csv
+
+Contains 1993 trade data between the 40 regions listed above, in US dollars.  The indicator variables “1_ex” and “1_im” equal 1 if the exporter or importer is a US state, and 2 for a Canadian province.
+
+## Empirical exercise
+
+In this exercise, you are asked to reproduce the empirical results shown in Table 5.2.  There are  four datasets available:  “dist.csv” which is distances; “gdp_ce_93.csv” which is GDP in exporting location in 1993; “gdp_ci_93.csv” which is GDP in importing location in 1993; and “trade_93.csv” which is trade in 1993.  To complete the exercise, these files should be stored in the directory:  c:\Empirical_Exercise\Chapter_5\.  After this, run the STATA program “data_trans.do,” which will convert these datasets to STATA files with the same name.  The trade data is already converted into US dollars, but GDP data is in Canadian dollars, so this is converted with the exchange rate 1 Canadian dollar = 0.775134 U.S. dollars.
+
+## Exercise 1
+
+Run the program “gravity_1.do” to replicate the gravity equations in columns (1)-(3) of Table 5.2.
+
+### Feenstra's code
+
+
+```stata
+capture log close
+log using c:\Empirical_Exercise\Chapter_5\gravity_1.log, replace
+
+set matsize 100
+
+use c:\Empirical_Exercise\Chapter_5\trade_93,clear
+sort c_e
+merge c_e using c:\Empirical_Exercise\Chapter_5\gdp_ce_93
+drop _merge
+sort c_i
+merge c_i using c:\Empirical_Exercise\Chapter_5\gdp_ci_93
+drop _merge
+drop if vx==0
+drop if dist==0
+
+gen lnvx=log(vx)
+gen lndist=log(dist)
+gen lngdp_ce=log(gdp_ce)
+gen lngdp_ci=log(gdp_ci)
+
+* Estimate Gravity Equation from the Canadian Perspective *
+
+preserve
+gen d_ca=0
+replace d_ca=1 if (l_ex==2) & (l_im==2)
+drop if (l_ex==1) & (l_im==1)
+
+regress lnvx lngdp_ce lngdp_ci lndist d_ca
+restore
+
+* Estimate Gravity Equation from the U.S. Perspective *
+
+preserve
+gen d_us=0
+replace d_us=1 if (l_ex==1) & (l_im==1)
+drop if (l_ex==2) & (l_im==2)
+
+regress lnvx lngdp_ce lngdp_ci lndist d_us
+restore
+
+* Estimate Gravity Equation by Pooling All Data *
+
+preserve
+gen d_ca=0
+gen d_us=0
+replace d_ca=1 if (l_ex==2) & (l_im==2)
+replace d_us=1 if (l_ex==1) & (l_im==1)
+
+regress lnvx lngdp_ce lngdp_ci lndist d_ca d_us
+vce
+restore
+
+clear
+
+log close
+```
+
+### My code
+
+```{r ch2_ex1}
+# Packages ----
+
+library(archive)
+library(haven)
+library(dplyr)
+
+# Extract ----
+
+fzip <- "first-edition/Chapter-5.zip"
+dout <- gsub("\\.zip$", "", fzip)
+
+if (!dir.exists(dout)) {
+  archive_extract(fzip, dir = dout)
+}
+
+# Read and transform ----
+
+fout <- paste0(dout, "/trade_93.rds")
+
+if (!file.exists(fout)) {
+  trade_93 <- read_dta(paste0(dout, "/trade_93.dta"))
+  gdp_ce_93 <- read_dta(paste0(dout, "/gdp_ce_93.dta"))
+  gdp_ci_93 <- read_dta(paste0(dout, "/gdp_ci_93.dta"))
+
+  trade_93 <- trade_93 %>%
+    left_join(gdp_ce_93, by = "c_e") %>%
+    left_join(gdp_ci_93, by = "c_i") %>%
+    filter(vx != 0, dist != 0) %>%
+    mutate(
+      lnvx = log(vx),
+      lndist = log(dist),
+      lngdp_ce = log(gdp_ce),
+      lngdp_ci = log(gdp_ci)
+    )
+
+  saveRDS(trade_93, fout)
+} else {
+  trade_93 <- readRDS(fout)
+}
+
+# Estimate Gravity Equation from the Canadian Perspective ----
+
+trade_93_2 <- trade_93 %>%
+  mutate(d_ca = ifelse(l_ex == 2 & l_im == 2, 1, 0)) %>%
+  filter(l_ex != 1 | l_im != 1)
+
+fit_ca <- lm(lnvx ~ lngdp_ce + lngdp_ci + lndist + d_ca, data = trade_93_2)
+
+summary(fit_ca)
+
+# Estimate Gravity Equation from the U.S. Perspective ----
+
+trade_93_3 <- trade_93 %>%
+  mutate(d_us = ifelse(l_ex == 1 & l_im == 1, 1, 0)) %>%
+  filter(l_ex != 2 | l_im != 2)
+
+fit_us <- lm(lnvx ~ lngdp_ce + lngdp_ci + lndist + d_us, data = trade_93_3)
+
+summary(fit_us)
+
+# Estimate Gravity Equation by Pooling All Data ----
+
+trade_93_4 <- trade_93 %>%
+  mutate(
+    d_ca = ifelse(l_ex == 2 & l_im == 2, 1, 0),
+    d_us = ifelse(l_ex == 1 & l_im == 1, 1, 0)
+  )
+
+fit_all <- lm(
+  lnvx ~ lngdp_ce + lngdp_ci + lndist + d_ca + d_us,
+  data = trade_93_4
+)
+
+summary(fit_all)
+
+vcov(fit_all)
+```
+
+## Exercise 2
+
+Run the program “gravity_2.do” to replicate gravity equation using fixed-effects, i.e., column (5) in Table 5.2.  Then answer:
+
+a. How are these results affected if we allow the provincial and state GDP’s to have coefficients different from unity?
+b. What coefficients are obtained if we introduce separate indicator variables for intra-Canadian and intra-U.S. trade, rather than the border dummy?
+
+### Feenstra's code
+
+```stata
+capture log close
+log using c:\Empirical_Exercise\Chapter_5\gravity_2.log, replace
+
+set matsize 100
+
+use c:\Empirical_Exercise\Chapter_5\trade_93,clear
+sort c_e
+merge c_e using c:\Empirical_Exercise\Chapter_5\gdp_ce_93
+drop _merge
+sort c_i
+merge c_i using c:\Empirical_Exercise\Chapter_5\gdp_ci_93
+drop _merge
+drop if vx==0
+drop if dist==0
+
+tab c_e, gen (ced)
+tab c_i, gen (cid)
+
+gen d_border=1
+replace d_border=0 if (l_ex==1) & (l_im==1)
+replace d_border=0 if (l_ex==2) & (l_im==2)
+
+gen lnvx=log(vx)
+gen lndist=log(dist)
+gen lngdp_ce=log(gdp_ce)
+gen lngdp_ci=log(gdp_ci)
+gen lnn_vx=lnvx-lngdp_ce-lngdp_ci
+
+regress lnn_vx lndist d_border ced* cid*
+
+clear
+log close
+```
+
+### My code
+
+```{r ch2_ex2}
+trade_93 <- readRDS(paste0(dout, "/trade_93.rds"))
+
+trade_93 %>%
+  group_by(c_e) %>%
+  summarise(
+    freq = n(),
+    percent = 100 * n() / nrow(trade_93)
+  ) %>%
+  ungroup() %>%
+  mutate(cum = cumsum(percent))
+
+trade_93 %>%
+  group_by(c_i) %>%
+  summarise(
+    freq = n(),
+    percent = 100 * n() / nrow(trade_93)
+  ) %>%
+  ungroup() %>%
+  mutate(cum = cumsum(percent))
+
+# gen d_border=1
+# replace d_border=0 if (l_ex==1) & (l_im==1)
+# replace d_border=0 if (l_ex==2) & (l_im==2)
+
+trade_93 <- trade_93 %>%
+  mutate(
+    d_border = case_when(
+      l_ex == 1 & l_im == 1 ~ 0,
+      l_ex == 2 & l_im == 2 ~ 0,
+      TRUE ~ 1
+    ),
+    lnvx = log(vx),
+    lndist = log(dist),
+    lngdp_ce = log(gdp_ce),
+    lngdp_ci = log(gdp_ci),
+    lnn_vx = lnvx - lngdp_ce - lngdp_ci
+  )
+
+# some of the FEs are dropped in Stata
+# the slopes are identical, which is what matters
+
+fit_fe <- lm(
+  lnn_vx ~ lndist + d_border + as.factor(c_e) + as.factor(c_i),
+  data = trade_93
+)
+
+summary(fit_fe)
+```

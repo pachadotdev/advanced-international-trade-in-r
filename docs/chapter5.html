@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Advanced International Trade in R - Chapter 5. Increasing Returns and the Gravity Equation Empirical Exercise</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./chapter4.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter5.html"><span class="chapter-title">Chapter 5. Increasing Returns and the Gravity Equation Empirical Exercise</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Advanced International Trade in R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">About</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 2. The Heckscher-Ohlin Model</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter4.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 4. Trade in Intermediate Inputs and Wages</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter5.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Chapter 5. Increasing Returns and the Gravity Equation Empirical Exercise</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#documentation" id="toc-documentation" class="nav-link active" data-scroll-target="#documentation">Documentation</a></li>
+  <li><a href="#empirical-exercise" id="toc-empirical-exercise" class="nav-link" data-scroll-target="#empirical-exercise">Empirical exercise</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a>
+  <ul class="collapse">
+  <li><a href="#feenstras-code" id="toc-feenstras-code" class="nav-link" data-scroll-target="#feenstras-code">Feenstra’s code</a></li>
+  <li><a href="#my-code" id="toc-my-code" class="nav-link" data-scroll-target="#my-code">My code</a></li>
+  </ul></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a>
+  <ul class="collapse">
+  <li><a href="#feenstras-code-1" id="toc-feenstras-code-1" class="nav-link" data-scroll-target="#feenstras-code-1">Feenstra’s code</a></li>
+  <li><a href="#my-code-1" id="toc-my-code-1" class="nav-link" data-scroll-target="#my-code-1">My code</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">Chapter 5. Increasing Returns and the Gravity Equation Empirical Exercise</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="documentation" class="level2">
+<h2 class="anchored" data-anchor-id="documentation">Documentation</h2>
+<p>US-Canada data for Anderson and van Wincoop (2002)</p>
+<p>There are a total of 63 US-Canada regions (states, District of Columbia, provinces and territories). They are listed below. The regressions, however, are based on the same 40 states and provinces as in McCallum (these are indicated with a star below).</p>
+<ol type="1">
+<li>Alabama*</li>
+<li>Alaska<br>
+</li>
+<li>Arizona*</li>
+<li>Arkansas<br>
+</li>
+<li>California*</li>
+<li>Colorado<br>
+</li>
+<li>Connecticut</li>
+<li>Delaware<br>
+</li>
+<li>Florida*</li>
+<li>Georgia*</li>
+<li>Hawaii<br>
+</li>
+<li>Idaho*</li>
+<li>Illinois*</li>
+<li>Indiana*</li>
+<li>Iowa<br>
+</li>
+<li>Kansas<br>
+</li>
+<li>Kentucky*</li>
+<li>Louisiana*</li>
+<li>Maine*</li>
+<li>Maryland*<br>
+</li>
+<li>Massachusetts*</li>
+<li>Michigan*<br>
+</li>
+<li>Minnesota*<br>
+</li>
+<li>Mississippi<br>
+</li>
+<li>Missouri*<br>
+</li>
+<li>Montana*<br>
+</li>
+<li>Nebraska<br>
+</li>
+<li>Nevada<br>
+</li>
+<li>New Hampshire*</li>
+<li>New Jersey*<br>
+</li>
+<li>New Mexico<br>
+</li>
+<li>New York*<br>
+</li>
+<li>North Carolina*</li>
+<li>North Dakota*<br>
+</li>
+<li>Ohio*<br>
+</li>
+<li>Oklahoma<br>
+</li>
+<li>Oregon<br>
+</li>
+<li>Pennsylvania*</li>
+<li>Rhode Island</li>
+<li>South Carolina<br>
+</li>
+<li>South Dakota<br>
+</li>
+<li>Tennessee*<br>
+</li>
+<li>Texas*<br>
+</li>
+<li>Utah<br>
+</li>
+<li>Vermont*<br>
+</li>
+<li>Virginia*<br>
+</li>
+<li>Washington*<br>
+</li>
+<li>West Virginia<br>
+</li>
+<li>Wisconsin*<br>
+</li>
+<li>Wyoming<br>
+</li>
+<li>Dist. of Col.<br>
+</li>
+<li>Alberta*<br>
+</li>
+<li>British Columbia*</li>
+<li>Manitoba*<br>
+</li>
+<li>New Brunswick *</li>
+<li>Newfoundland*</li>
+<li>NW Territories</li>
+<li>Nova Scotia*<br>
+</li>
+<li>Ontario*<br>
+</li>
+<li>Prince Edward Island*</li>
+<li>Quebec*<br>
+</li>
+<li>Saskatchewan*</li>
+<li>Yukon Territory</li>
+</ol>
+<p>Data files:</p>
+<ol type="1">
+<li>dist.csv: Contains distances between the 40 regions listed above. The distances are in kilometers and are between the capitals of the regions.</li>
+<li>gdp_ce_93.csv and gdp_ci_93.csv: Contains nominal GDP in millions of Canadian dollars in 1993 for the 40 regions above.</li>
+<li>trade_93.csv</li>
+</ol>
+<p>Contains 1993 trade data between the 40 regions listed above, in US dollars. The indicator variables “1_ex” and “1_im” equal 1 if the exporter or importer is a US state, and 2 for a Canadian province.</p>
+</section>
+<section id="empirical-exercise" class="level2">
+<h2 class="anchored" data-anchor-id="empirical-exercise">Empirical exercise</h2>
+<p>In this exercise, you are asked to reproduce the empirical results shown in Table 5.2. There are four datasets available: “dist.csv” which is distances; “gdp_ce_93.csv” which is GDP in exporting location in 1993; “gdp_ci_93.csv” which is GDP in importing location in 1993; and “trade_93.csv” which is trade in 1993. To complete the exercise, these files should be stored in the directory: c:_Exercise_5. After this, run the STATA program “data_trans.do,” which will convert these datasets to STATA files with the same name. The trade data is already converted into US dollars, but GDP data is in Canadian dollars, so this is converted with the exchange rate 1 Canadian dollar = 0.775134 U.S. dollars.</p>
+</section>
+<section id="exercise-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
+<p>Run the program “gravity_1.do” to replicate the gravity equations in columns (1)-(3) of Table 5.2.</p>
+<section id="feenstras-code" class="level3">
+<h3 class="anchored" data-anchor-id="feenstras-code">Feenstra’s code</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">capture</span> <span class="fu">log</span> <span class="kw">close</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span> <span class="kw">using</span> c:\Empirical_Exercise\Chapter_5\gravity_1.<span class="fu">log</span>, <span class="kw">replace</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">set</span> <span class="dv">matsize</span> 100</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> c:\Empirical_Exercise\Chapter_5\trade_93,<span class="kw">clear</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">sort</span> c_e</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">merge</span> c_e <span class="kw">using</span> c:\Empirical_Exercise\Chapter_5\gdp_ce_93</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">drop</span> <span class="dt">_merge</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">sort</span> c_i</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="kw">merge</span> c_i <span class="kw">using</span> c:\Empirical_Exercise\Chapter_5\gdp_ci_93</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="kw">drop</span> <span class="dt">_merge</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="kw">drop</span> <span class="kw">if</span> vx==0</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="kw">drop</span> <span class="kw">if</span> dist==0</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> lnvx=<span class="fu">log</span>(vx)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> lndist=<span class="fu">log</span>(dist)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> lngdp_ce=<span class="fu">log</span>(gdp_ce)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> lngdp_ci=<span class="fu">log</span>(gdp_ci)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>* Estimate Gravity Equation from the Canadian Perspective *</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="kw">preserve</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> d_ca=0</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="kw">replace</span> d_ca=1 <span class="kw">if</span> (l_ex==2) &amp; (l_im==2)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="kw">drop</span> <span class="kw">if</span> (l_ex==1) &amp; (l_im==1)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="kw">regress</span> lnvx lngdp_ce lngdp_ci lndist d_ca</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="kw">restore</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>* Estimate Gravity Equation from the U.S. Perspective *</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="kw">preserve</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> d_us=0</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="kw">replace</span> d_us=1 <span class="kw">if</span> (l_ex==1) &amp; (l_im==1)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="kw">drop</span> <span class="kw">if</span> (l_ex==2) &amp; (l_im==2)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="kw">regress</span> lnvx lngdp_ce lngdp_ci lndist d_us</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="kw">restore</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>* Estimate Gravity Equation <span class="kw">by</span> Pooling All Data *</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="kw">preserve</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> d_ca=0</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> d_us=0</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="kw">replace</span> d_ca=1 <span class="kw">if</span> (l_ex==2) &amp; (l_im==2)</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="kw">replace</span> d_us=1 <span class="kw">if</span> (l_ex==1) &amp; (l_im==1)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="kw">regress</span> lnvx lngdp_ce lngdp_ci lndist d_ca d_us</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="kw">vce</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="kw">restore</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="kw">clear</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span> <span class="kw">close</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="my-code" class="level3">
+<h3 class="anchored" data-anchor-id="my-code">My code</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Packages ----</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(archive)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract ----</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>fzip <span class="ot">&lt;-</span> <span class="st">"first-edition/Chapter-5.zip"</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>dout <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">.zip$"</span>, <span class="st">""</span>, fzip)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(dout)) {</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">archive_extract</span>(fzip, <span class="at">dir =</span> dout)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Read and transform ----</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>fout <span class="ot">&lt;-</span> <span class="fu">paste0</span>(dout, <span class="st">"/trade_93.rds"</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(fout)) {</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  trade_93 <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="fu">paste0</span>(dout, <span class="st">"/trade_93.dta"</span>))</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  gdp_ce_93 <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="fu">paste0</span>(dout, <span class="st">"/gdp_ce_93.dta"</span>))</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  gdp_ci_93 <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="fu">paste0</span>(dout, <span class="st">"/gdp_ci_93.dta"</span>))</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  trade_93 <span class="ot">&lt;-</span> trade_93 <span class="sc">%&gt;%</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(gdp_ce_93, <span class="at">by =</span> <span class="st">"c_e"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(gdp_ci_93, <span class="at">by =</span> <span class="st">"c_i"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(vx <span class="sc">!=</span> <span class="dv">0</span>, dist <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">lnvx =</span> <span class="fu">log</span>(vx),</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>      <span class="at">lndist =</span> <span class="fu">log</span>(dist),</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">lngdp_ce =</span> <span class="fu">log</span>(gdp_ce),</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">lngdp_ci =</span> <span class="fu">log</span>(gdp_ci)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(trade_93, fout)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  trade_93 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(fout)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate Gravity Equation from the Canadian Perspective ----</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>trade_93_2 <span class="ot">&lt;-</span> trade_93 <span class="sc">%&gt;%</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">d_ca =</span> <span class="fu">ifelse</span>(l_ex <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> l_im <span class="sc">==</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(l_ex <span class="sc">!=</span> <span class="dv">1</span> <span class="sc">|</span> l_im <span class="sc">!=</span> <span class="dv">1</span>)</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>fit_ca <span class="ot">&lt;-</span> <span class="fu">lm</span>(lnvx <span class="sc">~</span> lngdp_ce <span class="sc">+</span> lngdp_ci <span class="sc">+</span> lndist <span class="sc">+</span> d_ca, <span class="at">data =</span> trade_93_2)</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_ca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = lnvx ~ lngdp_ce + lngdp_ci + lndist + d_ca, data = trade_93_2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.9344 -0.6428  0.0174  0.6225  4.0379 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  3.74267    0.77220   4.847 1.56e-06 ***
+lngdp_ce     1.21871    0.03316  36.754  &lt; 2e-16 ***
+lngdp_ci     0.97978    0.03253  30.124  &lt; 2e-16 ***
+lndist      -1.35315    0.06901 -19.607  &lt; 2e-16 ***
+d_ca         2.80203    0.14170  19.775  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.183 on 674 degrees of freedom
+Multiple R-squared:  0.7622,    Adjusted R-squared:  0.7608 
+F-statistic:   540 on 4 and 674 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate Gravity Equation from the U.S. Perspective ----</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>trade_93_3 <span class="ot">&lt;-</span> trade_93 <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">d_us =</span> <span class="fu">ifelse</span>(l_ex <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> l_im <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(l_ex <span class="sc">!=</span> <span class="dv">2</span> <span class="sc">|</span> l_im <span class="sc">!=</span> <span class="dv">2</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>fit_us <span class="ot">&lt;-</span> <span class="fu">lm</span>(lnvx <span class="sc">~</span> lngdp_ce <span class="sc">+</span> lngdp_ci <span class="sc">+</span> lndist <span class="sc">+</span> d_us, <span class="at">data =</span> trade_93_3)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_us)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = lnvx ~ lngdp_ce + lngdp_ci + lndist + d_us, data = trade_93_3)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.2863 -0.4620 -0.0077  0.4822  3.7858 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  2.65959    0.44927   5.920 4.04e-09 ***
+lngdp_ce     1.12843    0.02045  55.172  &lt; 2e-16 ***
+lngdp_ci     0.98203    0.02040  48.148  &lt; 2e-16 ***
+lndist      -1.08189    0.03523 -30.712  &lt; 2e-16 ***
+d_us         0.40597    0.05787   7.016 3.54e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.9292 on 1416 degrees of freedom
+Multiple R-squared:  0.8529,    Adjusted R-squared:  0.8525 
+F-statistic:  2053 on 4 and 1416 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate Gravity Equation by Pooling All Data ----</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>trade_93_4 <span class="ot">&lt;-</span> trade_93 <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">d_ca =</span> <span class="fu">ifelse</span>(l_ex <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> l_im <span class="sc">==</span> <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">d_us =</span> <span class="fu">ifelse</span>(l_ex <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> l_im <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>fit_all <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  lnvx <span class="sc">~</span> lngdp_ce <span class="sc">+</span> lngdp_ci <span class="sc">+</span> lndist <span class="sc">+</span> d_ca <span class="sc">+</span> d_us,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> trade_93_4</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = lnvx ~ lngdp_ce + lngdp_ci + lndist + d_ca + d_us, 
+    data = trade_93_4)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.2531 -0.4630 -0.0100  0.4902  3.8101 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  2.91151    0.42672   6.823 1.29e-11 ***
+lngdp_ce     1.13297    0.01968  57.571  &lt; 2e-16 ***
+lngdp_ci     0.97422    0.01963  49.630  &lt; 2e-16 ***
+lndist      -1.11070    0.03373 -32.925  &lt; 2e-16 ***
+d_ca         2.75171    0.10868  25.320  &lt; 2e-16 ***
+d_us         0.39827    0.05744   6.933 6.08e-12 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.9304 on 1505 degrees of freedom
+Multiple R-squared:  0.852, Adjusted R-squared:  0.8515 
+F-statistic:  1733 on 5 and 1505 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vcov</span>(fit_all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             (Intercept)      lngdp_ce      lngdp_ci        lndist
+(Intercept)  0.182087517 -5.244280e-03 -5.204609e-03 -8.948498e-03
+lngdp_ce    -0.005244280  3.872922e-04  8.278679e-05  1.867887e-05
+lngdp_ci    -0.005204609  8.278679e-05  3.853139e-04  1.752375e-05
+lndist      -0.008948498  1.867887e-05  1.752375e-05  1.138030e-03
+d_ca        -0.011574809  4.124081e-04  4.010346e-04  1.704325e-04
+d_us         0.003876605 -3.748832e-04 -3.931548e-04  3.969829e-04
+                     d_ca          d_us
+(Intercept) -0.0115748092  0.0038766053
+lngdp_ce     0.0004124081 -0.0003748832
+lngdp_ci     0.0004010346 -0.0003931548
+lndist       0.0001704325  0.0003969829
+d_ca         0.0118103647  0.0008562509
+d_us         0.0008562509  0.0032996176</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-2" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
+<p>Run the program “gravity_2.do” to replicate gravity equation using fixed-effects, i.e., column (5) in Table 5.2. Then answer:</p>
+<ol type="a">
+<li>How are these results affected if we allow the provincial and state GDP’s to have coefficients different from unity?</li>
+<li>What coefficients are obtained if we introduce separate indicator variables for intra-Canadian and intra-U.S. trade, rather than the border dummy?</li>
+</ol>
+<section id="feenstras-code-1" class="level3">
+<h3 class="anchored" data-anchor-id="feenstras-code-1">Feenstra’s code</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">capture</span> <span class="fu">log</span> <span class="kw">close</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span> <span class="kw">using</span> c:\Empirical_Exercise\Chapter_5\gravity_2.<span class="fu">log</span>, <span class="kw">replace</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">set</span> <span class="dv">matsize</span> 100</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> c:\Empirical_Exercise\Chapter_5\trade_93,<span class="kw">clear</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="kw">sort</span> c_e</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="kw">merge</span> c_e <span class="kw">using</span> c:\Empirical_Exercise\Chapter_5\gdp_ce_93</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="kw">drop</span> <span class="dt">_merge</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="kw">sort</span> c_i</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="kw">merge</span> c_i <span class="kw">using</span> c:\Empirical_Exercise\Chapter_5\gdp_ci_93</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="kw">drop</span> <span class="dt">_merge</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="kw">drop</span> <span class="kw">if</span> vx==0</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="kw">drop</span> <span class="kw">if</span> dist==0</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="kw">tab</span> c_e, <span class="kw">gen</span> (ced)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="kw">tab</span> c_i, <span class="kw">gen</span> (cid)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> d_border=1</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="kw">replace</span> d_border=0 <span class="kw">if</span> (l_ex==1) &amp; (l_im==1)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="kw">replace</span> d_border=0 <span class="kw">if</span> (l_ex==2) &amp; (l_im==2)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> lnvx=<span class="fu">log</span>(vx)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> lndist=<span class="fu">log</span>(dist)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> lngdp_ce=<span class="fu">log</span>(gdp_ce)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> lngdp_ci=<span class="fu">log</span>(gdp_ci)</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="kw">gen</span> lnn_vx=lnvx-lngdp_ce-lngdp_ci</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="kw">regress</span> lnn_vx lndist d_border ced* cid*</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="kw">clear</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span> <span class="kw">close</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="my-code-1" class="level3">
+<h3 class="anchored" data-anchor-id="my-code-1">My code</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>trade_93 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">paste0</span>(dout, <span class="st">"/trade_93.rds"</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>trade_93 <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(c_e) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">freq =</span> <span class="fu">n</span>(),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">percent =</span> <span class="dv">100</span> <span class="sc">*</span> <span class="fu">n</span>() <span class="sc">/</span> <span class="fu">nrow</span>(trade_93)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cum =</span> <span class="fu">cumsum</span>(percent))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 40 × 4
+   c_e    freq percent   cum
+   &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;
+ 1 AB       39    2.58  2.58
+ 2 Ala      38    2.51  5.10
+ 3 Ari      37    2.45  7.54
+ 4 BC       39    2.58 10.1 
+ 5 Cal      37    2.45 12.6 
+ 6 Flo      39    2.58 15.2 
+ 7 Geo      39    2.58 17.7 
+ 8 Ida      36    2.38 20.1 
+ 9 Ill      39    2.58 22.7 
+10 Ind      38    2.51 25.2 
+# ℹ 30 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>trade_93 <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(c_i) <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">freq =</span> <span class="fu">n</span>(),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">percent =</span> <span class="dv">100</span> <span class="sc">*</span> <span class="fu">n</span>() <span class="sc">/</span> <span class="fu">nrow</span>(trade_93)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cum =</span> <span class="fu">cumsum</span>(percent))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 40 × 4
+   c_i    freq percent   cum
+   &lt;chr&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;
+ 1 AB       39    2.58  2.58
+ 2 Ala      38    2.51  5.10
+ 3 Ari      36    2.38  7.48
+ 4 BC       39    2.58 10.1 
+ 5 Cal      39    2.58 12.6 
+ 6 Flo      39    2.58 15.2 
+ 7 Geo      39    2.58 17.8 
+ 8 Ida      33    2.18 20.0 
+ 9 Ill      39    2.58 22.6 
+10 Ind      39    2.58 25.1 
+# ℹ 30 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gen d_border=1</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># replace d_border=0 if (l_ex==1) &amp; (l_im==1)</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># replace d_border=0 if (l_ex==2) &amp; (l_im==2)</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>trade_93 <span class="ot">&lt;-</span> trade_93 <span class="sc">%&gt;%</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">d_border =</span> <span class="fu">case_when</span>(</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>      l_ex <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> l_im <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>      l_ex <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> l_im <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">1</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">lnvx =</span> <span class="fu">log</span>(vx),</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">lndist =</span> <span class="fu">log</span>(dist),</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">lngdp_ce =</span> <span class="fu">log</span>(gdp_ce),</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">lngdp_ci =</span> <span class="fu">log</span>(gdp_ci),</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">lnn_vx =</span> lnvx <span class="sc">-</span> lngdp_ce <span class="sc">-</span> lngdp_ci</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co"># some of the FEs are dropped in Stata</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co"># the slopes are identical, which is what matters</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>fit_fe <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  lnn_vx <span class="sc">~</span> lndist <span class="sc">+</span> d_border <span class="sc">+</span> <span class="fu">as.factor</span>(c_e) <span class="sc">+</span> <span class="fu">as.factor</span>(c_i),</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> trade_93</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_fe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = lnn_vx ~ lndist + d_border + as.factor(c_e) + as.factor(c_i), 
+    data = trade_93)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.1033 -0.3934 -0.0101  0.3892  4.3379 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)         8.78621    0.35661  24.638  &lt; 2e-16 ***
+lndist             -1.25168    0.03682 -33.995  &lt; 2e-16 ***
+d_border           -1.55051    0.05889 -26.327  &lt; 2e-16 ***
+as.factor(c_e)Ala  -1.63657    0.19473  -8.404  &lt; 2e-16 ***
+as.factor(c_e)Ari  -1.79305    0.19567  -9.164  &lt; 2e-16 ***
+as.factor(c_e)BC   -0.20201    0.19057  -1.060 0.289297    
+as.factor(c_e)Cal  -1.18955    0.19584  -6.074 1.59e-09 ***
+as.factor(c_e)Flo  -2.28631    0.19321 -11.833  &lt; 2e-16 ***
+as.factor(c_e)Geo  -1.64307    0.19371  -8.482  &lt; 2e-16 ***
+as.factor(c_e)Ida  -1.30647    0.19686  -6.636 4.55e-11 ***
+as.factor(c_e)Ill  -1.35755    0.19407  -6.995 4.06e-12 ***
+as.factor(c_e)Ind  -1.57817    0.19573  -8.063 1.56e-15 ***
+as.factor(c_e)Ken  -1.39710    0.19705  -7.090 2.10e-12 ***
+as.factor(c_e)Lou  -1.83182    0.19702  -9.298  &lt; 2e-16 ***
+as.factor(c_e)Mai  -1.76609    0.19648  -8.989  &lt; 2e-16 ***
+as.factor(c_e)Mas  -1.87801    0.19402  -9.679  &lt; 2e-16 ***
+as.factor(c_e)Mic  -1.58645    0.19688  -8.058 1.62e-15 ***
+as.factor(c_e)Min  -1.17706    0.19477  -6.043 1.92e-09 ***
+as.factor(c_e)MN   -0.53057    0.19094  -2.779 0.005528 ** 
+as.factor(c_e)MO   -1.40491    0.19627  -7.158 1.31e-12 ***
+as.factor(c_e)Mon  -1.96394    0.19711  -9.964  &lt; 2e-16 ***
+as.factor(c_e)Mry  -1.95588    0.19703  -9.927  &lt; 2e-16 ***
+as.factor(c_e)NB   -1.09965    0.19128  -5.749 1.10e-08 ***
+as.factor(c_e)Nca  -1.55415    0.19384  -8.018 2.22e-15 ***
+as.factor(c_e)Nda  -1.85527    0.19711  -9.412  &lt; 2e-16 ***
+as.factor(c_e)Nfld -1.77882    0.19609  -9.071  &lt; 2e-16 ***
+as.factor(c_e)NHm  -1.90932    0.19548  -9.767  &lt; 2e-16 ***
+as.factor(c_e)NJr  -1.86410    0.19427  -9.595  &lt; 2e-16 ***
+as.factor(c_e)NS   -0.83361    0.19096  -4.365 1.36e-05 ***
+as.factor(c_e)Nyr  -2.46148    0.19431 -12.668  &lt; 2e-16 ***
+as.factor(c_e)Ohi  -1.42450    0.19713  -7.226 8.06e-13 ***
+as.factor(c_e)ON   -0.66004    0.19239  -3.431 0.000619 ***
+as.factor(c_e)PEI  -1.54122    0.19807  -7.781 1.37e-14 ***
+as.factor(c_e)Pen  -1.84783    0.19448  -9.501  &lt; 2e-16 ***
+as.factor(c_e)Que  -0.45829    0.19160  -2.392 0.016889 *  
+as.factor(c_e)SK   -0.69202    0.19069  -3.629 0.000295 ***
+as.factor(c_e)Ten  -1.30471    0.19528  -6.681 3.39e-11 ***
+as.factor(c_e)Tex  -1.56460    0.19550  -8.003 2.49e-15 ***
+as.factor(c_e)Ver  -2.05854    0.19683 -10.458  &lt; 2e-16 ***
+as.factor(c_e)Vir  -2.28509    0.19413 -11.771  &lt; 2e-16 ***
+as.factor(c_e)Was  -1.57505    0.19697  -7.996 2.62e-15 ***
+as.factor(c_e)Wis  -1.37702    0.19395  -7.100 1.96e-12 ***
+as.factor(c_i)Ala  -1.79804    0.19474  -9.233  &lt; 2e-16 ***
+as.factor(c_i)Ari  -1.29666    0.19730  -6.572 6.94e-11 ***
+as.factor(c_i)BC   -0.15376    0.19057  -0.807 0.419890    
+as.factor(c_i)Cal  -1.01648    0.19331  -5.258 1.68e-07 ***
+as.factor(c_i)Flo  -1.55628    0.19321  -8.055 1.66e-15 ***
+as.factor(c_i)Geo  -1.49839    0.19371  -7.735 1.94e-14 ***
+as.factor(c_i)Ida  -1.45965    0.20150  -7.244 7.09e-13 ***
+as.factor(c_i)Ill  -1.40371    0.19407  -7.233 7.68e-13 ***
+as.factor(c_i)Ind  -1.56421    0.19444  -8.045 1.80e-15 ***
+as.factor(c_i)Ken  -1.55287    0.19713  -7.877 6.58e-15 ***
+as.factor(c_i)Lou  -1.53952    0.19714  -7.809 1.11e-14 ***
+as.factor(c_i)Mai  -1.31609    0.19785  -6.652 4.11e-11 ***
+as.factor(c_i)Mas  -1.57232    0.19662  -7.997 2.61e-15 ***
+as.factor(c_i)Mic  -1.44190    0.19428  -7.422 1.98e-13 ***
+as.factor(c_i)Min  -1.44964    0.19353  -7.490 1.20e-13 ***
+as.factor(c_i)MN   -0.21433    0.19094  -1.123 0.261830    
+as.factor(c_i)MO   -1.68801    0.19369  -8.715  &lt; 2e-16 ***
+as.factor(c_i)Mon  -1.17030    0.20007  -5.849 6.11e-09 ***
+as.factor(c_i)Mry  -2.01908    0.19434 -10.389  &lt; 2e-16 ***
+as.factor(c_i)NB    0.07453    0.19128   0.390 0.696846    
+as.factor(c_i)Nca  -1.77539    0.19384  -9.159  &lt; 2e-16 ***
+as.factor(c_i)Nda  -1.32751    0.20530  -6.466 1.37e-10 ***
+as.factor(c_i)Nfld  0.21260    0.19185   1.108 0.267961    
+as.factor(c_i)NHm  -1.66954    0.19550  -8.540  &lt; 2e-16 ***
+as.factor(c_i)NJr  -1.75002    0.19427  -9.008  &lt; 2e-16 ***
+as.factor(c_i)NS   -0.68673    0.19096  -3.596 0.000334 ***
+as.factor(c_i)Nyr  -2.03481    0.19697 -10.330  &lt; 2e-16 ***
+as.factor(c_i)Ohi  -1.57975    0.19582  -8.067 1.51e-15 ***
+as.factor(c_i)ON   -0.50306    0.19239  -2.615 0.009024 ** 
+as.factor(c_i)PEI  -0.42490    0.19218  -2.211 0.027200 *  
+as.factor(c_i)Pen  -1.53740    0.19580  -7.852 7.98e-15 ***
+as.factor(c_i)Que  -0.32607    0.19160  -1.702 0.089003 .  
+as.factor(c_i)SK   -0.28279    0.19069  -1.483 0.138315    
+as.factor(c_i)Ten  -1.57721    0.19401  -8.130 9.23e-16 ***
+as.factor(c_i)Tex  -1.03685    0.19296  -5.373 9.01e-08 ***
+as.factor(c_i)Ver  -1.68015    0.20291  -8.280 2.79e-16 ***
+as.factor(c_i)Vir  -2.01230    0.19542 -10.297  &lt; 2e-16 ***
+as.factor(c_i)Was  -0.86859    0.19566  -4.439 9.72e-06 ***
+as.factor(c_i)Wis  -1.41883    0.19395  -7.315 4.26e-13 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.841 on 1430 degrees of freedom
+Multiple R-squared:  0.6639,    Adjusted R-squared:  0.6451 
+F-statistic: 35.32 on 80 and 1430 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./chapter4.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Chapter 4. Trade in Intermediate Inputs and Wages</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

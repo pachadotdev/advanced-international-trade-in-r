@@ -15,5 +15,11 @@ All the datasets and Stata codes are intellectual property of Dr. Robert C.
 Feenstra. The R codes are of my authorship, but these are a translation of the
 Stata codes, so I released them under Creative Commons Zero v1.0 Universal.
 
+The goal of these solutions is to provide a reference for those who come from
+Stata and want to learn R. I prioritized readability and simplicity over
+performance and elegance. There were parts of the code were it was challenging
+to stick to a literal code translation, and I had to use R idioms to make the
+code more readable.
+
 Please do not hesistate to email me if this is useful, or if you have any
 questions or suggestions. My email is on my GitHub profile.
