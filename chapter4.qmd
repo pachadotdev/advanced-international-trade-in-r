@@ -624,7 +624,7 @@ if (!file.exists(fout)) {
 
 datachp4 %>%
   select(wchanwsh:whtsh) %>%
-  summarise_all(sum, na.rm = T)
+  summarise(across(everything(), sum, na.rm = T))
 
 # Reproduce the rest of the columns in Table 4.4 ----
 
@@ -659,7 +659,7 @@ coeftest(reg3, vcov = vcovCL(reg3, cluster = datachp4$sic2))
 
 datachp4 %>%
   select(wchanwsh:whtsh) %>%
-  summarise_all(sum, na.rm = T)
+  summarise(across(everything(), sum, na.rm = T))
 
 # Reproduce the rest of the columns in Table III ----
 
@@ -1456,19 +1456,40 @@ weighted.sd <- function(x, w) {
 
 datachp4_2_1 <- datachp4_2 %>%
   select(dsimatd1, dhtdsh, dofsh) %>%
-  summarise_all(list(nobs = length, min = min, max = max)) %>%
+  summarise(
+    across(
+      everything(),
+      list(nobs = length, min = min, max = max)
+    )
+  ) %>%
   pivot_longer(
     cols = everything(),
     names_to = "variable",
     values_to = "value"
   ) %>%
-  separate(variable, into = c("var", "stat"), sep = "_") %>%
+  separate_wider_delim(variable, "_", names = c("var", "stat")) %>%
   pivot_wider(
     names_from = stat,
     values_from = value
   )
 
 datachp4_2_2 <- datachp4_2 %>%
+  mutate(across(c(dsimatd1, dhtdsh, dofsh), ~ . * mvshipsh)) %>%
+  select(dsimatd1, dhtdsh, dofsh) %>%
+  summarise(across(everything(), list(wsum = sum))) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "variable",
+    values_to = "value"
+  ) %>%
+  separate_wider_delim(variable, "_", names = c("var", "stat")) %>%
+  pivot_wider(
+    names_from = stat,
+    values_from = value
+  ) %>%
+  rename(weighted_sum = wsum)
+
+datachp4_2_3 <- datachp4_2 %>%
   select(dsimatd1, dhtdsh, dofsh, mvshipsh) %>%
   pivot_longer(
     cols = c(dsimatd1, dhtdsh, dofsh),
@@ -1476,31 +1497,15 @@ datachp4_2_2 <- datachp4_2 %>%
     values_to = "val"
   ) %>%
   group_by(var) %>%
-  summarise(sd = weighted.sd(val, mvshipsh))
-
-datachp4_2_3 <- datachp4_2 %>%
-  summarise(weight = sum(mvshipsh)) %>%
-  bind_cols(var = c("dsimatd1", "dhtdsh", "dofsh"))
+  summarise(weighted_sd = weighted.sd(val, mvshipsh))
 
 datachp4_2_4 <- datachp4_2 %>%
-  mutate(across(c(dsimatd1, dhtdsh, dofsh), ~ . * mvshipsh)) %>%
-  select(dsimatd1, dhtdsh, dofsh) %>%
-  summarise_all(list(wsum = sum)) %>%
-  pivot_longer(
-    cols = everything(),
-    names_to = "variable",
-    values_to = "value"
-  ) %>%
-  separate(variable, into = c("var", "stat"), sep = "_") %>%
-  pivot_wider(
-    names_from = stat,
-    values_from = value
-  )
+  summarise(sum_weights = sum(mvshipsh))
 
 datachp4_2_1 %>%
   left_join(datachp4_2_2) %>%
   left_join(datachp4_2_3) %>%
-  left_join(datachp4_2_4)
+  bind_cols(datachp4_2_4)
 
 reg1 <- lm(
   t4dlpvad ~ dsimat1b + dsimatd1 + dofsh + dhtdsh,
@@ -1526,15 +1531,18 @@ datachp4_2 <- datachp4_2 %>%
 
 datachp4_2 %>%
   select(narrout:difcom) %>%
-  summarise_all(
-    list(nobs = length, mean = mean, sd = sd, min = min, max = max)
+  summarise(
+    across(
+      everything(),
+      list(nobs = length, mean = mean, sd = sd, min = min, max = max)
+    )
   ) %>%
   pivot_longer(
     cols = everything(),
     names_to = "variable",
     values_to = "value"
   ) %>%
-  separate(variable, into = c("var", "stat"), sep = "_") %>%
+  separate_wider_delim(variable, "_", names = c("var", "stat")) %>%
   pivot_wider(
     names_from = stat,
     values_from = value
@@ -1584,37 +1592,54 @@ datachp4 <- datachp4 %>%
 
 datachp4 %>%
   select(dsimatd1, dhtdsh1, dofsh1) %>%
-  summarise_all(list(nobs = length, min = min, max = max, sd = sd)) %>%
+  summarise(
+    across(
+      everything(),
+      list(nobs = length, min = min, max = max)
+    )
+  ) %>%
   pivot_longer(
     cols = everything(),
     names_to = "variable",
     values_to = "value"
   ) %>%
-  separate(variable, into = c("var", "stat"), sep = "_") %>%
+  separate_wider_delim(variable, "_", names = c("var", "stat")) %>%
   pivot_wider(
     names_from = stat,
     values_from = value
   ) %>%
   left_join(
     datachp4 %>%
-      summarise(weight = sum(mvshipsh)) %>%
-      bind_cols(var = c("dsimatd1", "dhtdsh1", "dofsh1"))
-  ) %>%
-  left_join(
-    datachp4 %>%
+      select(dsimatd1, dhtdsh1, dofsh1, mvshipsh) %>%
       mutate(across(c(dsimatd1, dhtdsh1, dofsh1), ~ . * mvshipsh)) %>%
-      select(dsimatd1, dhtdsh1, dofsh1) %>%
-      summarise_all(list(wsum = sum)) %>%
+      select(-mvshipsh) %>%
+      summarise(across(everything(), list(wsum = sum))) %>%
       pivot_longer(
         cols = everything(),
         names_to = "variable",
         values_to = "value"
       ) %>%
-      separate(variable, into = c("var", "stat"), sep = "_") %>%
+      separate_wider_delim(variable, "_", names = c("var", "stat")) %>%
       pivot_wider(
         names_from = stat,
         values_from = value
-      )
+      ) %>%
+      rename(weighted_sum = wsum)
+  ) %>%
+  left_join(
+    datachp4 %>%
+      select(dsimatd1, dhtdsh1, dofsh1, mvshipsh) %>%
+      pivot_longer(
+        cols = c(dsimatd1, dhtdsh1, dofsh1),
+        names_to = "var",
+        values_to = "val"
+      ) %>%
+      group_by(var) %>%
+      summarise(weighted_sd = weighted.sd(val, mvshipsh))
+  ) %>%
+  bind_cols(
+    datachp4 %>%
+      summarise(sum_weights = sum(mvshipsh))
   )
 
 # regress t4dlpvad dsimat1b dsimatd1 dofsh1 dhtdsh1 [aw=mvshipsh], cluster(sic2)
