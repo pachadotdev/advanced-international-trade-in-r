@@ -1,5 +1,5 @@
 
-# Chapter 5. Import Tariffs and Dumping
+# Chapter 7. Import Tariffs and Dumping
 
 ## Data Description for Feenstra (1989)
 
@@ -755,6 +755,12 @@ mod5_tidy %>%
 ## Exercise 2
 
 Then replicate Feenstra’s Table 2 by imposing the tests of homogeneity and symmetry, shown in (7.35a) and (7.35b).  Instead of conducting the Wald test, as done in Feenstra (1989), instead conduct the analogous F-test. Do you accept or reject the hypotheses of symmetry and homogeneity?
+
+### Feenstra's code
+
+Included in exercise 1.
+
+### My code
 
 ```{r ch7_ex2}
 ## Cars ----
