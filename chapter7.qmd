@@ -1,0 +1,884 @@
+
+# Chapter 5. Import Tariffs and Dumping
+
+## Data Description for Feenstra (1989)
+
+There are five data sets in excel format: `cars.csv`, `trucks.csv`, `cycon.csv`, `cypool.csv`, `cyship.csv`.  All of the variables in the data sets are fitted values from instrumental variables regression.
+
+| Variable | Description                                      |
+|----------|--------------------------------------------------|
+| iprice   | Import price                                     |
+| usprice  | US price                                         |
+| gprice   | German price                                     |
+| tariff   | Tariff rate                                      |
+| income   | Expenditure on product class                     |
+| lag0     | First order polynomial lag on betas              |
+| lag1     | Second order polynomial lag on betas             |
+| lag2     | Third order polynomial lag on betas              |
+| y        | Import price transformed, y = iprice – income    |
+| x1       | US price transformed, usprice – income           |
+| x2       | German price transformed, gprice – income        |
+| z0       | First order polynomial lag transformed           |
+| z1       | Second order polynomial lag transformed          |
+| z2       | Third order polynomial lag transformed           |
+
+Note: all the transformations are done to reflect their restrictions.  So some are restricted to homogeneity, where others are restricted to symmetry and homogeneity.
+
+### Explanation of lag0, lag1 and lag2
+
+With a second-order polynomial, $\alpha_i = a + bi + ci^2$ it follows that
+
+\begin{align}
+\sum_{i=0}^4 \log(c_t^* s_{t-i}) \alpha_i &= \sum_{i=0}^4 \log(c_t^* s_{t-i}) (a + bi + ci^2) \\
+&= a \sum_{i=0}^4 \log(c_t^* s_{t-i}) + b \sum_{i=0}^4 \log(c_t^* s_{t-i}) i + c \sum_{i=0}^4 \log(c_t^* s_{t-i}) i^2.
+\end{align}
+
+Letting $\log(c_t^* s_{t-i}) = x_i$, we can define the three lags appeating in this formula as
+
+\begin{align}
+\text{lag}0 = x_0 + x_1 + x_2 + x_3 + x_4 \\
+\text{lag}1 = 0 + x_1 + 2x_2 + 3x_3 + 4x_4 \\
+\text{lag}2 = 0 + x_1 + 4x_2 + 9x_3 + 16x_4.
+\end{align}
+
+Then to compute the total pass-through of the exchange rate, it follow that,
+
+\begin{align}
+\sum_{i=0}^4 \alpha_i &= \sum_{i=0}^4 (a + bi + ci^2) \\
+&= 5a + b(1 + 2 + 3 + 4) + c(1^2 + 2^2 + 3^2 + 4^2) \\
+&= 5a + 10b + 30c.
+\end{align}
+
+When estimating the equation using lag0, lag1, and lag2, the coefficient estimates that you obtain are a, b, and c, respectively.  Using this, you can recover the coefficient estimate and standard error for each individual exchange rate term reported in the Table 7.2. You can always do this by hand, but STATA does offer a command to calculate the linear combination of the estimated coefficients.  The syntax for this is,
+
+```stata
+lincom lag0 + lag1 + lag2
+```
+
+This will calculate the coefficient estimates for the $\log(c_t^* s_{t-1})$. This is much in a same way as the syntax for test. Lag0 in above command does not refer to the data, but the coefficient estimate associated with lag0. 
+
+## Empirical exercise
+
+In this exercise, you are asked to reproduce some of the empirical results from Feenstra (1989).
+
+To complete the exercise, the files "cars.csv, trucks.csv, cycon.csv, cyship.csv, cypool.csv" should be stored in the directory: `c:\Empirical_Exercise\Chapter_7\`.  Each of these can be used in STATA programs "cars.do, trucks.do, cycon.do, cyship.do, cypool.do" to create a dataset with the variables described in "Documentation_Chp7.doc."
+
+## Exercise 1
+
+Replicate Table 7.2, i.e., run the specifications of (7.34) without imposing the tests of symmetry or homogeneity.  Duplicate all of the coefficients that are reported in this table, except the Durbin-Watson statistics.
+
+### Feenstra's code
+
+Cars:
+
+```stata
+clear
+capture log close
+
+log using c:\Empirical_Exercise\Chapter_7\cars.log, replace
+
+insheet using c:\Empirical_Exercise\Chapter_7\cars.csv
+* drop if time<=12
+regress iprice time timesq lag0 lag1 lag2 usprice gprice income
+
+*i=0
+lincom lag0
+
+*i=1
+lincom lag0+lag1+lag2
+
+*i=2
+lincom lag0+2*lag1+4*lag2
+
+*i=3
+lincom lag0+3*lag1+9*lag2
+
+*i=4
+lincom lag0+4*lag1+16*lag2
+
+*summation of betai's
+lincom 5*lag0+10*lag1+30*lag2
+
+*Impose the homogeneity constraint
+regress y time timesq z0 z1 z2 x1 x2
+
+*summation of betai's
+lincom 5*z0+10*z1+30*z2
+
+log close
+exit
+```
+
+Cycon:
+
+```stata
+clear
+capture log close
+
+log using c:\Empirical_Exercise\Chapter_7\cycon.log,replace
+
+insheet using c:\Empirical_Exercise\Chapter_7\cycon.csv
+drop if time<=16
+drop if time>=45
+regress iprice dummy1 dummy2 dummy3 time timesq lag0 lag1 lag2 /*
+     */ tariff usprice gprice income
+
+*i=0
+lincom lag0
+
+*i=1
+lincom lag0+lag1+lag2
+
+*i=2
+lincom lag0+2*lag1+4*lag2
+
+*i=3
+lincom lag0+3*lag1+9*lag2
+
+*i=4
+lincom lag0+4*lag1+16*lag2
+
+*summation of betai's
+lincom 5*lag0+10*lag1+30*lag2
+
+*Impose the homogeneity and symmetry constraints
+regress y dummy1 dummy2 dummy3 time timesq z0 z1 z2 x1 x2
+
+*summation of betai's
+lincom 5*z0+10*z1+30*z2
+
+log close
+exit
+```
+
+Cypool:
+
+```stata
+clear
+capture log close
+log using c:\Empirical_Exercise\Chapter_7\cypool.log,replace
+
+insheet using c:\Empirical_Exercise\Chapter_7\cypool.csv
+
+regress iprice dummy1 dummy2 dummy3 time timesq lag0 lag1 lag2 /*
+        */ tariff usprice gprice income
+
+*i=0
+lincom lag0
+
+*i=1
+lincom lag0+lag1+lag2
+
+*i=2
+lincom lag0+2*lag1+4*lag2
+
+*i=3
+lincom lag0+3*lag1+9*lag2
+
+*i=4
+lincom lag0+4*lag1+16*lag2
+
+*summation of betai's
+lincom 5*lag0+10*lag1+30*lag2
+
+*Impose the homogeneity and symmetry constraints
+regress y dummy1 dummy2 dummy3 time timesq z0 z1 z2 x1 x2
+
+*summation of betai's
+lincom 5*z0+10*z1+30*z2
+
+log close
+exit
+```
+
+Cyship:
+
+```stata
+clear
+capture log close
+
+log using c:\Empirical_Exercise\Chapter_7\cyship.log,replace
+
+insheet using c:\Empirical_Exercise\Chapter_7\cyship.csv
+drop if time<=16
+regress iprice dummy1 dummy2 dummy3 time timesq lag0 lag1 lag2 /*
+     */ tariff usprice gprice income
+
+*i=0
+lincom lag0
+
+*i=1
+lincom lag0+lag1+lag2
+
+*i=2
+lincom lag0+2*lag1+4*lag2
+
+*i=3
+lincom lag0+3*lag1+9*lag2
+
+*i=4
+lincom lag0+4*lag1+16*lag2
+
+*summation of betai's
+lincom 5*lag0+10*lag1+30*lag2
+
+*Impose the homogeneity and symmetry constraints
+regress y dummy1 dummy2 dummy3 time timesq z0 z1 z2 x1 x2
+
+*summation of betai's
+lincom 5*z0+10*z1+30*z2
+
+log close
+exit
+```
+
+Trucks:
+
+```stata
+clear
+capture log close
+
+log using c:\Empirical_Exercise\Chapter_7\trucks.log, replace
+
+insheet using c:\Empirical_Exercise\Chapter_7\trucks.csv
+drop if time<=12
+regress iprice time timesq lag0 lag1 lag2 tariff usprice income
+
+*i=0
+lincom lag0
+
+*i=1
+lincom lag0+lag1+lag2
+
+*i=2
+lincom lag0+2*lag1+4*lag2
+
+*i=3
+lincom lag0+3*lag1+9*lag2
+
+*i=4
+lincom lag0+4*lag1+16*lag2
+
+*summation of betai's
+lincom 5*lag0+10*lag1+30*lag2
+
+*Impose the homogeneity and symmetry constraints
+regress y time timesq z0 z1 z2 x1
+
+*summation of betai's
+lincom 5*z0+10*z1+30*z2
+
+log close
+exit
+```
+
+### My code
+
+```{r ch7_ex1}
+# Packages ----
+
+library(archive)
+library(readr)
+library(dplyr)
+library(broom)
+
+# Extract ----
+
+fzip <- "first-edition/Chapter-7.zip"
+dout <- gsub("\\.zip$", "", fzip)
+
+if (!dir.exists(dout)) {
+  archive_extract(fzip, dir = dout)
+}
+
+# Read and transform ----
+
+fout <- paste0(dout, "/feenstra_93.rds")
+
+if (!file.exists(fout)) {
+  feenstra_93 <- list(
+    cars = read_csv(paste0(dout, "/cars.csv")),
+    cycon = read_csv(paste0(dout, "/cycon.csv")) %>%
+      filter(time > 16 & time < 45),
+    cypool = read_csv(paste0(dout, "/cypool.csv")),
+    cyship = read_csv(paste0(dout, "/cyship.csv")) %>%
+      filter(time > 16),
+    trucks = read_csv(paste0(dout, "/trucks.csv")) %>%
+      filter(time > 12)
+  )
+
+  saveRDS(feenstra_93, fout)
+} else {
+  feenstra_93 <- readRDS(fout)
+}
+
+# Models ----
+
+## Cars ----
+
+mod1 <- lm(
+  iprice ~ time + timesq + lag0 + lag1 + lag2 + usprice + gprice + income,
+  data = feenstra_93$cars
+)
+
+mod1_tidy <- tidy(mod1)
+
+# i = 0
+
+mod1_tidy %>%
+  filter(term == "lag0")
+
+# i = 1
+# use the delta method to calculate the standard errors
+# define auxiliary variables and functions
+
+mod1_vcov <- vcov(mod1)
+
+mod1_summ <- summary(mod1)
+
+w <- c(1, 1, 1)
+
+std_error <- function(w, X, vars) {
+  as.numeric(sqrt(w %*% X[vars, vars] %*% w))
+}
+
+p_value <- function(statistic, summary) {
+  as.numeric(2 * pt(-abs(statistic), df = summary$df[2]))
+}
+
+mod1_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(w = w) %>%
+  summarise(
+    estimate = sum(estimate * w),
+    std.error = std_error(w, mod1_vcov, c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, mod1_summ)
+  )
+
+# i = 2
+
+w <- c(1, 2, 4)
+
+mod1_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 2, 4)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, mod1_vcov, c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, mod1_summ)
+  )
+
+# i = 3
+
+w <- c(1, 3, 9)
+
+mod1_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 3, 9)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, mod1_vcov, c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, mod1_summ)
+  )
+
+# i = 4
+
+w <- c(1, 4, 16)
+
+mod1_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 4, 16)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, mod1_vcov, c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, mod1_summ)
+  )
+
+# summation of betai's
+
+w <- c(5, 10, 30)
+
+mod1_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = w) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, mod1_vcov, c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, mod1_summ)
+  )
+
+## Cycon ----
+
+mod2 <- lm(
+  iprice ~ dummy1 + dummy2 + dummy3 + time + timesq + lag0 + lag1 + lag2 +
+    tariff + usprice + gprice + income,
+  data = feenstra_93$cycon
+)
+
+mod2_tidy <- tidy(mod2)
+
+# i = 0
+
+mod2_tidy %>%
+  filter(term == "lag0")
+
+# i = 1
+
+w <- c(1, 1, 1)
+
+mod2_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(w = w) %>%
+  summarise(
+    estimate = sum(estimate * w),
+    std.error = std_error(w, vcov(mod2), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod2))
+  )
+
+# i = 2
+
+w <- c(1, 2, 4)
+
+mod2_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 2, 4)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod2), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod2))
+  )
+
+# i = 3
+
+w <- c(1, 3, 9)
+
+mod2_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 3, 9)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod2), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod2))
+  )
+
+# i = 4
+
+w <- c(1, 4, 16)
+
+mod2_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 4, 16)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod2), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod2))
+  )
+
+# summation of betai's
+
+w <- c(5, 10, 30)
+
+mod2_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = w) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod2), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod2))
+  )
+
+## Cypool ----
+
+mod3 <- lm(
+  iprice ~ dummy1 + dummy2 + dummy3 + time + timesq + lag0 + lag1 + lag2 +
+    tariff + usprice + gprice + income,
+  data = feenstra_93$cypool
+)
+
+mod3_tidy <- tidy(mod3)
+
+# i = 0
+
+mod3_tidy %>%
+  filter(term == "lag0")
+
+# i = 1
+
+w <- c(1, 1, 1)
+
+mod3_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(w = w) %>%
+  summarise(
+    estimate = sum(estimate * w),
+    std.error = std_error(w, vcov(mod3), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod3))
+  )
+
+# i = 2
+
+w <- c(1, 2, 4)
+
+mod3_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 2, 4)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod3), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod3))
+  )
+
+# i = 3
+
+w <- c(1, 3, 9)
+
+mod3_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 3, 9)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod3), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod3))
+  )
+
+# i = 4
+
+w <- c(1, 4, 16)
+
+mod3_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 4, 16)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod3), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod3))
+  )
+
+# summation of betai's
+
+w <- c(5, 10, 30)
+
+mod3_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = w) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod3), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod3))
+  )
+
+## Cyship ----
+
+mod4 <- lm(
+  iprice ~ dummy1 + dummy2 + dummy3 + time + timesq + lag0 + lag1 + lag2 +
+    tariff + usprice + gprice + income,
+  data = feenstra_93$cyship
+)
+
+mod4_tidy <- tidy(mod4)
+
+# i = 0
+
+mod4_tidy %>%
+  filter(term == "lag0")
+
+# i = 1
+
+w <- c(1, 1, 1)
+
+mod4_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(w = w) %>%
+  summarise(
+    estimate = sum(estimate * w),
+    std.error = std_error(w, vcov(mod4), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod4))
+  )
+
+# i = 2
+
+w <- c(1, 2, 4)
+
+mod4_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 2, 4)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod4), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod4))
+  )
+
+# i = 3
+
+w <- c(1, 3, 9)
+
+mod4_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 3, 9)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod4), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod4))
+  )
+
+# i = 4
+
+w <- c(1, 4, 16)
+
+mod4_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 4, 16)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod4), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod4))
+  )
+
+# summation of betai's
+
+w <- c(5, 10, 30)
+
+mod4_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = w) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod4), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod4))
+  )
+
+## Trucks ----
+
+mod5 <- lm(
+  iprice ~ time + timesq + lag0 + lag1 + lag2 + tariff + usprice + income,
+  data = feenstra_93$trucks
+)
+
+mod5_tidy <- tidy(mod5)
+
+# i = 0
+
+mod5_tidy %>%
+  filter(term == "lag0")
+
+# i = 1
+
+w <- c(1, 1, 1)
+
+mod5_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(w = w) %>%
+  summarise(
+    estimate = sum(estimate * w),
+    std.error = std_error(w, vcov(mod5), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod5))
+  )
+
+# i = 2
+
+w <- c(1, 2, 4)
+
+mod5_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 2, 4)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod5), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod5))
+  )
+
+# i = 3
+
+w <- c(1, 3, 9)
+
+mod5_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 3, 9)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod5), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod5))
+  )
+
+# i = 4
+
+w <- c(1, 4, 16)
+
+mod5_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = c(1, 4, 16)) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod5), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod5))
+  )
+
+# summation of betai's
+
+w <- c(5, 10, 30)
+
+mod5_tidy %>%
+  filter(term %in% c("lag0", "lag1", "lag2")) %>%
+  mutate(weight = w) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod5), c("lag0", "lag1", "lag2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod5))
+  )
+```
+
+## Exercise 2
+
+Then replicate Feenstra’s Table 2 by imposing the tests of homogeneity and symmetry, shown in (7.35a) and (7.35b).  Instead of conducting the Wald test, as done in Feenstra (1989), instead conduct the analogous F-test. Do you accept or reject the hypotheses of symmetry and homogeneity?
+
+```{r ch7_ex2}
+## Cars ----
+
+# impose the homogeneity and symmetry constraints
+
+mod1h <- lm(
+  y ~ time + timesq + z0 + z1 + z2 + x1 + x2,
+  data = feenstra_93$cars
+)
+
+mod1h_tidy <- tidy(mod1h)
+
+# summation of betai's
+
+w <- c(5, 10, 30)
+
+mod1h_tidy %>%
+  filter(term %in% c("z0", "z1", "z2")) %>%
+  mutate(weight = w) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod1h), c("z0", "z1", "z2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod1h))
+  )
+
+## Cycon ----
+
+# impose the homogeneity and symmetry constraints
+
+mod2h <- lm(
+  y ~ dummy1 + dummy2 + dummy3 + time + timesq + z0 + z1 + z2 + x1 + x2,
+  data = feenstra_93$cycon
+)
+
+mod2h_tidy <- tidy(mod2h)
+
+# summation of betai's
+
+w <- c(5, 10, 30)
+
+mod2h_tidy %>%
+  filter(term %in% c("z0", "z1", "z2")) %>%
+  mutate(weight = w) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod2h), c("z0", "z1", "z2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod2h))
+  )
+
+## Cypool ----
+
+# impose the homogeneity and symmetry constraints
+
+mod3h <- lm(
+  y ~ dummy1 + dummy2 + dummy3 + time + timesq + z0 + z1 + z2 + x1 + x2,
+  data = feenstra_93$cypool
+)
+
+mod3h_tidy <- tidy(mod3h)
+
+# summation of betai's
+
+w <- c(5, 10, 30)
+
+mod3h_tidy %>%
+  filter(term %in% c("z0", "z1", "z2")) %>%
+  mutate(weight = w) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod3h), c("z0", "z1", "z2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod3h))
+  )
+
+## Cyship ----
+
+# impose the homogeneity and symmetry constraints
+
+mod4h <- lm(
+  y ~ dummy1 + dummy2 + dummy3 + time + timesq + z0 + z1 + z2 + x1 + x2,
+  data = feenstra_93$cyship
+)
+
+mod4h_tidy <- tidy(mod4h)
+
+# summation of betai's
+
+w <- c(5, 10, 30)
+
+mod4h_tidy %>%
+  filter(term %in% c("z0", "z1", "z2")) %>%
+  mutate(weight = w) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod4h), c("z0", "z1", "z2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod4h))
+  )
+
+## Trucks ----
+
+# impose the homogeneity and symmetry constraints
+
+mod5h <- lm(
+  y ~ time + timesq + z0 + z1 + z2 + x1,
+  data = feenstra_93$trucks
+)
+
+mod5h_tidy <- tidy(mod5h)
+
+# summation of betai's
+
+w <- c(5, 10, 30)
+
+mod5h_tidy %>%
+  filter(term %in% c("z0", "z1", "z2")) %>%
+  mutate(weight = w) %>%
+  summarise(
+    estimate = sum(estimate * weight),
+    std.error = std_error(weight, vcov(mod5h), c("z0", "z1", "z2")),
+    statistic = estimate / std.error,
+    p.value = p_value(statistic, summary(mod5h))
+  )
+```
