@@ -18,5 +18,5 @@ book:
     
 format:
   html:
-    theme: [cosmo]
+    theme: [default]
     number-sections: false

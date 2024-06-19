@@ -1,8 +1,7 @@
 
 # Chapter 2. The Heckscher-Ohlin Model
 
-In these exercises, you will reproduce some of the empirical results from Trefler (1993, 1995).  To complete the exercise, the Excel file `hov_pub.csv` should be stored in the directory:
-`c:\Empirical_Exercise\Chapter_2\hov_pub.csv`.  After this, run the STATA program `hov_pub.do`, which will create a new STATA data file `trefler.dta`.
+In these exercises, you will reproduce some of the empirical results from Trefler (1993, 1995).  To complete the exercise, the Excel file `hov_pub.csv` should be stored in the directory `Chapter-2`. After this, run the STATA program `hov_pub.do`, which will create a new STATA data file `trefler.dta`.
 
 ## Read and transform the data
 
@@ -12,7 +11,7 @@ In these exercises, you will reproduce some of the empirical results from Trefle
 * This is to read the data into Stata *
 
 set mem 30m
-* insheet using c:\Empirical_Exercise\Chapter_2\trefler.csv *
+* insheet using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler.csv *
 insheet using "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\hov_pub.csv"
 rename v1 country
 rename v2 factor
@@ -85,10 +84,210 @@ label var YPC "GDP per capita, PWT"
 label var indexc "Country indentifier"
 label var indexf "Factor Indentifier"
 
-* save c:\Empirical_Exercise\Chapter_2\trefler,replace *
+* save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler,replace *
 save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler", replace
 
 exit
+```
+
+Output:
+
+```stata
+. * This is to read the data into Stata *
+. set mem 30m
+
+Current memory allocation
+
+                    current                                 memory usage
+    settable          value     description                 (1M = 1024k)
+    --------------------------------------------------------------------
+    set maxvar         5000     max. variables allowed           1.909M
+    set memory           30M    max. data space                 30.000M
+    set matsize         400     max. RHS vars in models          1.254M
+                                                            -----------
+                                                                33.163M
+
+. insheet using Z:\home\pacha\github\advanced-international-trade\first-edition\Ch
+> apter-2\hov_pub.csv
+(8 vars, 297 obs)
+
+. rename v1 country
+
+. rename v2 factor
+
+. rename v3 AT
+
+. rename v4 V
+
+. rename v5 Y
+
+. rename v6 B
+
+. rename v7 YPC
+
+. rename v8 POP
+
+. 
+. * create country index *
+. quietly summarize YPC
+
+. local maxYPC=_result(6)
+
+. gen ratio=YPC/`maxYPC'
+
+. replace ratio=ratio+0.0001 if country=="Italy"
+(9 real changes made)
+
+. 
+. sort ratio
+
+. egen indexc=group(ratio)
+
+. 
+. * create factor index *
+. sort factor
+
+. egen indexf=group(factor)
+
+. 
+. * include delta *
+. 
+. gen delta=1
+
+. replace delta=0.03 if country=="Bangladesh"
+(9 real changes made)
+
+. replace delta=0.09 if country=="Pakistan"
+(9 real changes made)
+
+. replace delta=0.10 if country=="Indonesia"
+(9 real changes made)
+
+. replace delta=0.09 if country=="Sri Lanka"
+(9 real changes made)
+
+. replace delta=0.17 if country=="Thailand"
+(9 real changes made)
+
+. replace delta=0.16 if country=="Colombia"
+(9 real changes made)
+
+. replace delta=0.28 if country=="Panama"
+(9 real changes made)
+
+. replace delta=0.29 if country=="Yugoslavia"
+(9 real changes made)
+
+. replace delta=0.14 if country=="Portugal"
+(9 real changes made)
+
+. replace delta=0.11 if country=="Uruguay"
+(9 real changes made)
+
+. replace delta=0.45 if country=="Greece"
+(9 real changes made)
+
+. replace delta=0.55 if country=="Ireland"
+(9 real changes made)
+
+. replace delta=0.42 if country=="Spain"
+(9 real changes made)
+
+. replace delta=0.49 if country=="Israel"
+(9 real changes made)
+
+. replace delta=0.40 if country=="Hong Kong"
+(9 real changes made)
+
+. replace delta=0.38 if country=="New Zealand"
+(9 real changes made)
+
+. replace delta=0.60 if country=="Austria"
+(9 real changes made)
+
+. replace delta=0.48 if country=="Singapore"
+(9 real changes made)
+
+. replace delta=0.60 if country=="Italy"
+(9 real changes made)
+
+. replace delta=0.58 if country=="UK"
+(9 real changes made)
+
+. replace delta=0.70 if country=="Japan"
+(9 real changes made)
+
+. replace delta=0.65 if country=="Belgium"
+(9 real changes made)
+
+. replace delta=0.47 if country=="Trinidad"
+(9 real changes made)
+
+. replace delta=0.72 if country=="Netherlands"
+(9 real changes made)
+
+. replace delta=0.65 if country=="Finland"
+(9 real changes made)
+
+. replace delta=0.73 if country=="Denmark"
+(9 real changes made)
+
+. replace delta=0.78 if country=="West Germany"
+(9 real changes made)
+
+. replace delta=0.74 if country=="France"
+(9 real changes made)
+
+. replace delta=0.57 if country=="Sweden"
+(9 real changes made)
+
+. replace delta=0.69 if country=="Norway"
+(9 real changes made)
+
+. replace delta=0.79 if country=="Switzerland"
+(9 real changes made)
+
+. replace delta=0.55 if country=="Canada"
+(9 real changes made)
+
+. replace delta=1 if country=="USA"
+(0 real changes made)
+
+. 
+. compress
+YPC was float now int
+indexc was float now byte
+indexf was float now byte
+
+. 
+. label var country "Name of the country"
+
+. label var factor "Name of the factor"
+
+. label var AT "Factor content of trade F=A*T"
+
+. label var V "Endowment"
+
+. label var Y "GDP, World Bank, y=p*Q"
+
+. label var B "Trade balance, World Bank b=p*T"
+
+. label var YPC "GDP per capita, PWT"
+
+. label var indexc "Country indentifier"
+
+. label var indexf "Factor Indentifier"
+
+. 
+. save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\t
+> refler,replace
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\tre
+> fler.dta saved
+
+. 
+. exit
+
+end of do-file
 ```
 
 ### My code
@@ -207,12 +406,12 @@ Given identical technologies across countries, run the program `sign_rank_1.do` 
 * This program is to conduct sign test, Rank test and Missing trade test *
 
 capture log close
-* log using c:\Empirical_Exercise\Chapter_2\sign_rank_1.log, replace *
+* log using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\sign_rank_1.log, replace *
 log using "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\sign_rank_1.log", replace
 
 set mem 30m
 
-* use C:\Empirical_Exercise\Chapter_2\trefler, clear *
+* use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler, clear *
 use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler", clear
 
 * number of country in the dataset *
@@ -314,6 +513,400 @@ list
 
 log close
 exit
+```
+
+Output:
+
+```stata
+. * This program is to conduct sign test, Rank test and Missing trade test *
+. 
+. capture log close
+
+. log using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapte
+> r-2\sign_rank_1.log, replace
+----------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
+> er-2\sign_rank_1.log
+  log type:  text
+ opened on:  19 Jun 2024, 15:29:23
+
+. 
+. set mem 30m
+
+Current memory allocation
+
+                    current                                 memory usage
+    settable          value     description                 (1M = 1024k)
+    --------------------------------------------------------------------
+    set maxvar         5000     max. variables allowed           1.909M
+    set memory           30M    max. data space                 30.000M
+    set matsize         400     max. RHS vars in models          1.254M
+                                                            -----------
+                                                                33.163M
+
+. 
+. use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\tr
+> efler, clear
+
+. 
+. * number of country in the dataset *
+. egen C=max(indexc)
+
+. egen F=max(indexf)
+
+. 
+. * Calculate the world level of Yw, Bw and Vw *
+. egen Yww=sum(Y)
+
+. gen Yw=Yww/F
+
+. egen Bww=sum(B)
+
+. gen Bw=Bww/F
+
+. egen Vfw=sum(V), by(indexf)
+
+. 
+. * Calculate country share Sc *
+. gen Sc=(Y-B)/(Yw-Bw)
+
+. 
+. * Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)*
+. gen Efc=AT-(V-Sc*Vfw)
+
+. 
+. * Construct the average epsilon for a given factor *
+. egen total=sum(Efc),by(indexf)
+
+. gen ave=total/C
+
+. 
+. * Construct sigma^2 and the weight *
+. 
+. egen tot=sum((Efc-ave)^2), by(indexf)
+
+. gen sigma2f=tot/(C-1)
+
+. 
+. codebook sigma2f
+
+----------------------------------------------------------------------------------
+sigma2f                                                                (unlabeled)
+----------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [98198290,7.112e+22]         units:  10
+         unique values:  9                        missing .:  0/297
+
+            tabulation:  Freq.  Value
+                            33  98198288
+                            33  2.419e+08
+                            33  7.455e+11
+                            33  9.191e+11
+                            33  1.210e+12
+                            33  4.383e+12
+                            33  2.106e+13
+                            33  1.009e+14
+                            33  7.112e+22
+
+. gen sigmaf=sqrt(sigma2f)
+
+. gen weight=sigmaf*sqrt(Sc)
+
+. 
+. * Using the weight, convert all the data *
+. 
+. gen trAT=AT/(sigmaf*sqrt(Sc))
+
+. gen trV=V/(sigmaf*sqrt(Sc))
+
+. gen trY=Y/sqrt(Sc)
+
+. gen trB=B/sqrt(Sc)
+
+. gen trVfw=Vfw/sigmaf
+
+. 
+. gen AThat=trV-Sc*trVfw
+
+. gen AThat2=(V-Sc*Vfw)/weight
+
+. 
+. * Correlation, should be .28 *
+. 
+. corr trAT AThat2
+(obs=297)
+
+             |     trAT   AThat2
+-------------+------------------
+        trAT |   1.0000
+      AThat2 |   0.2823   1.0000
+
+
+. 
+. *************
+. * Sign Test *
+. *************
+. 
+. sort indexc
+
+. by indexc: count if trAT*AThat2>0
+
+----------------------------------------------------------------------------------
+-> indexc = 1
+    3
+----------------------------------------------------------------------------------
+-> indexc = 2
+    3
+----------------------------------------------------------------------------------
+-> indexc = 3
+    2
+----------------------------------------------------------------------------------
+-> indexc = 4
+    2
+----------------------------------------------------------------------------------
+-> indexc = 5
+    2
+----------------------------------------------------------------------------------
+-> indexc = 6
+    3
+----------------------------------------------------------------------------------
+-> indexc = 7
+    3
+----------------------------------------------------------------------------------
+-> indexc = 8
+    5
+----------------------------------------------------------------------------------
+-> indexc = 9
+    2
+----------------------------------------------------------------------------------
+-> indexc = 10
+    9
+----------------------------------------------------------------------------------
+-> indexc = 11
+    1
+----------------------------------------------------------------------------------
+-> indexc = 12
+    6
+----------------------------------------------------------------------------------
+-> indexc = 13
+    2
+----------------------------------------------------------------------------------
+-> indexc = 14
+    6
+----------------------------------------------------------------------------------
+-> indexc = 15
+    6
+----------------------------------------------------------------------------------
+-> indexc = 16
+    4
+----------------------------------------------------------------------------------
+-> indexc = 17
+    5
+----------------------------------------------------------------------------------
+-> indexc = 18
+    5
+----------------------------------------------------------------------------------
+-> indexc = 19
+    6
+----------------------------------------------------------------------------------
+-> indexc = 20
+    6
+----------------------------------------------------------------------------------
+-> indexc = 21
+    7
+----------------------------------------------------------------------------------
+-> indexc = 22
+    6
+----------------------------------------------------------------------------------
+-> indexc = 23
+    6
+----------------------------------------------------------------------------------
+-> indexc = 24
+    4
+----------------------------------------------------------------------------------
+-> indexc = 25
+    3
+----------------------------------------------------------------------------------
+-> indexc = 26
+    4
+----------------------------------------------------------------------------------
+-> indexc = 27
+    5
+----------------------------------------------------------------------------------
+-> indexc = 28
+    3
+----------------------------------------------------------------------------------
+-> indexc = 29
+    4
+----------------------------------------------------------------------------------
+-> indexc = 30
+    4
+----------------------------------------------------------------------------------
+-> indexc = 31
+    8
+----------------------------------------------------------------------------------
+-> indexc = 32
+    5
+----------------------------------------------------------------------------------
+-> indexc = 33
+    8
+
+. 
+. count if trAT*AThat2>0
+  148
+
+. display _result(1)/_N
+.4983165
+
+. 
+. *****************
+. * Missing Trade *
+. *****************
+. 
+. * Checking for the missing trade, should be .032 *
+. 
+. quietly summarize trAT
+
+. local varAT=_result(4)
+
+. quietly summarize AThat
+
+. local varHat=_result(4)
+
+. quietly summarize AThat2
+
+. local varHat2=_result(4)
+
+. display `varAT'/`varHat'
+.03375119
+
+. display `varAT'/`varHat2'
+.031999
+
+. 
+. **************
+. * Rank Tests *
+. **************
+. 
+. keep country indexc indexf trAT AThat2
+
+. 
+. sort indexc indexf
+
+. reshape wide trAT AThat2, i(indexc) j(indexf)
+(note: j = 1 2 3 4 5 6 7 8 9)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                      297   ->      33
+Number of variables                   5   ->      20
+j variable (9 values)            indexf   ->   (dropped)
+xij variables:
+                                   trAT   ->   trAT1 trAT2 ... trAT9
+                                 AThat2   ->   AThat21 AThat22 ... AThat29
+-----------------------------------------------------------------------------
+
+. 
+. local i=1
+
+. while `i'<9{
+  2.         local j=`i'+1
+  3.         while `j'<=9{
+  4.                 gen rank`i'`j'=((trAT`i'-trAT`j')*(AThat2`i'-AThat2`j')>0)
+  5.                 local j=`j'+1
+  6.         }
+  7.         local i=`i'+1
+  8. }
+
+. 
+. keep country indexc rank*
+
+. reshape long rank, i(indexc) j(factor)
+(note: j = 12 13 14 15 16 17 18 19 23 24 25 26 27 28 29 34 35 36 37 38 39 45 46 47
+>  48 49 56 57 58 59 67 68 69 78 79 89)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                       33   ->    1188
+Number of variables                  38   ->       4
+j variable (36 values)                    ->   factor
+xij variables:
+               rank12 rank13 ... rank89   ->   rank
+-----------------------------------------------------------------------------
+
+. egen r1=sum(rank), by(indexc)
+
+. gen r2=r1/36
+
+. collapse r2,by(indexc country)
+
+. sum r2
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+          r2 |        33    .6026936    .1721445   .0833333   .9166667
+
+. list
+
+     +----------------------------------+
+     | indexc        country         r2 |
+     |----------------------------------|
+  1. |      1     Bangladesh        .75 |
+  2. |      2       Pakistan   .7222222 |
+  3. |      3      Indonesia   .6666667 |
+  4. |      4      Sri Lanka   .4166667 |
+  5. |      5       Thailand   .6944444 |
+     |----------------------------------|
+  6. |      6       Colombia   .8055556 |
+  7. |      7         Panama   .5555556 |
+  8. |      8     Yugoslavia   .4444444 |
+  9. |      9       Portugal   .5277778 |
+ 10. |     10        Uruguay   .7222222 |
+     |----------------------------------|
+ 11. |     11         Greece   .4722222 |
+ 12. |     12        Ireland   .5277778 |
+ 13. |     13          Spain   .3888889 |
+ 14. |     14         Israel   .3888889 |
+ 15. |     15      Hong Kong   .8333333 |
+     |----------------------------------|
+ 16. |     16    New Zealand   .5277778 |
+ 17. |     17        Austria   .5277778 |
+ 18. |     18      Singapore   .6111111 |
+ 19. |     19          Italy   .7777778 |
+ 20. |     20             UK   .5833333 |
+     |----------------------------------|
+ 21. |     21          Japan   .7777778 |
+ 22. |     22        Belgium   .6111111 |
+ 23. |     23       Trinidad         .5 |
+ 24. |     24    Netherlands   .5277778 |
+ 25. |     25        Finland   .4722222 |
+     |----------------------------------|
+ 26. |     26        Denmark   .5277778 |
+ 27. |     27   West Germany   .8055556 |
+ 28. |     28         France   .0833333 |
+ 29. |     29         Sweden   .6666667 |
+ 30. |     30         Norway   .6111111 |
+     |----------------------------------|
+ 31. |     31    Switzerland   .5555556 |
+ 32. |     32         Canada   .8888889 |
+ 33. |     33            USA   .9166667 |
+     +----------------------------------+
+
+. 
+. log close
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
+> er-2\sign_rank_1.log
+  log type:  text
+ closed on:  19 Jun 2024, 15:29:31
+----------------------------------------------------------------------------------
+
+. exit
+
+end of do-file
 ```
 
 ### My code
@@ -489,12 +1082,12 @@ Given uniform technological differences across countries, run the program `sign_
 * using delta *
 
 capture log close
-* log using c:\Empirical_Exercise\Chapter_2\sign_rank_2.log, replace *
+* log using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\sign_rank_2.log, replace *
 log using "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\sign_rank_2.log", replace
 
 set mem 30m
 
-* use c:\Empirical_Exercise\Chapter_2\trefler, clear *
+* use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler, clear *
 use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler", clear
 
 * number of country in the dataset *
@@ -590,6 +1183,393 @@ list
 
 log close
 exit
+```
+
+Output:
+
+```stata
+. * This program is to conduct sign test, Rank test and Missing trade test *
+. * using delta *
+. 
+. capture log close
+
+. log using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapte
+> r-2\sign_rank_2.log, replace
+(note: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapte
+> r-2\sign_rank_2.log not found)
+----------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
+> er-2\sign_rank_2.log
+  log type:  text
+ opened on:  19 Jun 2024, 15:30:38
+
+. 
+. set mem 30m
+
+Current memory allocation
+
+                    current                                 memory usage
+    settable          value     description                 (1M = 1024k)
+    --------------------------------------------------------------------
+    set maxvar         5000     max. variables allowed           1.909M
+    set memory           30M    max. data space                 30.000M
+    set matsize         400     max. RHS vars in models          1.254M
+                                                            -----------
+                                                                33.163M
+
+. 
+. use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\tr
+> efler, clear
+
+. 
+. * number of country in the dataset *
+. egen C=max(indexc)
+
+. egen F=max(indexf)
+
+. 
+. * Calculate the world level of Yw, Bw and Vw *
+. egen Yww=sum(Y)
+
+. gen Yw=Yww/F
+
+. egen Bww=sum(B)
+
+. gen Bw=Bww/F
+
+. egen Vfw=sum(V), by(indexf)
+
+. egen Vw=sum(delta*V), by(indexf)
+
+. 
+. * Calculate country share Sc *
+. gen Sc=(Y-B)/(Yw-Bw)
+
+. 
+. * Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
+. 
+. gen Efc=delta*AT-(delta*V-Sc*Vw)
+
+. 
+. * Construct the average epsilon for a given factor *
+. egen total=sum(Efc),by(indexf)
+
+. gen ave=total/C
+
+. 
+. * Construct sigma^2 and the weight *
+. 
+. egen tot=sum((Efc-ave)^2), by(indexf)
+
+. gen sigma2f=tot/(C-1)
+
+. 
+. codebook sigma2f
+
+----------------------------------------------------------------------------------
+sigma2f                                                                (unlabeled)
+----------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [51579730,3.418e+21]         units:  10
+         unique values:  9                        missing .:  0/297
+
+            tabulation:  Freq.  Value
+                            33  51579728
+                            33  3.926e+08
+                            33  6.172e+10
+                            33  1.211e+11
+                            33  1.883e+11
+                            33  2.320e+11
+                            33  2.662e+11
+                            33  2.113e+12
+                            33  3.418e+21
+
+. gen sigmaf=sqrt(sigma2f)
+
+. gen weight=sigmaf*sqrt(Sc)
+
+. 
+. * Using the weight, convert all the data *
+. 
+. gen trAT=delta*AT/weight
+
+. gen AThat2=(delta*V-Sc*Vw)/weight
+
+. 
+. * Correlation *
+. 
+. corr trAT AThat2
+(obs=297)
+
+             |     trAT   AThat2
+-------------+------------------
+        trAT |   1.0000
+      AThat2 |   0.4100   1.0000
+
+
+. 
+. *************
+. * Sign Test *
+. *************
+. 
+. sort indexc
+
+. by indexc: count if trAT*AThat2>0
+
+----------------------------------------------------------------------------------
+-> indexc = 1
+    7
+----------------------------------------------------------------------------------
+-> indexc = 2
+    6
+----------------------------------------------------------------------------------
+-> indexc = 3
+    6
+----------------------------------------------------------------------------------
+-> indexc = 4
+    5
+----------------------------------------------------------------------------------
+-> indexc = 5
+    6
+----------------------------------------------------------------------------------
+-> indexc = 6
+    8
+----------------------------------------------------------------------------------
+-> indexc = 7
+    7
+----------------------------------------------------------------------------------
+-> indexc = 8
+    6
+----------------------------------------------------------------------------------
+-> indexc = 9
+    7
+----------------------------------------------------------------------------------
+-> indexc = 10
+    1
+----------------------------------------------------------------------------------
+-> indexc = 11
+    5
+----------------------------------------------------------------------------------
+-> indexc = 12
+    4
+----------------------------------------------------------------------------------
+-> indexc = 13
+    7
+----------------------------------------------------------------------------------
+-> indexc = 14
+    8
+----------------------------------------------------------------------------------
+-> indexc = 15
+    8
+----------------------------------------------------------------------------------
+-> indexc = 16
+    2
+----------------------------------------------------------------------------------
+-> indexc = 17
+    6
+----------------------------------------------------------------------------------
+-> indexc = 18
+    9
+----------------------------------------------------------------------------------
+-> indexc = 19
+    3
+----------------------------------------------------------------------------------
+-> indexc = 20
+    7
+----------------------------------------------------------------------------------
+-> indexc = 21
+    6
+----------------------------------------------------------------------------------
+-> indexc = 22
+    7
+----------------------------------------------------------------------------------
+-> indexc = 23
+    9
+----------------------------------------------------------------------------------
+-> indexc = 24
+    4
+----------------------------------------------------------------------------------
+-> indexc = 25
+    4
+----------------------------------------------------------------------------------
+-> indexc = 26
+    4
+----------------------------------------------------------------------------------
+-> indexc = 27
+    6
+----------------------------------------------------------------------------------
+-> indexc = 28
+    3
+----------------------------------------------------------------------------------
+-> indexc = 29
+    4
+----------------------------------------------------------------------------------
+-> indexc = 30
+    4
+----------------------------------------------------------------------------------
+-> indexc = 31
+    8
+----------------------------------------------------------------------------------
+-> indexc = 32
+    2
+----------------------------------------------------------------------------------
+-> indexc = 33
+    5
+
+. 
+. count if trAT*AThat2>0
+  184
+
+. display _result(1)/_N
+.61952862
+
+. 
+. *****************
+. * Missing Trade *
+. *****************
+. 
+. quietly summarize trAT
+
+. local varAT=_result(4)
+
+. quietly summarize AThat
+
+. local varHat=_result(4)
+
+. quietly summarize AThat2
+
+. local varHat2=_result(4)
+
+. display `varAT'/`varHat'
+.07061819
+
+. display `varAT'/`varHat2'
+.07061819
+
+. 
+. *************
+. * Rank Test *
+. *************
+. 
+. keep country indexc indexf trAT AThat2
+
+. 
+. sort indexc indexf
+
+. reshape wide trAT AThat2, i(indexc) j(indexf)
+(note: j = 1 2 3 4 5 6 7 8 9)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                      297   ->      33
+Number of variables                   5   ->      20
+j variable (9 values)            indexf   ->   (dropped)
+xij variables:
+                                   trAT   ->   trAT1 trAT2 ... trAT9
+                                 AThat2   ->   AThat21 AThat22 ... AThat29
+-----------------------------------------------------------------------------
+
+. 
+. local i=1
+
+. while `i'<9{
+  2.         local j=`i'+1
+  3.         while `j'<=9{
+  4.                 gen rank`i'`j'=((trAT`i'-trAT`j')*(AThat2`i'-AThat2`j')>0)
+  5.                 local j=`j'+1
+  6.         }
+  7.         local i=`i'+1
+  8. }
+
+. 
+. keep country indexc rank*
+
+. reshape long rank, i(indexc) j(factor)
+(note: j = 12 13 14 15 16 17 18 19 23 24 25 26 27 28 29 34 35 36 37 38 39 45 46 47
+>  48 49 56 57 58 59 67 68 69 78 79 89)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                       33   ->    1188
+Number of variables                  38   ->       4
+j variable (36 values)                    ->   factor
+xij variables:
+               rank12 rank13 ... rank89   ->   rank
+-----------------------------------------------------------------------------
+
+. egen r1=sum(rank), by(indexc)
+
+. gen r2=r1/36
+
+. collapse r2,by(indexc country)
+
+. sum r2
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+          r2 |        33    .6153199    .1508913   .1944444   .8611111
+
+. list
+
+     +----------------------------------+
+     | indexc        country         r2 |
+     |----------------------------------|
+  1. |      1     Bangladesh   .7777778 |
+  2. |      2       Pakistan   .7777778 |
+  3. |      3      Indonesia   .6666667 |
+  4. |      4      Sri Lanka   .6666667 |
+  5. |      5       Thailand   .7222222 |
+     |----------------------------------|
+  6. |      6       Colombia   .8611111 |
+  7. |      7         Panama   .7777778 |
+  8. |      8     Yugoslavia   .6111111 |
+  9. |      9       Portugal   .5833333 |
+ 10. |     10        Uruguay   .5277778 |
+     |----------------------------------|
+ 11. |     11         Greece        .75 |
+ 12. |     12        Ireland   .3888889 |
+ 13. |     13          Spain   .6944444 |
+ 14. |     14         Israel   .6944444 |
+ 15. |     15      Hong Kong   .7222222 |
+     |----------------------------------|
+ 16. |     16    New Zealand   .6111111 |
+ 17. |     17        Austria   .4444444 |
+ 18. |     18      Singapore   .6111111 |
+ 19. |     19          Italy   .6666667 |
+ 20. |     20             UK   .6388889 |
+     |----------------------------------|
+ 21. |     21          Japan   .7777778 |
+ 22. |     22        Belgium   .5277778 |
+ 23. |     23       Trinidad   .5277778 |
+ 24. |     24    Netherlands   .4722222 |
+ 25. |     25        Finland         .5 |
+     |----------------------------------|
+ 26. |     26        Denmark   .4166667 |
+ 27. |     27   West Germany   .7777778 |
+ 28. |     28         France   .1944444 |
+ 29. |     29         Sweden   .3611111 |
+ 30. |     30         Norway   .7777778 |
+     |----------------------------------|
+ 31. |     31    Switzerland         .5 |
+ 32. |     32         Canada   .5555556 |
+ 33. |     33            USA   .7222222 |
+     +----------------------------------+
+
+. 
+. log close
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
+> er-2\sign_rank_2.log
+  log type:  text
+ closed on:  19 Jun 2024, 15:30:44
+----------------------------------------------------------------------------------
+
+. exit
+
+end of do-file
 ```
 
 ### My code
@@ -761,12 +1741,12 @@ Allowing all factors in each country to have different productivities, now run t
 * This program is to compute pai, the factor productivity *
 
 capture log close
-* log using c:\Empirical_Exercise\Chapter_2\pi.log,replace *
+* log using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi.log,replace *
 log using "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi.log", replace
 
 set mem 30m
 
-* use c:\Empirical_Exercise\Chapter_2\trefler, clear *
+* use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler, clear *
 use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\trefler", clear
 
 * number of country in the dataset *
@@ -819,7 +1799,7 @@ replace en=3 if indexf==8
 replace en=4 if indexf==9
 keep country factor AT V en indexc Sc
 
-* save c:\Empirical_Exercise\Chapter_2\indexf_189,replace *
+* save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_189,replace *
 save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_189", replace
 
 restore
@@ -836,25 +1816,25 @@ rename AT_l AT
 gen en=1
 collapse (mean)AT V en indexc Sc, by(country)
 gen str5 factor="Labor"
-* save c:\Empirical_Exercise\Chapter_2\indexf_L,replace *
+* save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_L,replace *
 save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_L", replace
 
 restore
 
-* use c:\Empirical_Exercise\Chapter_2\indexf_189,clear *
+* use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_189,clear *
 use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_189", clear
 
-* append using c:\Empirical_Exercise\Chapter_2\indexf_L *
+* append using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_L *
 append using "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\indexf_L"
 sort indexc en
-* save c:\Empirical_Exercise\Chapter_2\pi,replace *
+* save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi,replace *
 save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi", replace
 
 ************************************
 * Compute Pi: factor productivity *
 ************************************
 
-* use c:\Empirical_Exercise\Chapter_2\pi, clear *
+* use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi, clear *
 use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi", clear
 
 gen p_0=1
@@ -875,7 +1855,7 @@ while `i'<=4{
 		local j=`j'+1
 	}
 	keep en country indexc p_1
-	* save c:\Empirical_Exercise\Chapter_2\pi_`i',replace *
+	* save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_`i',replace *
   save "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_`i'", replace
 	restore
 	local i=`i'+1
@@ -883,7 +1863,7 @@ while `i'<=4{
 
 local i=1
 while `i'<=4{
-	* use c:\Empirical_Exercise\Chapter_2\pi_`i',clear *
+	* use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_`i',clear *
   use "Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_`i'", clear
 	sort en indexc
 	by en: list en indexc country p_1
@@ -893,6 +1873,1064 @@ while `i'<=4{
 log close
 
 exit
+```
+
+Output:
+
+```stata
+. * This program is to compute pai, the factor productivity *
+. 
+. capture log close
+
+. log using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapte
+> r-2\pi.log,replace
+----------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
+> er-2\pi.log
+  log type:  text
+ opened on:  19 Jun 2024, 15:32:25
+
+. 
+. set mem 30m
+
+Current memory allocation
+
+                    current                                 memory usage
+    settable          value     description                 (1M = 1024k)
+    --------------------------------------------------------------------
+    set maxvar         5000     max. variables allowed           1.909M
+    set memory           30M    max. data space                 30.000M
+    set matsize         400     max. RHS vars in models          1.254M
+                                                            -----------
+                                                                33.163M
+
+. 
+. use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\tr
+> efler, clear
+
+. 
+. * number of country in the dataset *
+. egen C=max(indexc)
+
+. egen F=max(indexf)
+
+. 
+. * Calculate the world level of Yw, Bw and Vw *
+. egen Yww=sum(Y)
+
+. gen Yw=Yww/F
+
+. egen Bww=sum(B)
+
+. gen Bw=Bww/F
+
+. egen Vfw=sum(V), by(indexf)
+
+. 
+. * Calculate country share Sc *
+. gen Sc=(Y-B)/(Yw-Bw)
+
+. 
+. * Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
+. gen Efc=AT-(V-Sc*Vfw)
+
+. 
+. * Construct the average epsilon for a given factor *
+. egen total=sum(Efc),by(indexf)
+
+. gen ave=total/C
+
+. 
+. * Construct sigma^2 and the weight *
+. 
+. egen tot=sum((Efc-ave)^2), by(indexf)
+
+. gen sigma2f=tot/(C-1)
+
+. 
+. codebook sigma2f
+
+----------------------------------------------------------------------------------
+sigma2f                                                                (unlabeled)
+----------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [98198290,7.112e+22]         units:  10
+         unique values:  9                        missing .:  0/297
+
+            tabulation:  Freq.  Value
+                            33  98198288
+                            33  2.419e+08
+                            33  7.455e+11
+                            33  9.191e+11
+                            33  1.210e+12
+                            33  4.383e+12
+                            33  2.106e+13
+                            33  1.009e+14
+                            33  7.112e+22
+
+. gen sigmaf=sqrt(sigma2f)
+
+. gen weight=sigmaf*sqrt(Sc)
+
+. 
+. * Using the weight, convert all the data *
+. 
+. gen trAT=AT/(sigmaf*sqrt(Sc))
+
+. gen trV=V/(sigmaf*sqrt(Sc))
+
+. gen trY=Y/sqrt(Sc)
+
+. gen trB=B/sqrt(Sc)
+
+. gen trVfw=Vfw/sigmaf
+
+. 
+. gen AThat=trV-Sc*trVfw
+
+. gen AThat2=(V-Sc*Vfw)/weight
+
+. 
+. * Construct Aggregate Labor Endowment *
+. 
+. preserve
+
+. keep if indexf==7 |indexf==8 | indexf==9
+(198 observations deleted)
+
+. gen en=2
+
+. replace en=3 if indexf==8
+(33 real changes made)
+
+. replace en=4 if indexf==9
+(33 real changes made)
+
+. keep country factor AT V en indexc Sc
+
+. 
+. save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\i
+> ndexf_189,replace
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\ind
+> exf_189.dta saved
+
+. 
+. restore
+
+. 
+. preserve
+
+. drop if indexf==7 |indexf==8 | indexf==9
+(99 observations deleted)
+
+. 
+. egen v_l=sum(V), by(country)
+
+. egen AT_l=sum(AT), by(country)
+
+. 
+. drop V AT factor
+
+. rename v_l V
+
+. rename AT_l AT
+
+. gen en=1
+
+. collapse (mean)AT V en indexc Sc, by(country)
+
+. gen str5 factor="Labor"
+
+. save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\i
+> ndexf_L,replace
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\ind
+> exf_L.dta saved
+
+. 
+. restore
+
+. 
+. use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\in
+> dexf_189,clear
+
+. append using Z:\home\pacha\github\advanced-international-trade\first-edition\Cha
+> pter-2\indexf_L
+indexc was byte now float
+
+. sort indexc en
+
+. save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\p
+> i,replace
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi.
+> dta saved
+
+. 
+. ************************************
+. * Compute Pi: factor productivity *
+. ************************************
+. 
+. use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi
+> , clear
+
+. 
+. gen p_0=1
+
+. gen p_1=1
+
+. 
+. local i=1
+
+. while `i'<=4{
+  2.         preserve
+  3.         keep if en==`i'
+  4.         local j=1
+  5.         while `j'<51{
+  6.                 replace p_0=p_1
+  7.                 gen Vp=p_0*V
+  8.                 egen Vpw=sum(Vp)
+  9.                 replace p_1=(AT+Sc*Vpw)/V
+ 10.                 replace p_1=1 if country=="USA"
+ 11.                 drop Vp Vpw
+ 12.                 local j=`j'+1
+ 13.         }
+ 14.         keep en country indexc p_1
+ 15.         save Z:\home\pacha\github\advanced-international-trade\first-edition\
+> Chapter-2\pi_`i',replace
+ 16.         restore
+ 17.         local i=`i'+1
+ 18. }
+(99 observations deleted)
+(0 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(30 real changes made)
+(1 real change made)
+(29 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_
+> 1.dta saved
+(99 observations deleted)
+(0 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_
+> 2.dta saved
+(99 observations deleted)
+(0 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(32 real changes made)
+(1 real change made)
+(31 real changes made)
+(31 real changes made)
+(1 real change made)
+(30 real changes made)
+(29 real changes made)
+(1 real change made)
+(28 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_
+> 3.dta saved
+(99 observations deleted)
+(0 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(33 real changes made)
+(1 real change made)
+(32 real changes made)
+(28 real changes made)
+(1 real change made)
+(27 real changes made)
+(31 real changes made)
+(1 real change made)
+(30 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+(0 real changes made)
+(1 real change made)
+(1 real change made)
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-2\pi_
+> 4.dta saved
+
+. 
+. local i=1
+
+. while `i'<=4{
+  2.         use Z:\home\pacha\github\advanced-international-trade\first-edition\C
+> hapter-2\pi_`i',clear
+  3.         sort en indexc
+  4.         by en: list en indexc country p_1
+  5.         local i=`i'+1
+  6. }
+
+----------------------------------------------------------------------------------
+-> en = 1
+
+     +---------------------------------------+
+     | en   indexc        country        p_1 |
+     |---------------------------------------|
+  1. |  1        1     Bangladesh   .0165219 |
+  2. |  1        2       Pakistan   .0394124 |
+  3. |  1        3      Indonesia   .0432824 |
+  4. |  1        4      Sri Lanka   .0344432 |
+  5. |  1        5       Thailand    .048902 |
+     |---------------------------------------|
+  6. |  1        6       Colombia   .1940833 |
+  7. |  1        7         Panama   .2279774 |
+  8. |  1        8     Yugoslavia   .1997569 |
+  9. |  1        9       Portugal   .1759864 |
+ 10. |  1       10        Uruguay   .2029693 |
+     |---------------------------------------|
+ 11. |  1       11         Greece   .3140718 |
+ 12. |  1       12        Ireland   .4166084 |
+ 13. |  1       13          Spain   .4172725 |
+ 14. |  1       14         Israel   .6131932 |
+ 15. |  1       15      Hong Kong   .3781684 |
+     |---------------------------------------|
+ 16. |  1       16    New Zealand   .5850298 |
+ 17. |  1       17        Austria   .5694186 |
+ 18. |  1       18      Singapore   .4873306 |
+ 19. |  1       19          Italy   .5907437 |
+ 20. |  1       20             UK   .6332356 |
+     |---------------------------------------|
+ 21. |  1       21          Japan    .604921 |
+ 22. |  1       22        Belgium   .7233988 |
+ 23. |  1       23       Trinidad    .448344 |
+ 24. |  1       24    Netherlands   .7933354 |
+ 25. |  1       25        Finland   .6969619 |
+     |---------------------------------------|
+ 26. |  1       26        Denmark   .7061784 |
+ 27. |  1       27   West Germany   .7691833 |
+ 28. |  1       28         France    .735665 |
+ 29. |  1       29         Sweden   .7270576 |
+ 30. |  1       30         Norway   .7816517 |
+     |---------------------------------------|
+ 31. |  1       31    Switzerland   .9317446 |
+ 32. |  1       32         Canada   .7799865 |
+ 33. |  1       33            USA          1 |
+     +---------------------------------------+
+
+
+----------------------------------------------------------------------------------
+-> en = 2
+
+     +---------------------------------------+
+     | en   indexc        country        p_1 |
+     |---------------------------------------|
+  1. |  2        1     Bangladesh   .9119021 |
+  2. |  2        2       Pakistan   .4867497 |
+  3. |  2        3      Indonesia    .250653 |
+  4. |  2        4      Sri Lanka   .1259789 |
+  5. |  2        5       Thailand   .3929541 |
+     |---------------------------------------|
+  6. |  2        6       Colombia   .4856291 |
+  7. |  2        7         Panama   .3224079 |
+  8. |  2        8     Yugoslavia   .2985477 |
+  9. |  2        9       Portugal    .297107 |
+ 10. |  2       10        Uruguay   .4060566 |
+     |---------------------------------------|
+ 11. |  2       11         Greece   .4401574 |
+ 12. |  2       12        Ireland   .4783922 |
+ 13. |  2       13          Spain    .519489 |
+ 14. |  2       14         Israel   .5049116 |
+ 15. |  2       15      Hong Kong   .5150965 |
+     |---------------------------------------|
+ 16. |  2       16    New Zealand   .6197254 |
+ 17. |  2       17        Austria    .542198 |
+ 18. |  2       18      Singapore   .3209652 |
+ 19. |  2       19          Italy   .5122213 |
+ 20. |  2       20             UK   .8159872 |
+     |---------------------------------------|
+ 21. |  2       21          Japan   .6502131 |
+ 22. |  2       22        Belgium   .6457499 |
+ 23. |  2       23       Trinidad   .4193396 |
+ 24. |  2       24    Netherlands   .7513015 |
+ 25. |  2       25        Finland   .6453199 |
+     |---------------------------------------|
+ 26. |  2       26        Denmark    .703564 |
+ 27. |  2       27   West Germany   .6629313 |
+ 28. |  2       28         France   .6150761 |
+ 29. |  2       29         Sweden   .9445322 |
+ 30. |  2       30         Norway   .6199874 |
+     |---------------------------------------|
+ 31. |  2       31    Switzerland   .6079721 |
+ 32. |  2       32         Canada   .7359194 |
+ 33. |  2       33            USA          1 |
+     +---------------------------------------+
+
+
+----------------------------------------------------------------------------------
+-> en = 3
+
+     +----------------------------------------+
+     | en   indexc        country         p_1 |
+     |----------------------------------------|
+  1. |  3        1     Bangladesh    .0230836 |
+  2. |  3        2       Pakistan    .0975686 |
+  3. |  3        3      Indonesia    .1641388 |
+  4. |  3        4      Sri Lanka    .2300839 |
+  5. |  3        5       Thailand    .3002517 |
+     |----------------------------------------|
+  6. |  3        6       Colombia    .5963939 |
+  7. |  3        7         Panama    .5834956 |
+  8. |  3        8     Yugoslavia    .3189657 |
+  9. |  3        9       Portugal    -.383313 |
+ 10. |  3       10        Uruguay    .5709916 |
+     |----------------------------------------|
+ 11. |  3       11         Greece    .6072472 |
+ 12. |  3       12        Ireland    1.480371 |
+ 13. |  3       13          Spain    .2365766 |
+ 14. |  3       14         Israel    2.517195 |
+ 15. |  3       15      Hong Kong    -229.073 |
+     |----------------------------------------|
+ 16. |  3       16    New Zealand    7.520329 |
+ 17. |  3       17        Austria    1.159659 |
+ 18. |  3       18      Singapore   -25.49224 |
+ 19. |  3       19          Italy    .6419317 |
+ 20. |  3       20             UK     1.47654 |
+     |----------------------------------------|
+ 21. |  3       21          Japan    4.292305 |
+ 22. |  3       22        Belgium    .4575562 |
+ 23. |  3       23       Trinidad    -.904206 |
+ 24. |  3       24    Netherlands    9.091455 |
+ 25. |  3       25        Finland      .67896 |
+     |----------------------------------------|
+ 26. |  3       26        Denmark    1.759899 |
+ 27. |  3       27   West Germany    1.054174 |
+ 28. |  3       28         France    1.558952 |
+ 29. |  3       29         Sweden     .907351 |
+ 30. |  3       30         Norway    1.812922 |
+     |----------------------------------------|
+ 31. |  3       31    Switzerland     3.74253 |
+ 32. |  3       32         Canada    .4738446 |
+ 33. |  3       33            USA           1 |
+     +----------------------------------------+
+
+
+----------------------------------------------------------------------------------
+-> en = 4
+
+     +----------------------------------------+
+     | en   indexc        country         p_1 |
+     |----------------------------------------|
+  1. |  4        1     Bangladesh    1.256177 |
+  2. |  4        2       Pakistan    .4731916 |
+  3. |  4        3      Indonesia    .4576648 |
+  4. |  4        4      Sri Lanka    .7949094 |
+  5. |  4        5       Thailand    16.93923 |
+     |----------------------------------------|
+  6. |  4        6       Colombia    .1271541 |
+  7. |  4        7         Panama    .2973391 |
+  8. |  4        8     Yugoslavia    .6397428 |
+  9. |  4        9       Portugal    1.639775 |
+ 10. |  4       10        Uruguay    .0984165 |
+     |----------------------------------------|
+ 11. |  4       11         Greece    .5059133 |
+ 12. |  4       12        Ireland    .6129137 |
+ 13. |  4       13          Spain    1.017669 |
+ 14. |  4       14         Israel     2.15672 |
+ 15. |  4       15      Hong Kong   -879.5381 |
+     |----------------------------------------|
+ 16. |  4       16    New Zealand    .3673215 |
+ 17. |  4       17        Austria    1.975304 |
+ 18. |  4       18      Singapore    795.1004 |
+ 19. |  4       19          Italy    3.145272 |
+ 20. |  4       20             UK    2.242249 |
+     |----------------------------------------|
+ 21. |  4       21          Japan    100.5984 |
+ 22. |  4       22        Belgium    6.886858 |
+ 23. |  4       23       Trinidad     4.62197 |
+ 24. |  4       24    Netherlands    13.09784 |
+ 25. |  4       25        Finland    22.29664 |
+     |----------------------------------------|
+ 26. |  4       26        Denmark    28.72834 |
+ 27. |  4       27   West Germany    6.864776 |
+ 28. |  4       28         France    3.166397 |
+ 29. |  4       29         Sweden     7.64686 |
+ 30. |  4       30         Norway    34.59857 |
+     |----------------------------------------|
+ 31. |  4       31    Switzerland    3.335021 |
+ 32. |  4       32         Canada    .9541135 |
+ 33. |  4       33            USA           1 |
+     +----------------------------------------+
+
+
+. 
+. log close
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
+> er-2\pi.log
+  log type:  text
+ closed on:  19 Jun 2024, 15:32:49
+----------------------------------------------------------------------------------
+
+. 
+. exit
+
+end of do-file
 ```
 
 ### My code

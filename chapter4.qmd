@@ -87,7 +87,7 @@ Note: Given this data, you need to first compute the wage rates in production an
 
 ### My code
 
-```{r ch2_ex1}
+```{r ch4_ex1}
 # Packages ----
 
 library(readr)
@@ -559,7 +559,7 @@ end of do-file
 
 ### My code
 
-```{r ch2_ex2}
+```{r ch4_ex2}
 # Packages ----
 
 library(archive)
@@ -1337,7 +1337,7 @@ end of do-file
 
 #### Part A
 
-```{r ch2_ex3a}
+```{r ch4_ex3a}
 # Read and transform ----
 
 datachp4 <- readRDS(fout) %>%
@@ -1412,7 +1412,7 @@ coeftest(reg5, vcov = vcovHC(reg5, type = "HC1"))
 
 #### Part B
 
-```{r ch2_ex3b}
+```{r ch4_ex3b}
 # Packages ----
 
 library(tidyr)
