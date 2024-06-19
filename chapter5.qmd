@@ -81,7 +81,7 @@ Contains 1993 trade data between the 40 regions listed above, in US dollars.  Th
 
 ## Empirical exercise
 
-In this exercise, you are asked to reproduce the empirical results shown in Table 5.2.  There are  four datasets available:  “dist.csv” which is distances; “gdp_ce_93.csv” which is GDP in exporting location in 1993; “gdp_ci_93.csv” which is GDP in importing location in 1993; and “trade_93.csv” which is trade in 1993.  To complete the exercise, these files should be stored in the directory:  c:\Empirical_Exercise\Chapter_5\.  After this, run the STATA program “data_trans.do,” which will convert these datasets to STATA files with the same name.  The trade data is already converted into US dollars, but GDP data is in Canadian dollars, so this is converted with the exchange rate 1 Canadian dollar = 0.775134 U.S. dollars.
+In this exercise, you are asked to reproduce the empirical results shown in Table 5.2.  There are  four datasets available:  “dist.csv” which is distances; “gdp_ce_93.csv” which is GDP in exporting location in 1993; “gdp_ci_93.csv” which is GDP in importing location in 1993; and “trade_93.csv” which is trade in 1993.  To complete the exercise, these files should be stored in the directory:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\.  After this, run the STATA program “data_trans.do,” which will convert these datasets to STATA files with the same name.  The trade data is already converted into US dollars, but GDP data is in Canadian dollars, so this is converted with the exchange rate 1 Canadian dollar = 0.775134 U.S. dollars.
 
 ## Exercise 1
 
@@ -89,19 +89,61 @@ Run the program “gravity_1.do” to replicate the gravity equations in columns
 
 ### Feenstra's code
 
+Data transformation:
+
+```stata
+* Input data set into STATA and save as STATA file *
+
+insheet using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\dist.csv
+sort c_e c_i
+save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\dist,replace
+
+clear
+insheet using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\trade_93.csv
+sort c_e c_i
+
+merge c_e c_i using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\dist
+drop _merge
+
+sort c_e c_i
+
+save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\trade_93,replace
+
+clear
+
+insheet using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\gdp_ce_93.csv
+gen gce=gdp_ce*0.775134
+drop gdp_ce
+ren gce gdp_ce
+sort c_e
+save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\gdp_ce_93,replace
+
+clear
+
+insheet using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\gdp_ci_93.csv
+gen gci=gdp_ci*0.775134
+drop gdp_ci
+ren gci gdp_ci
+sort c_i
+save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\gdp_ci_93,replace
+
+clear
+```
+
+Models:
 
 ```stata
 capture log close
-log using c:\Empirical_Exercise\Chapter_5\gravity_1.log, replace
+log using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\gravity_1.log, replace
 
 set matsize 100
 
-use c:\Empirical_Exercise\Chapter_5\trade_93,clear
+use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\trade_93,clear
 sort c_e
-merge c_e using c:\Empirical_Exercise\Chapter_5\gdp_ce_93
+merge c_e using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\gdp_ce_93
 drop _merge
 sort c_i
-merge c_i using c:\Empirical_Exercise\Chapter_5\gdp_ci_93
+merge c_i using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\gdp_ci_93
 drop _merge
 drop if vx==0
 drop if dist==0
@@ -148,13 +190,225 @@ clear
 log close
 ```
 
+Output:
+
+```stata
+. capture log close
+
+. log using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapte
+> r-5\gravity_1.log, replace
+(note: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapte
+> r-5\gravity_1.log not found)
+----------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
+> er-5\gravity_1.log
+  log type:  text
+ opened on:  19 Jun 2024, 13:34:35
+
+. 
+. set matsize 100
+
+Current memory allocation
+
+                    current                                 memory usage
+    settable          value     description                 (1M = 1024k)
+    --------------------------------------------------------------------
+    set maxvar         5000     max. variables allowed           1.909M
+    set memory           50M    max. data space                 50.000M
+    set matsize         100     max. RHS vars in models          0.085M
+                                                            -----------
+                                                                51.994M
+
+. 
+. use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\tr
+> ade_93,clear
+
+. sort c_e
+
+. merge c_e using Z:\home\pacha\github\advanced-international-trade\first-edition\
+> Chapter-5\gdp_ce_93
+(note: you are using old merge syntax; see [R] merge for new syntax)
+variable c_e does not uniquely identify observations in the master data
+
+. drop _merge
+
+. sort c_i
+
+. merge c_i using Z:\home\pacha\github\advanced-international-trade\first-edition\
+> Chapter-5\gdp_ci_93
+(note: you are using old merge syntax; see [R] merge for new syntax)
+variable c_i does not uniquely identify observations in the master data
+
+. drop _merge
+
+. drop if vx==0
+(49 observations deleted)
+
+. drop if dist==0
+(40 observations deleted)
+
+. 
+. gen lnvx=log(vx)
+
+. gen lndist=log(dist)
+
+. gen lngdp_ce=log(gdp_ce)
+
+. gen lngdp_ci=log(gdp_ci)
+
+. 
+. * Estimate Gravity Equation from the Canadian Perspective *
+. 
+. preserve
+
+. gen d_ca=0
+
+. replace d_ca=1 if (l_ex==2) & (l_im==2)
+(90 real changes made)
+
+. drop if (l_ex==1) & (l_im==1)
+(832 observations deleted)
+
+. 
+. regress lnvx lngdp_ce lngdp_ci lndist d_ca
+
+      Source |       SS       df       MS              Number of obs =     679
+-------------+------------------------------           F(  4,   674) =  540.02
+       Model |  3020.52204     4  755.130511           Prob > F      =  0.0000
+    Residual |  942.471913   674  1.39832628           R-squared     =  0.7622
+-------------+------------------------------           Adj R-squared =  0.7608
+       Total |  3962.99396   678  5.84512383           Root MSE      =  1.1825
+
+------------------------------------------------------------------------------
+        lnvx |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    lngdp_ce |   1.218705   .0331581    36.75   0.000       1.1536    1.283811
+    lngdp_ci |   .9797792   .0325254    30.12   0.000     .9159159    1.043642
+      lndist |  -1.353149   .0690128   -19.61   0.000    -1.488655   -1.217643
+        d_ca |   2.802034   .1416955    19.78   0.000     2.523816    3.080251
+       _cons |   3.742672   .7721966     4.85   0.000     2.226472    5.258873
+------------------------------------------------------------------------------
+
+. restore
+
+. 
+. * Estimate Gravity Equation from the U.S. Perspective *
+. 
+. preserve
+
+. gen d_us=0
+
+. replace d_us=1 if (l_ex==1) & (l_im==1)
+(832 real changes made)
+
+. drop if (l_ex==2) & (l_im==2)
+(90 observations deleted)
+
+. 
+. regress lnvx lngdp_ce lngdp_ci lndist d_us
+
+      Source |       SS       df       MS              Number of obs =    1421
+-------------+------------------------------           F(  4,  1416) = 2052.61
+       Model |  7089.25392     4  1772.31348           Prob > F      =  0.0000
+    Residual |  1222.63635  1416  .863443752           R-squared     =  0.8529
+-------------+------------------------------           Adj R-squared =  0.8525
+       Total |  8311.89028  1420  5.85344386           Root MSE      =  .92922
+
+------------------------------------------------------------------------------
+        lnvx |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    lngdp_ce |   1.128429    .020453    55.17   0.000     1.088308     1.16855
+    lngdp_ci |   .9820314    .020396    48.15   0.000     .9420218    1.022041
+      lndist |  -1.081888    .035227   -30.71   0.000    -1.150991   -1.012785
+        d_us |   .4059649   .0578667     7.02   0.000     .2924511    .5194786
+       _cons |   2.659586   .4492747     5.92   0.000      1.77827    3.540901
+------------------------------------------------------------------------------
+
+. restore
+
+. 
+. * Estimate Gravity Equation by Pooling All Data *
+. 
+. preserve
+
+. gen d_ca=0
+
+. gen d_us=0
+
+. replace d_ca=1 if (l_ex==2) & (l_im==2)
+(90 real changes made)
+
+. replace d_us=1 if (l_ex==1) & (l_im==1)
+(832 real changes made)
+
+. 
+. regress lnvx lngdp_ce lngdp_ci lndist d_ca d_us
+
+      Source |       SS       df       MS              Number of obs =    1511
+-------------+------------------------------           F(  5,  1505) = 1732.75
+       Model |  7499.70876     5  1499.94175           Prob > F      =  0.0000
+    Residual |  1302.79013  1505  .865641282           R-squared     =  0.8520
+-------------+------------------------------           Adj R-squared =  0.8515
+       Total |  8802.49889  1510  5.82946946           Root MSE      =   .9304
+
+------------------------------------------------------------------------------
+        lnvx |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    lngdp_ce |   1.132974   .0196797    57.57   0.000     1.094371    1.171577
+    lngdp_ci |   .9742161   .0196294    49.63   0.000     .9357122     1.01272
+      lndist |  -1.110705   .0337347   -32.92   0.000    -1.176877   -1.044533
+        d_ca |   2.751708   .1086755    25.32   0.000     2.538536    2.964879
+        d_us |   .3982716   .0574423     6.93   0.000     .2855962    .5109471
+       _cons |   2.911512   .4267171     6.82   0.000     2.074488    3.748535
+------------------------------------------------------------------------------
+
+. vce
+
+Covariance matrix of coefficients of regress model
+
+        e(V) |   lngdp_ce    lngdp_ci      lndist        d_ca        d_us 
+-------------+------------------------------------------------------------
+    lngdp_ce |  .00038729                                                 
+    lngdp_ci |  .00008279   .00038531                                     
+      lndist |  .00001868   .00001752   .00113803                         
+        d_ca |  .00041241   .00040103   .00017043   .01181037             
+        d_us | -.00037488  -.00039315   .00039698   .00085625   .00329962 
+       _cons | -.00524428  -.00520461   -.0089485  -.01157481   .00387661 
+
+        e(V) |      _cons 
+-------------+------------
+       _cons |  .18208752 
+
+. restore
+
+. 
+. clear
+
+. 
+. log close
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
+> er-5\gravity_1.log
+  log type:  text
+ closed on:  19 Jun 2024, 13:34:38
+----------------------------------------------------------------------------------
+
+. 
+. 
+. 
+. 
+end of do-file
+```
+
 ### My code
 
 ```{r ch2_ex1}
 # Packages ----
 
 library(archive)
-library(haven)
+library(readr)
+library(janitor)
 library(dplyr)
 
 # Extract ----
@@ -171,9 +425,34 @@ if (!dir.exists(dout)) {
 fout <- paste0(dout, "/trade_93.rds")
 
 if (!file.exists(fout)) {
-  trade_93 <- read_dta(paste0(dout, "/trade_93.dta"))
-  gdp_ce_93 <- read_dta(paste0(dout, "/gdp_ce_93.dta"))
-  gdp_ci_93 <- read_dta(paste0(dout, "/gdp_ci_93.dta"))
+  # trade_93 <- read_dta(paste0(dout, "/trade_93.dta"))
+  # gdp_ce_93 <- read_dta(paste0(dout, "/gdp_ce_93.dta"))
+  # gdp_ci_93 <- read_dta(paste0(dout, "/gdp_ci_93.dta"))
+
+  # instead of reading the DTA files, I will read the CSV files and transform
+
+  dist <- read_csv(paste0(dout, "/dist.csv")) %>%
+    clean_names() %>%
+    arrange(c_e, c_i)
+
+  trade_93 <- read_csv(paste0(dout, "/trade_93.csv")) %>%
+    clean_names() %>%
+    arrange(c_e, c_i)
+
+  trade_93 <- trade_93 %>%
+    left_join(dist, by = c("c_e", "c_i"))
+
+  rm(dist)
+
+  gdp_ce_93 <- read_csv(paste0(dout, "/gdp_ce_93.csv")) %>%
+    clean_names() %>%
+    mutate(gdp_ce = gdp_ce * 0.775134) %>%
+    arrange(c_e)
+
+  gdp_ci_93 <- read_csv(paste0(dout, "/gdp_ci_93.csv")) %>%
+    clean_names() %>%
+    mutate(gdp_ci = gdp_ci * 0.775134) %>%
+    arrange(c_i)
 
   trade_93 <- trade_93 %>%
     left_join(gdp_ce_93, by = "c_e") %>%
@@ -240,16 +519,16 @@ b. What coefficients are obtained if we introduce separate indicator variables f
 
 ```stata
 capture log close
-log using c:\Empirical_Exercise\Chapter_5\gravity_2.log, replace
+log using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\gravity_2.log, replace
 
 set matsize 100
 
-use c:\Empirical_Exercise\Chapter_5\trade_93,clear
+use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\trade_93,clear
 sort c_e
-merge c_e using c:\Empirical_Exercise\Chapter_5\gdp_ce_93
+merge c_e using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\gdp_ce_93
 drop _merge
 sort c_i
-merge c_i using c:\Empirical_Exercise\Chapter_5\gdp_ci_93
+merge c_i using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\gdp_ci_93
 drop _merge
 drop if vx==0
 drop if dist==0
@@ -271,6 +550,294 @@ regress lnn_vx lndist d_border ced* cid*
 
 clear
 log close
+```
+
+Output:
+
+```stata
+. capture log close
+
+. log using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapte
+> r-5\gravity_2.log, replace
+(note: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapte
+> r-5\gravity_2.log not found)
+----------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
+> er-5\gravity_2.log
+  log type:  text
+ opened on:  19 Jun 2024, 13:41:01
+
+. 
+. set matsize 100
+
+Current memory allocation
+
+                    current                                 memory usage
+    settable          value     description                 (1M = 1024k)
+    --------------------------------------------------------------------
+    set maxvar         5000     max. variables allowed           1.909M
+    set memory           50M    max. data space                 50.000M
+    set matsize         100     max. RHS vars in models          0.085M
+                                                            -----------
+                                                                51.994M
+
+. 
+. use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-5\tr
+> ade_93,clear
+
+. sort c_e
+
+. merge c_e using Z:\home\pacha\github\advanced-international-trade\first-edition\
+> Chapter-5\gdp_ce_93
+(note: you are using old merge syntax; see [R] merge for new syntax)
+variable c_e does not uniquely identify observations in the master data
+
+. drop _merge
+
+. sort c_i
+
+. merge c_i using Z:\home\pacha\github\advanced-international-trade\first-edition\
+> Chapter-5\gdp_ci_93
+(note: you are using old merge syntax; see [R] merge for new syntax)
+variable c_i does not uniquely identify observations in the master data
+
+. drop _merge
+
+. drop if vx==0
+(49 observations deleted)
+
+. drop if dist==0
+(40 observations deleted)
+
+. 
+. tab c_e, gen (ced)
+
+        c_e |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         AB |         39        2.58        2.58
+        Ala |         38        2.51        5.10
+        Ari |         37        2.45        7.54
+         BC |         39        2.58       10.13
+        Cal |         37        2.45       12.57
+        Flo |         39        2.58       15.16
+        Geo |         39        2.58       17.74
+        Ida |         36        2.38       20.12
+        Ill |         39        2.58       22.70
+        Ind |         38        2.51       25.22
+        Ken |         37        2.45       27.66
+        Lou |         36        2.38       30.05
+         MN |         39        2.58       32.63
+         MO |         37        2.45       35.08
+        Mai |         37        2.45       37.52
+        Mas |         39        2.58       40.11
+        Mic |         37        2.45       42.55
+        Min |         38        2.51       45.07
+        Mon |         36        2.38       47.45
+        Mry |         37        2.45       49.90
+         NB |         39        2.58       52.48
+        NHm |         38        2.51       55.00
+        NJr |         39        2.58       57.58
+         NS |         39        2.58       60.16
+        Nca |         39        2.58       62.74
+        Nda |         36        2.38       65.12
+       Nfld |         35        2.32       67.44
+        Nyr |         39        2.58       70.02
+         ON |         39        2.58       72.60
+        Ohi |         37        2.45       75.05
+        PEI |         34        2.25       77.30
+        Pen |         39        2.58       79.88
+        Que |         39        2.58       82.46
+         SK |         39        2.58       85.04
+        Ten |         38        2.51       87.56
+        Tex |         37        2.45       90.01
+        Ver |         37        2.45       92.46
+        Vir |         39        2.58       95.04
+        Was |         36        2.38       97.42
+        Wis |         39        2.58      100.00
+------------+-----------------------------------
+      Total |      1,511      100.00
+
+. tab c_i, gen (cid)
+
+        c_I |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         AB |         39        2.58        2.58
+        Ala |         38        2.51        5.10
+        Ari |         36        2.38        7.48
+         BC |         39        2.58       10.06
+        Cal |         39        2.58       12.64
+        Flo |         39        2.58       15.22
+        Geo |         39        2.58       17.80
+        Ida |         33        2.18       19.99
+        Ill |         39        2.58       22.57
+        Ind |         39        2.58       25.15
+        Ken |         37        2.45       27.60
+        Lou |         36        2.38       29.98
+         MN |         39        2.58       32.56
+         MO |         39        2.58       35.14
+        Mai |         36        2.38       37.52
+        Mas |         37        2.45       39.97
+        Mic |         39        2.58       42.55
+        Min |         39        2.58       45.14
+        Mon |         34        2.25       47.39
+        Mry |         39        2.58       49.97
+         NB |         39        2.58       52.55
+        NHm |         38        2.51       55.06
+        NJr |         39        2.58       57.64
+         NS |         39        2.58       60.23
+        Nca |         39        2.58       62.81
+        Nda |         31        2.05       64.86
+       Nfld |         38        2.51       67.37
+        Nyr |         37        2.45       69.82
+         ON |         39        2.58       72.40
+        Ohi |         38        2.51       74.92
+        PEI |         38        2.51       77.43
+        Pen |         38        2.51       79.95
+        Que |         39        2.58       82.53
+         SK |         39        2.58       85.11
+        Ten |         39        2.58       87.69
+        Tex |         39        2.58       90.27
+        Ver |         33        2.18       92.46
+        Vir |         38        2.51       94.97
+        Was |         37        2.45       97.42
+        Wis |         39        2.58      100.00
+------------+-----------------------------------
+      Total |      1,511      100.00
+
+. 
+. gen d_border=1
+
+. replace d_border=0 if (l_ex==1) & (l_im==1)
+(832 real changes made)
+
+. replace d_border=0 if (l_ex==2) & (l_im==2)
+(90 real changes made)
+
+. 
+. gen lnvx=log(vx)
+
+. gen lndist=log(dist)
+
+. gen lngdp_ce=log(gdp_ce)
+
+. gen lngdp_ci=log(gdp_ci)
+
+. gen lnn_vx=lnvx-lngdp_ce-lngdp_ci
+
+. 
+. regress lnn_vx lndist d_border ced* cid*
+note: ced39 omitted because of collinearity
+note: cid37 omitted because of collinearity
+
+      Source |       SS       df       MS              Number of obs =    1511
+-------------+------------------------------           F( 80,  1430) =   35.32
+       Model |  1998.34711    80  24.9793388           Prob > F      =  0.0000
+    Residual |   1011.4731  1430  .707323845           R-squared     =  0.6639
+-------------+------------------------------           Adj R-squared =  0.6451
+       Total |   3009.8202  1510  1.99325841           Root MSE      =  .84103
+
+------------------------------------------------------------------------------
+      lnn_vx |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      lndist |  -1.251681   .0368191   -34.00   0.000    -1.323906   -1.179456
+    d_border |  -1.550514   .0588941   -26.33   0.000    -1.666042   -1.434986
+        ced1 |   1.575054   .1969728     8.00   0.000     1.188667    1.961441
+        ced2 |  -.0615169   .1968394    -0.31   0.755    -.4476419    .3246082
+        ced3 |  -.2180008   .1971536    -1.11   0.269     -.604742    .1687405
+        ced4 |   1.373042   .1968679     6.97   0.000     .9868611    1.759223
+        ced5 |   .3855025    .197204     1.95   0.051    -.0013377    .7723426
+        ced6 |  -.7112586   .1952711    -3.64   0.000    -1.094307   -.3282102
+        ced7 |   -.068018   .1960215    -0.35   0.729    -.4525384    .3165025
+        ced8 |     .26858   .1986056     1.35   0.176    -.1210097    .6581697
+        ced9 |   .2175036   .1965116     1.11   0.269    -.1679784    .6029856
+       ced10 |  -.0031177   .1983064    -0.02   0.987    -.3921204    .3858849
+       ced11 |   .1779582   .1996637     0.89   0.373     -.213707    .5696233
+       ced12 |  -.2567707   .1990797    -1.29   0.197    -.6472903    .1337489
+       ced13 |   1.044481   .1978236     5.28   0.000     .6564256    1.432537
+       ced14 |   .1701477   .1984997     0.86   0.391    -.2192341    .5595295
+       ced15 |  -.1910339   .1989122    -0.96   0.337    -.5812249    .1991571
+       ced16 |  -.3029544   .1964512    -1.54   0.123     -.688318    .0824091
+       ced17 |  -.0113933   .1994526    -0.06   0.954    -.4026443    .3798577
+       ced18 |   .3979938   .1970337     2.02   0.044     .0114877    .7844999
+       ced19 |  -.3888902   .1986962    -1.96   0.051    -.7786574     .000877
+       ced20 |  -.3808243   .1996346    -1.91   0.057    -.7724324    .0107838
+       ced21 |   .4754037   .1983009     2.40   0.017     .0864117    .8643956
+       ced22 |  -.3342633   .1979945    -1.69   0.092    -.7226541    .0541276
+       ced23 |  -.2890499   .1967737    -1.47   0.142    -.6750459    .0969461
+       ced24 |   .7414483   .1978522     3.75   0.000     .3533366     1.12956
+       ced25 |   .0208998   .1962026     0.11   0.915    -.3639759    .4057755
+       ced26 |  -.2802188   .1992561    -1.41   0.160    -.6710844    .1106468
+       ced27 |  -.2037673   .2019207    -1.01   0.313    -.5998598    .1923251
+       ced28 |   -.886426   .1967576    -4.51   0.000     -1.27239   -.5004615
+       ced29 |   .9150161   .1997198     4.58   0.000     .5232408    1.306791
+       ced30 |   .1505522   .1996938     0.75   0.451    -.2411719    .5422764
+       ced31 |   .0338336    .204322     0.17   0.869    -.3669694    .4346365
+       ced32 |  -.2727766   .1970444    -1.38   0.166    -.6593036    .1137504
+       ced33 |   1.116763   .1987298     5.62   0.000       .72693    1.506596
+       ced34 |   .8830361    .197432     4.47   0.000     .4957487    1.270324
+       ced35 |   .2703462   .1977387     1.37   0.172    -.1175428    .6582352
+       ced36 |   .0104498   .1972876     0.05   0.958    -.3765544     .397454
+       ced37 |  -.4834816   .1993893    -2.42   0.015    -.8746085   -.0923547
+       ced38 |  -.7100399   .1965941    -3.61   0.000    -1.095684   -.3243962
+       ced39 |  (omitted)
+       ced40 |    .198035   .1963542     1.01   0.313    -.1871383    .5832082
+        cid1 |   1.680152   .2029079     8.28   0.000     1.282123    2.078181
+        cid2 |  -.1178891   .2007464    -0.59   0.557    -.5116781    .2758998
+        cid3 |   .3834953   .2058763     1.86   0.063    -.0203566    .7873472
+        cid4 |   1.526394   .2034908     7.50   0.000     1.127221    1.925566
+        cid5 |   .6636691   .2025088     3.28   0.001      .266423    1.060915
+        cid6 |    .123873   .1998081     0.62   0.535    -.2680755    .5158215
+        cid7 |   .1817594   .1993881     0.91   0.362    -.2093651    .5728839
+        cid8 |   .2205046   .2089568     1.06   0.291    -.1893901    .6303994
+        cid9 |   .2764433   .1992735     1.39   0.166    -.1144564    .6673429
+       cid10 |   .1159431   .1992318     0.58   0.561    -.2748747     .506761
+       cid11 |   .1272816   .2017003     0.63   0.528    -.2683786    .5229418
+       cid12 |   .1406299   .2038587     0.69   0.490    -.2592642     .540524
+       cid13 |    1.46582   .2017388     7.27   0.000     1.070084    1.861556
+       cid14 |  -.0078626   .1993992    -0.04   0.969    -.3990089    .3832838
+       cid15 |    .364058    .203114     1.79   0.073    -.0343753    .7624914
+       cid16 |   .1078348   .2018047     0.53   0.593    -.2880302    .5036999
+       cid17 |   .2382488   .1991692     1.20   0.232    -.1524464    .6289439
+       cid18 |    .230515   .1994864     1.16   0.248    -.1608024    .6218323
+       cid19 |   .5098527   .2072802     2.46   0.014     .1032468    .9164585
+       cid20 |  -.3389257   .1992385    -1.70   0.089    -.7297569    .0519054
+       cid21 |   1.754684   .2015199     8.71   0.000     1.359378    2.149991
+       cid22 |   .0106125   .2004059     0.05   0.958    -.3825087    .4037336
+       cid23 |  -.0698658    .199243    -0.35   0.726    -.4607058    .3209742
+       cid24 |   .9934234   .2017215     4.92   0.000     .5977216    1.389125
+       cid25 |  -.0952417   .1993355    -0.48   0.633    -.4862632    .2957797
+       cid26 |   .3526411   .2113739     1.67   0.095     -.061995    .7672773
+       cid27 |   1.892756   .2044776     9.26   0.000     1.491648    2.293864
+       cid28 |  -.3546606   .2017692    -1.76   0.079    -.7504559    .0411347
+       cid29 |   1.177096   .2013695     5.85   0.000     .7820845    1.572107
+       cid30 |   .1004037   .2004709     0.50   0.617    -.2928449    .4936523
+       cid31 |   1.255257   .2028449     6.19   0.000     .8573513    1.653162
+       cid32 |    .142753   .2003897     0.71   0.476    -.2503363    .5358422
+       cid33 |   1.354079   .2014154     6.72   0.000     .9589778    1.749181
+       cid34 |   1.397366   .2020603     6.92   0.000        1.001    1.793733
+       cid35 |   .1029397    .199289     0.52   0.606    -.2879904    .4938697
+       cid36 |   .6433019    .200675     3.21   0.001      .249653    1.036951
+       cid37 |  (omitted)
+       cid38 |  -.3321485   .2004144    -1.66   0.098    -.7252863    .0609892
+       cid39 |   .8115608   .2044609     3.97   0.000     .4104853    1.212636
+       cid40 |   .2613272   .1993011     1.31   0.190    -.1296268    .6522811
+       _cons |   5.531002   .3406908    16.23   0.000     4.862695     6.19931
+------------------------------------------------------------------------------
+
+. 
+. clear
+
+. log close
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
+> er-5\gravity_2.log
+  log type:  text
+ closed on:  19 Jun 2024, 13:41:11
+----------------------------------------------------------------------------------
+
+. 
+end of do-file
 ```
 
 ### My code
