@@ -1,6 +1,12 @@
 
 # Chapter 7. Import Tariffs and Dumping
 
+## Empirical exercise
+
+In this exercise, you are asked to reproduce some of the empirical results from Feenstra (1989).
+
+To complete the exercise, the files "cars.csv, trucks.csv, cycon.csv, cyship.csv, cypool.csv" should be stored in the directory: `first-edition/Chapter-7`. Each of these can be used in STATA programs "cars.do, trucks.do, cycon.do, cyship.do, cypool.do" to create a dataset with the variables described in "Documentation_Chp7.doc."
+
 ## Data Description for Feenstra (1989)
 
 There are five data sets in excel format: `cars.csv`, `trucks.csv`, `cycon.csv`, `cypool.csv`, `cyship.csv`.  All of the variables in the data sets are fitted values from instrumental variables regression.
@@ -56,12 +62,6 @@ lincom lag0 + lag1 + lag2
 ```
 
 This will calculate the coefficient estimates for the $\log(c_t^* s_{t-1})$. This is much in a same way as the syntax for test. Lag0 in above command does not refer to the data, but the coefficient estimate associated with lag0. 
-
-## Empirical exercise
-
-In this exercise, you are asked to reproduce some of the empirical results from Feenstra (1989).
-
-To complete the exercise, the files "cars.csv, trucks.csv, cycon.csv, cyship.csv, cypool.csv" should be stored in the directory: `first-edition/Chapter-7`. Each of these can be used in STATA programs "cars.do, trucks.do, cycon.do, cyship.do, cypool.do" to create a dataset with the variables described in "Documentation_Chp7.doc."
 
 ## Exercise 1
 

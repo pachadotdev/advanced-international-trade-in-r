@@ -168,8 +168,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#documentation" id="toc-documentation" class="nav-link active" data-scroll-target="#documentation">Documentation</a></li>
-  <li><a href="#empirical-exercise" id="toc-empirical-exercise" class="nav-link" data-scroll-target="#empirical-exercise">Empirical exercise</a></li>
+  <li><a href="#empirical-exercise" id="toc-empirical-exercise" class="nav-link active" data-scroll-target="#empirical-exercise">Empirical exercise</a></li>
+  <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
   <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a>
   <ul class="collapse">
   <li><a href="#feenstras-code" id="toc-feenstras-code" class="nav-link" data-scroll-target="#feenstras-code">Feenstra’s code</a></li>
@@ -203,129 +203,287 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
+<section id="empirical-exercise" class="level2">
+<h2 class="anchored" data-anchor-id="empirical-exercise">Empirical exercise</h2>
+<p>In this exercise, you are asked to reproduce the empirical results shown in Table 5.2. There are four datasets available: <code>dist.csv</code> which is distances; <code>gdp_ce_93.csv</code> which is GDP in exporting location in 1993; <code>gdp_ci_93.csv</code> which is GDP in importing location in 1993; and <code>trade_93.csv</code> which is trade in 1993. To complete the exercise, these files should be stored in the directory <code>Chapter-5</code>. After this, run the STATA program <code>data_trans.do</code>, which will convert these datasets to STATA files with the same name. The trade data is already converted into US dollars, but GDP data is in Canadian dollars, so this is converted with the exchange rate 1 Canadian dollar = 0.775134 U.S. dollars.</p>
+</section>
 <section id="documentation" class="level2">
 <h2 class="anchored" data-anchor-id="documentation">Documentation</h2>
 <p>US-Canada data for Anderson and van Wincoop (2002)</p>
 <p>There are a total of 63 US-Canada regions (states, District of Columbia, provinces and territories). They are listed below. The regressions, however, are based on the same 40 states and provinces as in McCallum (these are indicated with a star below).</p>
-<ol type="1">
-<li>Alabama*</li>
-<li>Alaska<br>
-</li>
-<li>Arizona*</li>
-<li>Arkansas<br>
-</li>
-<li>California*</li>
-<li>Colorado<br>
-</li>
-<li>Connecticut</li>
-<li>Delaware<br>
-</li>
-<li>Florida*</li>
-<li>Georgia*</li>
-<li>Hawaii<br>
-</li>
-<li>Idaho*</li>
-<li>Illinois*</li>
-<li>Indiana*</li>
-<li>Iowa<br>
-</li>
-<li>Kansas<br>
-</li>
-<li>Kentucky*</li>
-<li>Louisiana*</li>
-<li>Maine*</li>
-<li>Maryland*<br>
-</li>
-<li>Massachusetts*</li>
-<li>Michigan*<br>
-</li>
-<li>Minnesota*<br>
-</li>
-<li>Mississippi<br>
-</li>
-<li>Missouri*<br>
-</li>
-<li>Montana*<br>
-</li>
-<li>Nebraska<br>
-</li>
-<li>Nevada<br>
-</li>
-<li>New Hampshire*</li>
-<li>New Jersey*<br>
-</li>
-<li>New Mexico<br>
-</li>
-<li>New York*<br>
-</li>
-<li>North Carolina*</li>
-<li>North Dakota*<br>
-</li>
-<li>Ohio*<br>
-</li>
-<li>Oklahoma<br>
-</li>
-<li>Oregon<br>
-</li>
-<li>Pennsylvania*</li>
-<li>Rhode Island</li>
-<li>South Carolina<br>
-</li>
-<li>South Dakota<br>
-</li>
-<li>Tennessee*<br>
-</li>
-<li>Texas*<br>
-</li>
-<li>Utah<br>
-</li>
-<li>Vermont*<br>
-</li>
-<li>Virginia*<br>
-</li>
-<li>Washington*<br>
-</li>
-<li>West Virginia<br>
-</li>
-<li>Wisconsin*<br>
-</li>
-<li>Wyoming<br>
-</li>
-<li>Dist. of Col.<br>
-</li>
-<li>Alberta*<br>
-</li>
-<li>British Columbia*</li>
-<li>Manitoba*<br>
-</li>
-<li>New Brunswick *</li>
-<li>Newfoundland*</li>
-<li>NW Territories</li>
-<li>Nova Scotia*<br>
-</li>
-<li>Ontario*<br>
-</li>
-<li>Prince Edward Island*</li>
-<li>Quebec*<br>
-</li>
-<li>Saskatchewan*</li>
-<li>Yukon Territory</li>
-</ol>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>State/Province</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Alabama*</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Alaska</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Arizona*</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Arkansas</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>California*</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Colorado</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>Connecticut</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>Delaware</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>Florida*</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>Georgia*</td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td>Hawaii</td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td>Idaho*</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>Illinois*</td>
+</tr>
+<tr class="even">
+<td>14</td>
+<td>Indiana*</td>
+</tr>
+<tr class="odd">
+<td>15</td>
+<td>Iowa</td>
+</tr>
+<tr class="even">
+<td>16</td>
+<td>Kansas</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>Kentucky*</td>
+</tr>
+<tr class="even">
+<td>18</td>
+<td>Louisiana*</td>
+</tr>
+<tr class="odd">
+<td>19</td>
+<td>Maine*</td>
+</tr>
+<tr class="even">
+<td>20</td>
+<td>Maryland*</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>Massachusetts*</td>
+</tr>
+<tr class="even">
+<td>22</td>
+<td>Michigan*</td>
+</tr>
+<tr class="odd">
+<td>23</td>
+<td>Minnesota*</td>
+</tr>
+<tr class="even">
+<td>24</td>
+<td>Mississippi</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>Missouri*</td>
+</tr>
+<tr class="even">
+<td>26</td>
+<td>Montana*</td>
+</tr>
+<tr class="odd">
+<td>27</td>
+<td>Nebraska</td>
+</tr>
+<tr class="even">
+<td>28</td>
+<td>Nevada</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>New Hampshire*</td>
+</tr>
+<tr class="even">
+<td>30</td>
+<td>New Jersey*</td>
+</tr>
+<tr class="odd">
+<td>31</td>
+<td>New Mexico</td>
+</tr>
+<tr class="even">
+<td>32</td>
+<td>New York*</td>
+</tr>
+<tr class="odd">
+<td>33</td>
+<td>North Carolina*</td>
+</tr>
+<tr class="even">
+<td>34</td>
+<td>North Dakota*</td>
+</tr>
+<tr class="odd">
+<td>35</td>
+<td>Ohio*</td>
+</tr>
+<tr class="even">
+<td>36</td>
+<td>Oklahoma</td>
+</tr>
+<tr class="odd">
+<td>37</td>
+<td>Oregon</td>
+</tr>
+<tr class="even">
+<td>38</td>
+<td>Pennsylvania*</td>
+</tr>
+<tr class="odd">
+<td>39</td>
+<td>Rhode Island</td>
+</tr>
+<tr class="even">
+<td>40</td>
+<td>South Carolina</td>
+</tr>
+<tr class="odd">
+<td>41</td>
+<td>South Dakota</td>
+</tr>
+<tr class="even">
+<td>42</td>
+<td>Tennessee*</td>
+</tr>
+<tr class="odd">
+<td>43</td>
+<td>Texas*</td>
+</tr>
+<tr class="even">
+<td>44</td>
+<td>Utah</td>
+</tr>
+<tr class="odd">
+<td>45</td>
+<td>Vermont*</td>
+</tr>
+<tr class="even">
+<td>46</td>
+<td>Virginia*</td>
+</tr>
+<tr class="odd">
+<td>47</td>
+<td>Washington*</td>
+</tr>
+<tr class="even">
+<td>48</td>
+<td>West Virginia</td>
+</tr>
+<tr class="odd">
+<td>49</td>
+<td>Wisconsin*</td>
+</tr>
+<tr class="even">
+<td>50</td>
+<td>Wyoming</td>
+</tr>
+<tr class="odd">
+<td>51</td>
+<td>Dist. of Col.</td>
+</tr>
+<tr class="even">
+<td>52</td>
+<td>Alberta*</td>
+</tr>
+<tr class="odd">
+<td>53</td>
+<td>British Columbia*</td>
+</tr>
+<tr class="even">
+<td>54</td>
+<td>Manitoba*</td>
+</tr>
+<tr class="odd">
+<td>55</td>
+<td>New Brunswick*</td>
+</tr>
+<tr class="even">
+<td>56</td>
+<td>Newfoundland*</td>
+</tr>
+<tr class="odd">
+<td>57</td>
+<td>NW Territories</td>
+</tr>
+<tr class="even">
+<td>58</td>
+<td>Nova Scotia*</td>
+</tr>
+<tr class="odd">
+<td>59</td>
+<td>Ontario*</td>
+</tr>
+<tr class="even">
+<td>60</td>
+<td>Prince Edward Island*</td>
+</tr>
+<tr class="odd">
+<td>61</td>
+<td>Quebec*</td>
+</tr>
+<tr class="even">
+<td>62</td>
+<td>Saskatchewan*</td>
+</tr>
+<tr class="odd">
+<td>63</td>
+<td>Yukon Territory</td>
+</tr>
+</tbody>
+</table>
 <p>Data files:</p>
 <ol type="1">
 <li>dist.csv: Contains distances between the 40 regions listed above. The distances are in kilometers and are between the capitals of the regions.</li>
 <li>gdp_ce_93.csv and gdp_ci_93.csv: Contains nominal GDP in millions of Canadian dollars in 1993 for the 40 regions above.</li>
 <li>trade_93.csv</li>
 </ol>
-<p>Contains 1993 trade data between the 40 regions listed above, in US dollars. The indicator variables “1_ex” and “1_im” equal 1 if the exporter or importer is a US state, and 2 for a Canadian province.</p>
-</section>
-<section id="empirical-exercise" class="level2">
-<h2 class="anchored" data-anchor-id="empirical-exercise">Empirical exercise</h2>
-<p>In this exercise, you are asked to reproduce the empirical results shown in Table 5.2. There are four datasets available: “dist.csv” which is distances; “gdp_ce_93.csv” which is GDP in exporting location in 1993; “gdp_ci_93.csv” which is GDP in importing location in 1993; and “trade_93.csv” which is trade in 1993. To complete the exercise, these files should be stored in the directory: Z:-international-trade-edition. After this, run the STATA program “data_trans.do,” which will convert these datasets to STATA files with the same name. The trade data is already converted into US dollars, but GDP data is in Canadian dollars, so this is converted with the exchange rate 1 Canadian dollar = 0.775134 U.S. dollars.</p>
+<p>Contains 1993 trade data between the 40 regions listed above, in US dollars. The indicator variables <code>1_ex</code> and <code>1_im</code> equal 1 if the exporter or importer is a US state, and 2 for a Canadian province.</p>
 </section>
 <section id="exercise-1" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
-<p>Run the program “gravity_1.do” to replicate the gravity equations in columns (1)-(3) of Table 5.2.</p>
+<p>Run the program <code>gravity_1.do</code> to replicate the gravity equations in columns (1)-(3) of Table 5.2.</p>
 <section id="feenstras-code" class="level3">
 <h3 class="anchored" data-anchor-id="feenstras-code">Feenstra’s code</h3>
 <p>Data transformation:</p>
@@ -823,7 +981,7 @@ d_us         0.0008562509  0.0032996176</code></pre>
 </section>
 <section id="exercise-2" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
-<p>Run the program “gravity_2.do” to replicate gravity equation using fixed-effects, i.e., column (5) in Table 5.2. Then answer:</p>
+<p>Run the program <code>gravity_2.do</code> to replicate gravity equation using fixed-effects, i.e., column (5) in Table 5.2. Then answer:</p>
 <ol type="a">
 <li>How are these results affected if we allow the provincial and state GDP’s to have coefficients different from unity?</li>
 <li>What coefficients are obtained if we introduce separate indicator variables for intra-Canadian and intra-U.S. trade, rather than the border dummy?</li>
@@ -1154,12 +1312,12 @@ d_us         0.0008562509  0.0032996176</code></pre>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>trade_93 <span class="sc">%&gt;%</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(c_e) <span class="sc">%&gt;%</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">freq =</span> <span class="fu">n</span>(),</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">percent =</span> <span class="dv">100</span> <span class="sc">*</span> <span class="fu">n</span>() <span class="sc">/</span> <span class="fu">nrow</span>(trade_93)</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cum =</span> <span class="fu">cumsum</span>(percent))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">freq =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">percent =</span> freq <span class="sc">/</span> <span class="fu">sum</span>(freq) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cum =</span> <span class="fu">cumsum</span>(percent)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 40 × 4
    c_e    freq percent   cum
@@ -1178,12 +1336,12 @@ d_us         0.0008562509  0.0032996176</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>trade_93 <span class="sc">%&gt;%</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(c_i) <span class="sc">%&gt;%</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">freq =</span> <span class="fu">n</span>(),</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">percent =</span> <span class="dv">100</span> <span class="sc">*</span> <span class="fu">n</span>() <span class="sc">/</span> <span class="fu">nrow</span>(trade_93)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cum =</span> <span class="fu">cumsum</span>(percent))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">freq =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">percent =</span> freq <span class="sc">/</span> <span class="fu">sum</span>(freq) <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">cum =</span> <span class="fu">cumsum</span>(percent)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 40 × 4
    c_i    freq percent   cum
@@ -1200,33 +1358,29 @@ d_us         0.0008562509  0.0032996176</code></pre>
 10 Ind      39    2.58 25.1 
 # ℹ 30 more rows</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gen d_border=1</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># replace d_border=0 if (l_ex==1) &amp; (l_im==1)</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># replace d_border=0 if (l_ex==2) &amp; (l_im==2)</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>trade_93 <span class="ot">&lt;-</span> trade_93 <span class="sc">%&gt;%</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">d_border =</span> <span class="fu">case_when</span>(</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>      l_ex <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> l_im <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>      l_ex <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> l_im <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">1</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">lnvx =</span> <span class="fu">log</span>(vx),</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">lndist =</span> <span class="fu">log</span>(dist),</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">lngdp_ce =</span> <span class="fu">log</span>(gdp_ce),</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">lngdp_ci =</span> <span class="fu">log</span>(gdp_ci),</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">lnn_vx =</span> lnvx <span class="sc">-</span> lngdp_ce <span class="sc">-</span> lngdp_ci</span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co"># some of the FEs are dropped in Stata</span></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co"># the slopes are identical, which is what matters</span></span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>fit_fe <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  lnn_vx <span class="sc">~</span> lndist <span class="sc">+</span> d_border <span class="sc">+</span> <span class="fu">as.factor</span>(c_e) <span class="sc">+</span> <span class="fu">as.factor</span>(c_i),</span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> trade_93</span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_fe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>trade_93 <span class="ot">&lt;-</span> trade_93 <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">d_border =</span> <span class="fu">case_when</span>(</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>      l_ex <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> l_im <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>      l_ex <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;</span> l_im <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">1</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">lnvx =</span> <span class="fu">log</span>(vx),</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">lndist =</span> <span class="fu">log</span>(dist),</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">lngdp_ce =</span> <span class="fu">log</span>(gdp_ce),</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">lngdp_ci =</span> <span class="fu">log</span>(gdp_ci),</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">lnn_vx =</span> lnvx <span class="sc">-</span> lngdp_ce <span class="sc">-</span> lngdp_ci</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co"># some of the FEs are dropped in Stata</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co"># the slopes are identical, which is what matters</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>fit_fe <span class="ot">&lt;-</span> <span class="fu">lm</span>(</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  lnn_vx <span class="sc">~</span> lndist <span class="sc">+</span> d_border <span class="sc">+</span> <span class="fu">as.factor</span>(c_e) <span class="sc">+</span> <span class="fu">as.factor</span>(c_i),</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> trade_93</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_fe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:

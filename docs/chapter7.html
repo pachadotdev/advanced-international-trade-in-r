@@ -169,11 +169,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#data-description-for-feenstra-1989" id="toc-data-description-for-feenstra-1989" class="nav-link active" data-scroll-target="#data-description-for-feenstra-1989">Data Description for Feenstra (1989)</a>
+  <li><a href="#empirical-exercise" id="toc-empirical-exercise" class="nav-link active" data-scroll-target="#empirical-exercise">Empirical exercise</a></li>
+  <li><a href="#data-description-for-feenstra-1989" id="toc-data-description-for-feenstra-1989" class="nav-link" data-scroll-target="#data-description-for-feenstra-1989">Data Description for Feenstra (1989)</a>
   <ul class="collapse">
   <li><a href="#explanation-of-lag0-lag1-and-lag2" id="toc-explanation-of-lag0-lag1-and-lag2" class="nav-link" data-scroll-target="#explanation-of-lag0-lag1-and-lag2">Explanation of lag0, lag1 and lag2</a></li>
   </ul></li>
-  <li><a href="#empirical-exercise" id="toc-empirical-exercise" class="nav-link" data-scroll-target="#empirical-exercise">Empirical exercise</a></li>
   <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a>
   <ul class="collapse">
   <li><a href="#feenstras-code" id="toc-feenstras-code" class="nav-link" data-scroll-target="#feenstras-code">Feenstra’s code</a></li>
@@ -208,6 +208,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
+<section id="empirical-exercise" class="level2">
+<h2 class="anchored" data-anchor-id="empirical-exercise">Empirical exercise</h2>
+<p>In this exercise, you are asked to reproduce some of the empirical results from Feenstra (1989).</p>
+<p>To complete the exercise, the files “cars.csv, trucks.csv, cycon.csv, cyship.csv, cypool.csv” should be stored in the directory: <code>first-edition/Chapter-7</code>. Each of these can be used in STATA programs “cars.do, trucks.do, cycon.do, cyship.do, cypool.do” to create a dataset with the variables described in “Documentation_Chp7.doc.”</p>
+</section>
 <section id="data-description-for-feenstra-1989" class="level2">
 <h2 class="anchored" data-anchor-id="data-description-for-feenstra-1989">Data Description for Feenstra (1989)</h2>
 <p>There are five data sets in excel format: <code>cars.csv</code>, <code>trucks.csv</code>, <code>cycon.csv</code>, <code>cypool.csv</code>, <code>cyship.csv</code>. All of the variables in the data sets are fitted values from instrumental variables regression.</p>
@@ -301,11 +306,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb1"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">lincom</span> lag0 + lag1 + lag2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This will calculate the coefficient estimates for the <span class="math inline">\(\log(c_t^* s_{t-1})\)</span>. This is much in a same way as the syntax for test. Lag0 in above command does not refer to the data, but the coefficient estimate associated with lag0.</p>
 </section>
-</section>
-<section id="empirical-exercise" class="level2">
-<h2 class="anchored" data-anchor-id="empirical-exercise">Empirical exercise</h2>
-<p>In this exercise, you are asked to reproduce some of the empirical results from Feenstra (1989).</p>
-<p>To complete the exercise, the files “cars.csv, trucks.csv, cycon.csv, cyship.csv, cypool.csv” should be stored in the directory: <code>first-edition/Chapter-7</code>. Each of these can be used in STATA programs “cars.do, trucks.do, cycon.do, cyship.do, cypool.do” to create a dataset with the variables described in “Documentation_Chp7.doc.”</p>
 </section>
 <section id="exercise-1" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
