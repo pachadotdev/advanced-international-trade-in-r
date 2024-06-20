@@ -1,0 +1,1678 @@
+----------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
+> er-8\system_nocon.log
+  log type:  text
+ opened on:  20 Jun 2024, 12:49:20
+
+. 
+. set matsize 400
+
+Current memory allocation
+
+                    current                                 memory usage
+    settable          value     description                 (1M = 1024k)
+    --------------------------------------------------------------------
+    set maxvar         5000     max. variables allowed           1.909M
+    set memory           50M    max. data space                 50.000M
+    set matsize         400     max. RHS vars in models          1.254M
+                                                            -----------
+                                                                53.163M
+
+. 
+. use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\tr
+> uck_7990,clear
+
+. gen ve=2
+
+. rename wdth wdth_t
+
+. rename hght hght_t
+
+. rename weight wght_t
+
+. rename hp hp_t
+
+. rename four four_t
+
+. rename tran tran_t
+
+. rename ps ps_t
+
+. rename ac ac_t
+
+. 
+. save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\t
+> ruck_temp,replace
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\tru
+> ck_temp.dta saved
+
+. 
+. use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\ca
+> r_7990,clear
+
+. gen ve=1
+
+. rename wdth wdth_c
+
+. rename hght hght_c
+
+. rename wght wght_c
+
+. rename hp hp_c
+
+. rename four four_c
+
+. rename tran tran_c
+
+. rename ps ps_c
+
+. rename ac ac_c
+
+. 
+. append using Z:\home\pacha\github\advanced-international-trade\first-edition\Cha
+> pter-8\truck_temp
+
+. 
+. replace wdth_c=0 if wdth_c==.
+(120 real changes made)
+
+. replace hght_c=0 if hght_c==.
+(120 real changes made)
+
+. replace wght_c=0 if wght_c==.
+(120 real changes made)
+
+. replace hp_c=0 if hp_c==.
+(120 real changes made)
+
+. replace four_c=0 if four_c==.
+(120 real changes made)
+
+. replace tran_c=0 if tran_c==.
+(120 real changes made)
+
+. replace ps_c=0 if ps_c==.
+(120 real changes made)
+
+. replace ac_c=0 if ac_c==.
+(120 real changes made)
+
+. replace wdth_t=0 if wdth_t==.
+(284 real changes made)
+
+. replace hght_t=0 if hght_t==.
+(284 real changes made)
+
+. replace wght_t=0 if wght_t==.
+(284 real changes made)
+
+. replace hp_t=0 if hp_t==.
+(284 real changes made)
+
+. replace four_t=0 if four_t==.
+(284 real changes made)
+
+. replace tran_t=0 if tran_t==.
+(284 real changes made)
+
+. replace ps_t=0 if ps_t==.
+(284 real changes made)
+
+. replace ac_t=0 if ac_t==.
+(284 real changes made)
+
+. 
+. tab year, gen(yd)
+
+       year |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         79 |         31        7.67        7.67
+         80 |         34        8.42       16.09
+         81 |         35        8.66       24.75
+         82 |         35        8.66       33.42
+         83 |         36        8.91       42.33
+         84 |         40        9.90       52.23
+         85 |         43       10.64       62.87
+         86 |         33        8.17       71.04
+         87 |         35        8.66       79.70
+         88 |         30        7.43       87.13
+         89 |         26        6.44       93.56
+         90 |         26        6.44      100.00
+------------+-----------------------------------
+      Total |        404      100.00
+
+. 
+. gen cyd2=yd2
+
+. gen tyd2=yd2
+
+. replace cyd2=0 if type=="JT"
+(8 real changes made)
+
+. replace tyd2=0 if type~="JT"
+(26 real changes made)
+
+. 
+. gen cyd3=yd3
+
+. gen tyd3=yd3
+
+. replace cyd3=0 if type=="JT"
+(9 real changes made)
+
+. replace tyd3=0 if type~="JT"
+(26 real changes made)
+
+. 
+. gen cyd4=yd4
+
+. gen tyd4=yd4
+
+. replace cyd4=0 if type=="JT"
+(9 real changes made)
+
+. replace tyd4=0 if type~="JT"
+(26 real changes made)
+
+. 
+. gen cyd5=yd5
+
+. gen tyd5=yd5
+
+. replace cyd5=0 if type=="JT"
+(7 real changes made)
+
+. replace tyd5=0 if type~="JT"
+(29 real changes made)
+
+. 
+. gen cyd6=yd6
+
+. gen tyd6=yd6
+
+. replace cyd6=0 if type=="JT"
+(7 real changes made)
+
+. replace tyd6=0 if type~="JT"
+(33 real changes made)
+
+. 
+. gen cyd7=yd7
+
+. gen tyd7=yd7
+
+. replace cyd7=0 if type=="JT"
+(7 real changes made)
+
+. replace tyd7=0 if type~="JT"
+(36 real changes made)
+
+. 
+. gen cyd8=yd8
+
+. gen tyd8=yd8
+
+. replace cyd8=0 if type=="JT"
+(7 real changes made)
+
+. replace tyd8=0 if type~="JT"
+(26 real changes made)
+
+. 
+. gen cyd9=yd9
+
+. gen tyd9=yd9
+
+. replace cyd9=0 if type=="JT"
+(6 real changes made)
+
+. replace tyd9=0 if type~="JT"
+(29 real changes made)
+
+. 
+. gen cyd10=yd10
+
+. gen tyd10=yd10
+
+. replace cyd10=10 if type=="JT"
+(84 real changes made)
+
+. replace tyd10=10 if type~="JT"
+(320 real changes made)
+
+. 
+. gen cyd11=yd11
+
+. gen tyd11=yd11
+
+. replace cyd11=11 if type=="JT"
+(84 real changes made)
+
+. replace tyd11=11 if type~="JT"
+(320 real changes made)
+
+. 
+. gen cyd12=yd12
+
+. gen tyd12=yd12
+
+. replace cyd12=12 if type=="JT"
+(84 real changes made)
+
+. replace tyd12=12 if type~="JT"
+(320 real changes made)
+
+. 
+. program define nlct_1
+  1. version 7.0
+  2. if "`1'"=="?"{
+  3. global S_1 "a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 
+> b12 c1 c2 c3 c4 c5 c6 c7 c8 d1 d2 d3 d4 d5 d6 d7 d8 e2 e3 e4 e5 e6 e7 e8 e9 e10 
+> e11 e12"
+  4. global a3=1
+  5. global a4=1
+  6. global a5=1
+  7. global a6=1
+  8. global a7=1
+  9. global a8=1
+ 10. global a9=1
+ 11. global a10=1
+ 12. global a11=1
+ 13. global a12=1
+ 14. global b2=.1
+ 15. global b3=.1
+ 16. global b4=.1
+ 17. global b5=.1
+ 18. global b6=.1
+ 19. global b7=.1
+ 20. global b8=.1
+ 21. global b9=.1
+ 22. global b10=.1
+ 23. global b11=.1
+ 24. global b12=.1
+ 25. global c1=.1
+ 26. global c2=.1
+ 27. global c3=.1
+ 28. global c4=.1
+ 29. global c5=.1
+ 30. global c6=.1
+ 31. global c7=.1
+ 32. global c8=.1
+ 33. global d1=.1
+ 34. global d2=.1
+ 35. global d3=.1
+ 36. global d4=.1
+ 37. global d5=.1
+ 38. global d6=.1
+ 39. global d7=.1
+ 40. global d8=.1
+ 41. global e2=.1
+ 42. global e3=.1
+ 43. global e4=.1
+ 44. global e5=.1
+ 45. global e6=.1
+ 46. global e7=.1
+ 47. global e8=.1
+ 48. global e9=.1
+ 49. global e10=.1
+ 50. global e11=.1
+ 51. global e12=.1
+ 52. exit
+ 53. }
+ 54. 
+. replace `1'=$a3*cyd3+$a4*cyd4+$a5*cyd5+$a6*cyd6+$a7*cyd7/*
+> */+$a8*cyd8+$a9*cyd9+$a10*cyd10+$a11*cyd11+$a12*cyd12/*
+> */+exp($b2*cyd2+$b3*cyd3+$b4*cyd4+$b5*cyd5+$b6*cyd6+$b7*cyd7/*
+> */+$b8*cyd8+$b9*cyd9+$b10*cyd10+$b11*cyd11+$b12*cyd12/*
+> */+$c1*wght_c+$c2*wdth_c+$c3*hght_c+$c4*hp_c+$c5*tran_c+$c6*ps_c+$c7*ac_c/*
+> */+$c8)+exp($e2*tyd2+$e3*tyd3+$e4*tyd4+$e5*tyd5+$e6*tyd6+$e7*tyd7/*
+> */+$e8*tyd8+$e9*tyd9+$e10*tyd10+$e11*tyd11+$e12*tyd12/*
+> */+$d1*wght_t+$d2*wdth_t+$d3*hght_t+$d4*hp_t+$d5*tran_t+$d6*ps_t+$d7*four_t+$d8)
+ 55. 
+. end
+
+. 
+. nl ct_1 price
+(obs = 404)
+
+Iteration 0:   residual SS =  3.65e+10
+Iteration 1:   residual SS =  3.56e+10
+Iteration 2:   residual SS =  3.50e+10
+Iteration 3:   residual SS =  1.46e+10
+Iteration 4:   residual SS =  1.17e+10
+Iteration 5:   residual SS =  1.17e+10
+Iteration 6:   residual SS =  1.17e+10
+Iteration 7:   residual SS =  1.01e+10
+Iteration 8:   residual SS =  7.79e+09
+Iteration 9:   residual SS =  5.68e+09
+Iteration 10:  residual SS =  1.80e+09
+Iteration 11:  residual SS =  1.64e+09
+Iteration 12:  residual SS =  1.62e+09
+Iteration 13:  residual SS =  1.61e+09
+Iteration 14:  residual SS =  1.61e+09
+Iteration 15:  residual SS =  1.60e+09
+Iteration 16:  residual SS =  1.60e+09
+Iteration 17:  residual SS =  1.59e+09
+Iteration 18:  residual SS =  1.59e+09
+Iteration 19:  residual SS =  1.59e+09
+Iteration 20:  residual SS =  1.58e+09
+Iteration 21:  residual SS =  1.58e+09
+Iteration 22:  residual SS =  1.58e+09
+Iteration 23:  residual SS =  1.58e+09
+Iteration 24:  residual SS =  1.57e+09
+Iteration 25:  residual SS =  1.57e+09
+Iteration 26:  residual SS =  1.57e+09
+Iteration 27:  residual SS =  1.57e+09
+Iteration 28:  residual SS =  1.36e+09
+Iteration 29:  residual SS =  1.35e+09
+Iteration 30:  residual SS =  1.35e+09
+Iteration 31:  residual SS =  1.22e+09
+Iteration 32:  residual SS =  1.22e+09
+Iteration 33:  residual SS =  1.22e+09
+Iteration 34:  residual SS =  1.22e+09
+Iteration 35:  residual SS =  1.22e+09
+Iteration 36:  residual SS =  1.21e+09
+Iteration 37:  residual SS =  1.21e+09
+Iteration 38:  residual SS =  1.20e+09
+Iteration 39:  residual SS =  5.71e+08
+Iteration 40:  residual SS =  5.70e+08
+Iteration 41:  residual SS =  5.70e+08
+Iteration 42:  residual SS =  5.70e+08
+Iteration 43:  residual SS =  5.69e+08
+Iteration 44:  residual SS =  5.59e+08
+Iteration 45:  residual SS =  5.59e+08
+Iteration 46:  residual SS =  5.59e+08
+Iteration 47:  residual SS =  5.59e+08
+Iteration 48:  residual SS =  5.59e+08
+Iteration 49:  residual SS =  5.58e+08
+Iteration 50:  residual SS =  5.58e+08
+Iteration 51:  residual SS =  5.57e+08
+Iteration 52:  residual SS =  4.93e+08
+Iteration 53:  residual SS =  4.93e+08
+Iteration 54:  residual SS =  4.93e+08
+Iteration 55:  residual SS =  4.93e+08
+Iteration 56:  residual SS =  4.93e+08
+Iteration 57:  residual SS =  4.93e+08
+Iteration 58:  residual SS =  4.93e+08
+Iteration 59:  residual SS =  4.93e+08
+Iteration 60:  residual SS =  4.93e+08
+Iteration 61:  residual SS =  4.93e+08
+Iteration 62:  residual SS =  4.93e+08
+Iteration 63:  residual SS =  4.93e+08
+Iteration 64:  residual SS =  4.93e+08
+Iteration 65:  residual SS =  4.93e+08
+Iteration 66:  residual SS =  4.93e+08
+Iteration 67:  residual SS =  4.93e+08
+Iteration 68:  residual SS =  4.92e+08
+Iteration 69:  residual SS =  4.92e+08
+Iteration 70:  residual SS =  4.92e+08
+Iteration 71:  residual SS =  4.92e+08
+Iteration 72:  residual SS =  4.92e+08
+Iteration 73:  residual SS =  4.92e+08
+Iteration 74:  residual SS =  4.92e+08
+Iteration 75:  residual SS =  4.92e+08
+Iteration 76:  residual SS =  4.92e+08
+Iteration 77:  residual SS =  4.92e+08
+Iteration 78:  residual SS =  4.77e+08
+Iteration 79:  residual SS =  4.77e+08
+Iteration 80:  residual SS =  4.77e+08
+Iteration 81:  residual SS =  4.77e+08
+Iteration 82:  residual SS =  4.77e+08
+Iteration 83:  residual SS =  4.77e+08
+Iteration 84:  residual SS =  4.77e+08
+Iteration 85:  residual SS =  4.77e+08
+Iteration 86:  residual SS =  4.77e+08
+Iteration 87:  residual SS =  4.77e+08
+Iteration 88:  residual SS =  4.77e+08
+Iteration 89:  residual SS =  4.77e+08
+Iteration 90:  residual SS =  4.77e+08
+Iteration 91:  residual SS =  4.77e+08
+Iteration 92:  residual SS =  4.77e+08
+Iteration 93:  residual SS =  4.71e+08
+Iteration 94:  residual SS =  4.71e+08
+Iteration 95:  residual SS =  4.71e+08
+Iteration 96:  residual SS =  4.71e+08
+Iteration 97:  residual SS =  4.71e+08
+Iteration 98:  residual SS =  4.71e+08
+Iteration 99:  residual SS =  4.71e+08
+Iteration 100: residual SS =  4.71e+08
+Iteration 101: residual SS =  4.71e+08
+Iteration 102: residual SS =  4.71e+08
+Iteration 103: residual SS =  4.71e+08
+Iteration 104: residual SS =  4.71e+08
+Iteration 105: residual SS =  4.71e+08
+Iteration 106: residual SS =  4.71e+08
+Iteration 107: residual SS =  4.70e+08
+Iteration 108: residual SS =  4.70e+08
+Iteration 109: residual SS =  4.70e+08
+Iteration 110: residual SS =  4.70e+08
+Iteration 111: residual SS =  4.70e+08
+Iteration 112: residual SS =  4.70e+08
+Iteration 113: residual SS =  4.70e+08
+Iteration 114: residual SS =  4.70e+08
+Iteration 115: residual SS =  4.70e+08
+Iteration 116: residual SS =  4.70e+08
+Iteration 117: residual SS =  4.70e+08
+Iteration 118: residual SS =  4.70e+08
+Iteration 119: residual SS =  4.70e+08
+Iteration 120: residual SS =  4.70e+08
+Iteration 121: residual SS =  4.69e+08
+Iteration 122: residual SS =  4.69e+08
+Iteration 123: residual SS =  4.69e+08
+Iteration 124: residual SS =  4.69e+08
+Iteration 125: residual SS =  4.69e+08
+Iteration 126: residual SS =  4.69e+08
+Iteration 127: residual SS =  4.69e+08
+Iteration 128: residual SS =  4.69e+08
+Iteration 129: residual SS =  4.69e+08
+Iteration 130: residual SS =  4.69e+08
+Iteration 131: residual SS =  4.69e+08
+Iteration 132: residual SS =  4.69e+08
+Iteration 133: residual SS =  4.69e+08
+Iteration 134: residual SS =  4.69e+08
+Iteration 135: residual SS =  4.69e+08
+Iteration 136: residual SS =  4.69e+08
+Iteration 137: residual SS =  4.69e+08
+Iteration 138: residual SS =  4.69e+08
+Iteration 139: residual SS =  4.69e+08
+Iteration 140: residual SS =  4.69e+08
+Iteration 141: residual SS =  4.69e+08
+Iteration 142: residual SS =  4.69e+08
+Iteration 143: residual SS =  4.69e+08
+Iteration 144: residual SS =  4.69e+08
+Iteration 145: residual SS =  4.69e+08
+Iteration 146: residual SS =  4.69e+08
+Iteration 147: residual SS =  4.69e+08
+Iteration 148: residual SS =  4.69e+08
+Iteration 149: residual SS =  4.69e+08
+Iteration 150: residual SS =  4.69e+08
+Iteration 151: residual SS =  4.69e+08
+Iteration 152: residual SS =  4.69e+08
+Iteration 153: residual SS =  4.69e+08
+Iteration 154: residual SS =  4.69e+08
+Iteration 155: residual SS =  4.69e+08
+Iteration 156: residual SS =  4.69e+08
+Iteration 157: residual SS =  4.69e+08
+Iteration 158: residual SS =  4.69e+08
+Iteration 159: residual SS =  4.69e+08
+Iteration 160: residual SS =  4.69e+08
+Iteration 161: residual SS =  4.69e+08
+Iteration 162: residual SS =  4.69e+08
+Iteration 163: residual SS =  4.69e+08
+Iteration 164: residual SS =  4.69e+08
+Iteration 165: residual SS =  4.69e+08
+Iteration 166: residual SS =  4.69e+08
+Iteration 167: residual SS =  4.69e+08
+Iteration 168: residual SS =  4.69e+08
+Iteration 169: residual SS =  4.69e+08
+Iteration 170: residual SS =  4.69e+08
+Iteration 171: residual SS =  4.69e+08
+Iteration 172: residual SS =  4.69e+08
+Iteration 173: residual SS =  4.69e+08
+Iteration 174: residual SS =  4.69e+08
+Iteration 175: residual SS =  4.69e+08
+Iteration 176: residual SS =  4.69e+08
+Iteration 177: residual SS =  4.69e+08
+Iteration 178: residual SS =  4.69e+08
+Iteration 179: residual SS =  4.69e+08
+Iteration 180: residual SS =  4.69e+08
+Iteration 181: residual SS =  4.69e+08
+Iteration 182: residual SS =  4.69e+08
+Iteration 183: residual SS =  4.69e+08
+Iteration 184: residual SS =  4.69e+08
+Iteration 185: residual SS =  4.69e+08
+Iteration 186: residual SS =  4.69e+08
+Iteration 187: residual SS =  4.69e+08
+Iteration 188: residual SS =  4.69e+08
+Iteration 189: residual SS =  4.69e+08
+Iteration 190: residual SS =  4.69e+08
+Iteration 191: residual SS =  4.69e+08
+Iteration 192: residual SS =  4.69e+08
+Iteration 193: residual SS =  4.69e+08
+Iteration 194: residual SS =  4.69e+08
+Iteration 195: residual SS =  4.69e+08
+Iteration 196: residual SS =  4.69e+08
+Iteration 197: residual SS =  4.69e+08
+Iteration 198: residual SS =  4.69e+08
+Iteration 199: residual SS =  4.69e+08
+Iteration 200: residual SS =  4.69e+08
+Iteration 201: residual SS =  4.69e+08
+Iteration 202: residual SS =  4.69e+08
+Iteration 203: residual SS =  4.69e+08
+Iteration 204: residual SS =  4.69e+08
+Iteration 205: residual SS =  4.69e+08
+Iteration 206: residual SS =  4.69e+08
+Iteration 207: residual SS =  4.69e+08
+Iteration 208: residual SS =  4.69e+08
+Iteration 209: residual SS =  4.69e+08
+Iteration 210: residual SS =  4.69e+08
+Iteration 211: residual SS =  4.69e+08
+Iteration 212: residual SS =  4.69e+08
+Iteration 213: residual SS =  4.69e+08
+Iteration 214: residual SS =  4.69e+08
+Iteration 215: residual SS =  4.69e+08
+Iteration 216: residual SS =  4.69e+08
+Iteration 217: residual SS =  4.69e+08
+Iteration 218: residual SS =  4.69e+08
+Iteration 219: residual SS =  4.69e+08
+Iteration 220: residual SS =  4.69e+08
+Iteration 221: residual SS =  4.69e+08
+Iteration 222: residual SS =  4.69e+08
+Iteration 223: residual SS =  4.69e+08
+Iteration 224: residual SS =  4.69e+08
+Iteration 225: residual SS =  4.69e+08
+Iteration 226: residual SS =  4.69e+08
+Iteration 227: residual SS =  4.69e+08
+Iteration 228: residual SS =  4.69e+08
+Iteration 229: residual SS =  4.69e+08
+Iteration 230: residual SS =  4.69e+08
+Iteration 231: residual SS =  4.69e+08
+Iteration 232: residual SS =  4.69e+08
+Iteration 233: residual SS =  4.69e+08
+Iteration 234: residual SS =  4.69e+08
+Iteration 235: residual SS =  4.69e+08
+Iteration 236: residual SS =  4.69e+08
+Iteration 237: residual SS =  4.69e+08
+Iteration 238: residual SS =  4.69e+08
+Iteration 239: residual SS =  4.69e+08
+Iteration 240: residual SS =  4.69e+08
+Iteration 241: residual SS =  4.69e+08
+Iteration 242: residual SS =  4.69e+08
+Iteration 243: residual SS =  4.69e+08
+Iteration 244: residual SS =  4.69e+08
+Iteration 245: residual SS =  4.69e+08
+Iteration 246: residual SS =  4.69e+08
+Iteration 247: residual SS =  4.69e+08
+Iteration 248: residual SS =  4.69e+08
+Iteration 249: residual SS =  4.69e+08
+Iteration 250: residual SS =  4.69e+08
+Iteration 251: residual SS =  4.69e+08
+Iteration 252: residual SS =  4.69e+08
+Iteration 253: residual SS =  4.69e+08
+Iteration 254: residual SS =  4.69e+08
+Iteration 255: residual SS =  4.69e+08
+Iteration 256: residual SS =  4.69e+08
+Iteration 257: residual SS =  4.69e+08
+Iteration 258: residual SS =  4.69e+08
+Iteration 259: residual SS =  4.69e+08
+Iteration 260: residual SS =  4.69e+08
+Iteration 261: residual SS =  4.69e+08
+Iteration 262: residual SS =  4.69e+08
+Iteration 263: residual SS =  4.69e+08
+Iteration 264: residual SS =  4.69e+08
+Iteration 265: residual SS =  4.69e+08
+Iteration 266: residual SS =  4.69e+08
+Iteration 267: residual SS =  4.69e+08
+Iteration 268: residual SS =  4.69e+08
+Iteration 269: residual SS =  4.69e+08
+Iteration 270: residual SS =  4.69e+08
+Iteration 271: residual SS =  4.69e+08
+Iteration 272: residual SS =  4.69e+08
+Iteration 273: residual SS =  4.69e+08
+Iteration 274: residual SS =  4.69e+08
+Iteration 275: residual SS =  4.69e+08
+Iteration 276: residual SS =  4.69e+08
+Iteration 277: residual SS =  4.69e+08
+Iteration 278: residual SS =  4.69e+08
+Iteration 279: residual SS =  4.69e+08
+Iteration 280: residual SS =  4.69e+08
+Iteration 281: residual SS =  4.69e+08
+Iteration 282: residual SS =  4.69e+08
+Iteration 283: residual SS =  4.69e+08
+Iteration 284: residual SS =  4.69e+08
+Iteration 285: residual SS =  4.69e+08
+Iteration 286: residual SS =  4.69e+08
+Iteration 287: residual SS =  4.69e+08
+Iteration 288: residual SS =  4.69e+08
+Iteration 289: residual SS =  4.69e+08
+Iteration 290: residual SS =  4.69e+08
+Iteration 291: residual SS =  4.69e+08
+Iteration 292: residual SS =  4.69e+08
+Iteration 293: residual SS =  4.69e+08
+Iteration 294: residual SS =  4.69e+08
+Iteration 295: residual SS =  4.69e+08
+Iteration 296: residual SS =  4.69e+08
+Iteration 297: residual SS =  4.69e+08
+Iteration 298: residual SS =  4.69e+08
+Iteration 299: residual SS =  4.69e+08
+Iteration 300: residual SS =  4.69e+08
+Iteration 301: residual SS =  4.69e+08
+Iteration 302: residual SS =  4.69e+08
+Iteration 303: residual SS =  4.69e+08
+Iteration 304: residual SS =  4.69e+08
+Iteration 305: residual SS =  4.69e+08
+Iteration 306: residual SS =  4.69e+08
+Iteration 307: residual SS =  4.69e+08
+Iteration 308: residual SS =  4.69e+08
+Iteration 309: residual SS =  4.69e+08
+Iteration 310: residual SS =  4.69e+08
+Iteration 311: residual SS =  4.69e+08
+Iteration 312: residual SS =  4.69e+08
+Iteration 313: residual SS =  4.69e+08
+Iteration 314: residual SS =  4.69e+08
+Iteration 315: residual SS =  4.69e+08
+Iteration 316: residual SS =  4.69e+08
+Iteration 317: residual SS =  4.69e+08
+Iteration 318: residual SS =  4.69e+08
+Iteration 319: residual SS =  4.69e+08
+Iteration 320: residual SS =  4.69e+08
+Iteration 321: residual SS =  4.69e+08
+Iteration 322: residual SS =  4.69e+08
+Iteration 323: residual SS =  4.69e+08
+Iteration 324: residual SS =  4.69e+08
+Iteration 325: residual SS =  4.69e+08
+Iteration 326: residual SS =  4.69e+08
+Iteration 327: residual SS =  4.69e+08
+Iteration 328: residual SS =  4.69e+08
+Iteration 329: residual SS =  4.69e+08
+Iteration 330: residual SS =  4.69e+08
+Iteration 331: residual SS =  4.69e+08
+Iteration 332: residual SS =  4.69e+08
+Iteration 333: residual SS =  4.69e+08
+Iteration 334: residual SS =  4.69e+08
+Iteration 335: residual SS =  4.69e+08
+Iteration 336: residual SS =  4.69e+08
+Iteration 337: residual SS =  4.69e+08
+Iteration 338: residual SS =  4.69e+08
+Iteration 339: residual SS =  4.69e+08
+Iteration 340: residual SS =  4.69e+08
+Iteration 341: residual SS =  4.69e+08
+Iteration 342: residual SS =  4.69e+08
+Iteration 343: residual SS =  4.69e+08
+Iteration 344: residual SS =  4.69e+08
+Iteration 345: residual SS =  4.69e+08
+Iteration 346: residual SS =  4.69e+08
+Iteration 347: residual SS =  4.69e+08
+Iteration 348: residual SS =  4.69e+08
+Iteration 349: residual SS =  4.69e+08
+Iteration 350: residual SS =  4.69e+08
+Iteration 351: residual SS =  4.69e+08
+Iteration 352: residual SS =  4.69e+08
+Iteration 353: residual SS =  4.69e+08
+Iteration 354: residual SS =  4.69e+08
+Iteration 355: residual SS =  4.69e+08
+Iteration 356: residual SS =  4.69e+08
+Iteration 357: residual SS =  4.69e+08
+Iteration 358: residual SS =  4.69e+08
+Iteration 359: residual SS =  4.69e+08
+Iteration 360: residual SS =  4.69e+08
+Iteration 361: residual SS =  4.69e+08
+Iteration 362: residual SS =  4.69e+08
+Iteration 363: residual SS =  4.69e+08
+Iteration 364: residual SS =  4.69e+08
+Iteration 365: residual SS =  4.69e+08
+Iteration 366: residual SS =  4.69e+08
+Iteration 367: residual SS =  4.69e+08
+Iteration 368: residual SS =  4.69e+08
+Iteration 369: residual SS =  4.69e+08
+Iteration 370: residual SS =  4.69e+08
+Iteration 371: residual SS =  4.69e+08
+Iteration 372: residual SS =  4.69e+08
+Iteration 373: residual SS =  4.69e+08
+Iteration 374: residual SS =  4.69e+08
+Iteration 375: residual SS =  4.69e+08
+Iteration 376: residual SS =  4.69e+08
+Iteration 377: residual SS =  4.69e+08
+Iteration 378: residual SS =  4.69e+08
+Iteration 379: residual SS =  4.69e+08
+Iteration 380: residual SS =  4.69e+08
+Iteration 381: residual SS =  4.69e+08
+Iteration 382: residual SS =  4.69e+08
+Iteration 383: residual SS =  4.69e+08
+Iteration 384: residual SS =  4.69e+08
+Iteration 385: residual SS =  4.69e+08
+Iteration 386: residual SS =  4.69e+08
+Iteration 387: residual SS =  4.69e+08
+Iteration 388: residual SS =  4.69e+08
+Iteration 389: residual SS =  4.69e+08
+Iteration 390: residual SS =  4.69e+08
+Iteration 391: residual SS =  4.69e+08
+Iteration 392: residual SS =  4.69e+08
+Iteration 393: residual SS =  4.69e+08
+Iteration 394: residual SS =  4.69e+08
+Iteration 395: residual SS =  4.69e+08
+Iteration 396: residual SS =  4.69e+08
+Iteration 397: residual SS =  4.69e+08
+Iteration 398: residual SS =  4.69e+08
+Iteration 399: residual SS =  4.69e+08
+Iteration 400: residual SS =  4.69e+08
+Iteration 401: residual SS =  4.69e+08
+Iteration 402: residual SS =  4.69e+08
+Iteration 403: residual SS =  4.69e+08
+Iteration 404: residual SS =  4.69e+08
+
+      Source |       SS       df       MS            Number of obs =       404
+-------------+------------------------------         F( 48,   356) =    576.55
+       Model |  3.6436e+10    48   759074436         Prob > F      =    0.0000
+    Residual |   468703508   356  1316582.89         R-squared     =    0.9873
+-------------+------------------------------         Adj R-squared =    0.9856
+       Total |  3.6904e+10   404  91347218.9         Root MSE      =  1147.424
+                                                     Res. dev.     =  6787.985
+(ct_1)
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+          a3 |   311.3235   688.7506     0.45   0.652    -1043.208    1665.855
+          a4 |   124.4009   678.8125     0.18   0.855    -1210.586    1459.387
+          a5 |   -32.4732   654.0405    -0.05   0.960    -1318.742    1253.796
+          a6 |   365.9132   650.4956     0.56   0.574    -913.3841     1645.21
+          a7 |  -182.4107    662.807    -0.28   0.783     -1485.92    1121.099
+          a8 |    99.5125   722.6989     0.14   0.891    -1321.783    1520.808
+          a9 |   623.5557   740.7578     0.84   0.400    -833.2557    2080.367
+         a10 |  -510.0145   850.6701    -0.60   0.549    -2182.985    1162.956
+         a11 |  -117.2407   828.7073    -0.14   0.888    -1747.018    1512.536
+         a12 |   165.7747   863.5199     0.19   0.848    -1532.467    1864.016
+          b2 |  -.2525958   .0539141    -4.69   0.000    -.3586261   -.1465656
+          b3 |  -.1623986    .112602    -1.44   0.150    -.3838473      .05905
+          b4 |  -.0746543    .102305    -0.73   0.466    -.2758524    .1265438
+          b5 |  -.0694248   .0974478    -0.71   0.477    -.2610706     .122221
+          b6 |  -.0611509   .0966047    -0.63   0.527    -.2511386    .1288368
+          b7 |   .0395587    .089472     0.44   0.659    -.1364014    .2155189
+          b8 |  -.0052012   .0952998    -0.05   0.957    -.1926226    .1822202
+          b9 |   .0293371   .0951523     0.31   0.758    -.1577941    .2164683
+         b10 |   .1441127   .0960075     1.50   0.134    -.0447004    .3329258
+         b11 |   .1563463   .0939872     1.66   0.097    -.0284936    .3411862
+         b12 |   .0715575   .1017443     0.70   0.482    -.1285379    .2716529
+          c1 |   .4753103   .1148428     4.14   0.000     .2494548    .7011659
+          c2 |   .8298707   .1219701     6.80   0.000     .5899982    1.069743
+          c3 |  -.2927558   .0563593    -5.19   0.000    -.4035949   -.1819167
+          c4 |   .2302322    .046208     4.98   0.000     .1393573    .3211071
+          c5 |   .0048313   .0243104     0.20   0.843    -.0429787    .0526413
+          c6 |    .116925   .0288961     4.05   0.000     .0600965    .1737535
+          c7 |   .1611654   .0256511     6.28   0.000     .1107185    .2116122
+          c8 |   4.896426   .7054934     6.94   0.000     3.508967    6.283885
+          d1 |   .5559378   .1008129     5.51   0.000      .357674    .7542015
+          d2 |   .5115204   .2383617     2.15   0.033     .0427463    .9802945
+          d3 |  -.2677578   .0799406    -3.35   0.001    -.4249731   -.1105426
+          d4 |   .5615629   .1522031     3.69   0.000     .2622327     .860893
+          d5 |   .1892271   .0545638     3.47   0.001     .0819193    .2965349
+          d6 |   .0781166   .0591314     1.32   0.187    -.0381743    .1944074
+          d7 |   .1586298   .1011966     1.57   0.118    -.0403884    .3576481
+          d8 |   5.376737    1.26604     4.25   0.000      2.88688    7.866595
+          e2 |  -.4027439   .3347902    -1.20   0.230    -1.061159    .2556712
+          e3 |   .0890406   .1434657     0.62   0.535    -.1931062    .3711875
+          e4 |   .0771731   .1369381     0.56   0.573    -.1921363    .3464824
+          e5 |  -.0850111   .1786288    -0.48   0.634    -.4363115    .2662892
+          e6 |  -.0639346   .1756482    -0.36   0.716    -.4093731     .281504
+          e7 |  -.1390747   .1654681    -0.84   0.401    -.4644925    .1863432
+          e8 |  -.0556387    .146723    -0.38   0.705    -.3441915    .2329141
+          e9 |  -.1291071   .1527376    -0.85   0.399    -.4294884    .1712743
+         e10 |  -.0432892   .1099129    -0.39   0.694    -.2594494     .172871
+         e11 |   .0354982   .0951005     0.37   0.709    -.1515313    .2225277
+         e12 |   .0692493   .0950716     0.73   0.467    -.1177233    .2562219
+------------------------------------------------------------------------------
+ (SEs, P values, CIs, and correlations are asymptotic approximations)
+
+. 
+. gen winv=1/exp(_b[b2]*cyd2+_b[b3]*cyd3+_b[b4]*cyd4+_b[b5]*cyd5+_b[b6]*cyd6+_b[b7
+> ]*cyd7/*
+> */+_b[b8]*cyd8+_b[b9]*cyd9+_b[b10]*cyd10+_b[b11]*cyd11+_b[b12]*cyd12/*
+> */+_b[c1]*wght_c+_b[c2]*wdth_c+_b[c3]*hght_c+_b[c4]*hp_c+_b[c5]*tran_c+_b[c6]*ps
+> _c/*
+> */+_b[c7]*ac_c+_b[c8])
+
+. 
+. replace winv=1/exp(_b[e2]*tyd2+_b[e3]*tyd3+_b[e4]*tyd4+_b[e5]*tyd5+_b[e6]*tyd6/*
+> */+_b[e7]*tyd7+_b[e8]*tyd8+_b[e9]*tyd9+_b[e10]*tyd10+_b[e11]*tyd11+_b[e12]*tyd12
+> /*
+> */+_b[d1]*wght_t+_b[d2]*wdth_t+_b[d3]*hght_t+_b[d4]*hp_t/*
+> */+_b[d5]*tran_t+_b[d6]*ps_t+_b[d7]*four_t+_b[d8]) if ve==2
+(120 real changes made)
+
+. 
+. gen nprice=price*winv
+
+. 
+. 
+. program define nlct_2
+  1. version 7.0
+  2. if "`1'"=="?"{
+  3. global S_1 "a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 
+> b12 c1 c2 c3 c4 c5 c6 c7 c8 d1 d2 d3 d4 d5 d6 d7 d8 e2 e3 e4 e5 e6 e7 e8 e9 e10 
+> e11 e12"
+  4. global a3=1
+  5. global a4=1
+  6. global a5=1
+  7. global a6=1
+  8. global a7=1
+  9. global a8=1
+ 10. global a9=1
+ 11. global a10=1
+ 12. global a11=1
+ 13. global a12=1
+ 14. global b2=.1
+ 15. global b3=.1
+ 16. global b4=.1
+ 17. global b5=.1
+ 18. global b6=.1
+ 19. global b7=.1
+ 20. global b8=.1
+ 21. global b9=.1
+ 22. global b10=.1
+ 23. global b11=.1
+ 24. global b12=.1
+ 25. global c1=.1
+ 26. global c2=.1
+ 27. global c3=.1
+ 28. global c4=.1
+ 29. global c5=.1
+ 30. global c6=.1
+ 31. global c7=.1
+ 32. global c8=.1
+ 33. global d1=.1
+ 34. global d2=.1
+ 35. global d3=.1
+ 36. global d4=.1
+ 37. global d5=.1
+ 38. global d6=.1
+ 39. global d7=.1
+ 40. global d8=.1
+ 41. global e2=.1
+ 42. global e3=.1
+ 43. global e4=.1
+ 44. global e5=.1
+ 45. global e6=.1
+ 46. global e7=.1
+ 47. global e8=.1
+ 48. global e9=.1
+ 49. global e10=.1
+ 50. global e11=.1
+ 51. global e12=.1
+ 52. exit
+ 53. }
+ 54. 
+. replace `1'=winv*($a3*cyd3+$a4*cyd4+$a5*cyd5+$a6*cyd6+$a7*cyd7/*
+> */+$a8*cyd8+$a9*cyd9+$a10*cyd10+$a11*cyd11+$a12*cyd12)/*
+> */+winv*exp($b2*cyd2+$b3*cyd3+$b4*cyd4+$b5*cyd5+$b6*cyd6+$b7*cyd7/*
+> */+$b8*cyd8+$b9*cyd9+$b10*cyd10+$b11*cyd11+$b12*cyd12/*
+> */+$c1*wght_c+$c2*wdth_c+$c3*hght_c+$c4*hp_c+$c5*tran_c+$c6*ps_c+$c7*ac_c/*
+> */+$c8)+winv*exp($e2*tyd2+$e3*tyd3+$e4*tyd4+$e5*tyd5+$e6*tyd6+$e7*tyd7/*
+> */+$e8*tyd8+$e9*tyd9+$e10*tyd10+$e11*tyd11+$e12*tyd12/*
+> */+$d1*wght_t+$d2*wdth_t+$d3*hght_t+$d4*hp_t+$d5*tran_t+$d6*ps_t+$d7*four_t+$d8)
+ 55. 
+. end
+
+. 
+. nl ct_2 nprice
+(obs = 404)
+
+Iteration 0:   residual SS =  705.4054
+Iteration 1:   residual SS =  694.9967
+Iteration 2:   residual SS =  618.2689
+Iteration 3:   residual SS =  335.5705
+Iteration 4:   residual SS =  331.3802
+Iteration 5:   residual SS =   184.371
+Iteration 6:   residual SS =  177.3471
+Iteration 7:   residual SS =  172.5454
+Iteration 8:   residual SS =  169.6635
+Iteration 9:   residual SS =  166.2802
+Iteration 10:  residual SS =  22.66957
+Iteration 11:  residual SS =  22.66956
+Iteration 12:  residual SS =  22.66684
+Iteration 13:  residual SS =  22.65584
+Iteration 14:  residual SS =  22.64368
+Iteration 15:  residual SS =  22.63996
+Iteration 16:  residual SS =  22.62355
+Iteration 17:  residual SS =  22.61289
+Iteration 18:  residual SS =  22.54081
+Iteration 19:  residual SS =   21.6917
+Iteration 20:  residual SS =   21.5732
+Iteration 21:  residual SS =  21.42498
+Iteration 22:  residual SS =  21.41305
+Iteration 23:  residual SS =  21.37221
+Iteration 24:  residual SS =  21.29353
+Iteration 25:  residual SS =  21.04616
+Iteration 26:  residual SS =  21.04184
+Iteration 27:  residual SS =  21.03701
+Iteration 28:  residual SS =  21.03168
+Iteration 29:  residual SS =  21.03043
+Iteration 30:  residual SS =  21.02528
+Iteration 31:  residual SS =  21.01683
+Iteration 32:  residual SS =  21.01485
+Iteration 33:  residual SS =  20.99616
+Iteration 34:  residual SS =  20.96647
+Iteration 35:  residual SS =  20.88007
+Iteration 36:  residual SS =  20.72223
+Iteration 37:  residual SS =  20.69676
+Iteration 38:  residual SS =  20.61953
+Iteration 39:  residual SS =  20.52975
+Iteration 40:  residual SS =  20.51257
+Iteration 41:  residual SS =  20.45908
+Iteration 42:  residual SS =  20.30939
+Iteration 43:  residual SS =  20.09851
+Iteration 44:  residual SS =  20.08025
+Iteration 45:  residual SS =  19.67231
+Iteration 46:  residual SS =  19.66755
+Iteration 47:  residual SS =  19.66604
+Iteration 48:  residual SS =  19.66078
+Iteration 49:  residual SS =  19.65246
+Iteration 50:  residual SS =  19.64741
+Iteration 51:  residual SS =  19.64456
+Iteration 52:  residual SS =   19.6153
+Iteration 53:  residual SS =  19.55125
+Iteration 54:  residual SS =  19.40556
+Iteration 55:  residual SS =  19.35525
+Iteration 56:  residual SS =  19.34365
+Iteration 57:  residual SS =  19.28265
+Iteration 58:  residual SS =  19.19945
+Iteration 59:  residual SS =  19.16791
+Iteration 60:  residual SS =   19.1539
+Iteration 61:  residual SS =  19.10194
+Iteration 62:  residual SS =  17.47472
+Iteration 63:  residual SS =  17.47118
+Iteration 64:  residual SS =  17.46723
+Iteration 65:  residual SS =  17.46577
+Iteration 66:  residual SS =  17.46136
+Iteration 67:  residual SS =  17.45454
+Iteration 68:  residual SS =  17.45054
+Iteration 69:  residual SS =  17.44954
+Iteration 70:  residual SS =  17.43946
+Iteration 71:  residual SS =  17.40746
+Iteration 72:  residual SS =  17.29667
+Iteration 73:  residual SS =  17.18164
+Iteration 74:  residual SS =  17.01401
+Iteration 75:  residual SS =  16.99103
+Iteration 76:  residual SS =  16.96242
+Iteration 77:  residual SS =  16.85806
+Iteration 78:  residual SS =  16.74928
+Iteration 79:  residual SS =  16.58976
+Iteration 80:  residual SS =   16.5681
+Iteration 81:  residual SS =  16.54033
+Iteration 82:  residual SS =   16.4404
+Iteration 83:  residual SS =  16.33536
+Iteration 84:  residual SS =  16.17739
+Iteration 85:  residual SS =  16.15622
+Iteration 86:  residual SS =  16.12466
+Iteration 87:  residual SS =   16.0259
+Iteration 88:  residual SS =  16.00638
+Iteration 89:  residual SS =  15.99564
+Iteration 90:  residual SS =  15.95586
+Iteration 91:  residual SS =  15.89712
+Iteration 92:  residual SS =  15.84198
+Iteration 93:  residual SS =   15.8306
+Iteration 94:  residual SS =  15.78819
+Iteration 95:  residual SS =  14.35169
+Iteration 96:  residual SS =   14.3497
+Iteration 97:  residual SS =  14.34613
+Iteration 98:  residual SS =  14.34127
+Iteration 99:  residual SS =  14.33758
+Iteration 100: residual SS =  14.33624
+Iteration 101: residual SS =  14.29966
+Iteration 102: residual SS =   11.8903
+Iteration 103: residual SS =   11.8902
+Iteration 104: residual SS =  11.88896
+Iteration 105: residual SS =  11.88638
+Iteration 106: residual SS =  11.88233
+Iteration 107: residual SS =  11.87684
+Iteration 108: residual SS =  11.87533
+Iteration 109: residual SS =  11.86396
+Iteration 110: residual SS =  11.84341
+Iteration 111: residual SS =  11.79668
+Iteration 112: residual SS =  11.78704
+Iteration 113: residual SS =  11.76461
+Iteration 114: residual SS =  11.55238
+Iteration 115: residual SS =  11.54104
+Iteration 116: residual SS =  11.52216
+Iteration 117: residual SS =  11.44263
+Iteration 118: residual SS =  11.37577
+Iteration 119: residual SS =  11.35628
+Iteration 120: residual SS =  10.32662
+Iteration 121: residual SS =  10.31206
+Iteration 122: residual SS =  10.27411
+Iteration 123: residual SS =  9.818045
+Iteration 124: residual SS =  9.816528
+Iteration 125: residual SS =  9.814906
+Iteration 126: residual SS =   9.81318
+Iteration 127: residual SS =  9.811347
+Iteration 128: residual SS =   9.80941
+Iteration 129: residual SS =  9.809035
+Iteration 130: residual SS =  9.807725
+Iteration 131: residual SS =  9.805553
+Iteration 132: residual SS =  9.802607
+Iteration 133: residual SS =  9.798979
+Iteration 134: residual SS =  9.796881
+Iteration 135: residual SS =  9.790647
+Iteration 136: residual SS =  9.783385
+Iteration 137: residual SS =  9.756612
+Iteration 138: residual SS =  8.913569
+Iteration 139: residual SS =  8.912848
+Iteration 140: residual SS =   8.91204
+Iteration 141: residual SS =   8.91115
+Iteration 142: residual SS =  8.910182
+Iteration 143: residual SS =  8.910011
+Iteration 144: residual SS =  8.909245
+Iteration 145: residual SS =  8.907971
+Iteration 146: residual SS =  8.906269
+Iteration 147: residual SS =  8.905624
+Iteration 148: residual SS =  8.902611
+Iteration 149: residual SS =  8.899152
+Iteration 150: residual SS =  8.885651
+Iteration 151: residual SS =  8.835815
+Iteration 152: residual SS =  8.835285
+Iteration 153: residual SS =  8.834752
+Iteration 154: residual SS =  8.834215
+Iteration 155: residual SS =  8.833675
+Iteration 156: residual SS =  8.833659
+Iteration 157: residual SS =  8.833573
+Iteration 158: residual SS =  8.833414
+Iteration 159: residual SS =  8.833179
+Iteration 160: residual SS =  8.832868
+Iteration 161: residual SS =   8.83248
+Iteration 162: residual SS =  8.832016
+Iteration 163: residual SS =  8.831478
+Iteration 164: residual SS =  8.830865
+Iteration 165: residual SS =  8.830181
+Iteration 166: residual SS =  8.829428
+Iteration 167: residual SS =  8.828608
+Iteration 168: residual SS =  8.827726
+Iteration 169: residual SS =   8.82765
+Iteration 170: residual SS =  8.827055
+Iteration 171: residual SS =  8.826006
+Iteration 172: residual SS =  8.824568
+Iteration 173: residual SS =  8.824508
+Iteration 174: residual SS =  8.822161
+Iteration 175: residual SS =   8.82031
+Iteration 176: residual SS =  8.810115
+Iteration 177: residual SS =  8.490083
+Iteration 178: residual SS =   8.48977
+Iteration 179: residual SS =  8.489397
+Iteration 180: residual SS =   8.48897
+Iteration 181: residual SS =   8.48849
+Iteration 182: residual SS =  8.487964
+Iteration 183: residual SS =  8.487941
+Iteration 184: residual SS =  8.487555
+Iteration 185: residual SS =  8.486867
+Iteration 186: residual SS =   8.48593
+Iteration 187: residual SS =  8.485604
+Iteration 188: residual SS =  8.483926
+Iteration 189: residual SS =  8.481974
+Iteration 190: residual SS =  8.474384
+Iteration 191: residual SS =   8.36673
+Iteration 192: residual SS =  8.366465
+Iteration 193: residual SS =  8.366199
+Iteration 194: residual SS =   8.36593
+Iteration 195: residual SS =  8.365661
+Iteration 196: residual SS =  8.365389
+Iteration 197: residual SS =  8.365116
+Iteration 198: residual SS =  8.365113
+Iteration 199: residual SS =  8.365066
+Iteration 200: residual SS =  8.364976
+Iteration 201: residual SS =  8.364842
+Iteration 202: residual SS =  8.364667
+Iteration 203: residual SS =  8.364451
+Iteration 204: residual SS =  8.364196
+Iteration 205: residual SS =  8.363903
+Iteration 206: residual SS =  8.363574
+Iteration 207: residual SS =  8.363211
+Iteration 208: residual SS =  8.362815
+Iteration 209: residual SS =   8.36239
+Iteration 210: residual SS =  8.362343
+Iteration 211: residual SS =  8.362043
+Iteration 212: residual SS =  8.361527
+Iteration 213: residual SS =   8.36083
+Iteration 214: residual SS =  8.360717
+Iteration 215: residual SS =  8.359558
+Iteration 216: residual SS =  8.358495
+Iteration 217: residual SS =  8.353464
+Iteration 218: residual SS =  8.197774
+Iteration 219: residual SS =  8.197599
+Iteration 220: residual SS =  8.197398
+Iteration 221: residual SS =  8.197175
+Iteration 222: residual SS =  8.196931
+Iteration 223: residual SS =  8.196668
+Iteration 224: residual SS =   8.19659
+Iteration 225: residual SS =  8.196359
+Iteration 226: residual SS =  8.196001
+Iteration 227: residual SS =  8.195542
+Iteration 228: residual SS =  8.195281
+Iteration 229: residual SS =   8.19446
+Iteration 230: residual SS =  8.193416
+Iteration 231: residual SS =  8.193229
+Iteration 232: residual SS =   8.18982
+Iteration 233: residual SS =  8.188416
+Iteration 234: residual SS =  8.186118
+Iteration 235: residual SS =  8.179266
+Iteration 236: residual SS =  8.177646
+Iteration 237: residual SS =  8.173903
+Iteration 238: residual SS =   8.16482
+Iteration 239: residual SS =  8.164212
+Iteration 240: residual SS =  8.126725
+Iteration 241: residual SS =  8.126594
+Iteration 242: residual SS =  8.126448
+Iteration 243: residual SS =  8.126289
+Iteration 244: residual SS =  8.126117
+Iteration 245: residual SS =  8.125934
+Iteration 246: residual SS =  8.125933
+Iteration 247: residual SS =  8.125822
+Iteration 248: residual SS =  8.125619
+Iteration 249: residual SS =   8.12534
+Iteration 250: residual SS =  8.124999
+Iteration 251: residual SS =  8.124774
+Iteration 252: residual SS =  8.124184
+Iteration 253: residual SS =  8.123446
+Iteration 254: residual SS =  8.120985
+Iteration 255: residual SS =  8.103524
+Iteration 256: residual SS =  8.103419
+Iteration 257: residual SS =  8.103312
+Iteration 258: residual SS =  8.103205
+Iteration 259: residual SS =  8.103098
+Iteration 260: residual SS =  8.102989
+Iteration 261: residual SS =  8.102881
+Iteration 262: residual SS =  8.102771
+Iteration 263: residual SS =  8.102661
+Iteration 264: residual SS =   8.10255
+Iteration 265: residual SS =   8.10254
+Iteration 266: residual SS =  8.102509
+Iteration 267: residual SS =  8.102458
+Iteration 268: residual SS =  8.102388
+Iteration 269: residual SS =  8.102301
+Iteration 270: residual SS =  8.102198
+Iteration 271: residual SS =  8.102081
+Iteration 272: residual SS =   8.10195
+Iteration 273: residual SS =  8.101806
+Iteration 274: residual SS =  8.101652
+Iteration 275: residual SS =  8.101647
+Iteration 276: residual SS =  8.101544
+Iteration 277: residual SS =   8.10136
+Iteration 278: residual SS =   8.10111
+Iteration 279: residual SS =  8.101057
+Iteration 280: residual SS =  8.100637
+Iteration 281: residual SS =  8.100204
+Iteration 282: residual SS =   8.09835
+Iteration 283: residual SS =  8.086078
+Iteration 284: residual SS =  8.086075
+Iteration 285: residual SS =   8.08606
+Iteration 286: residual SS =  8.086031
+Iteration 287: residual SS =  8.085988
+Iteration 288: residual SS =  8.085933
+Iteration 289: residual SS =  8.085864
+Iteration 290: residual SS =  8.085784
+Iteration 291: residual SS =  8.085693
+Iteration 292: residual SS =   8.08559
+Iteration 293: residual SS =  8.085477
+Iteration 294: residual SS =  8.085355
+Iteration 295: residual SS =  8.085223
+Iteration 296: residual SS =  8.085084
+Iteration 297: residual SS =  8.084936
+Iteration 298: residual SS =  8.084906
+Iteration 299: residual SS =  8.084798
+Iteration 300: residual SS =  8.084626
+Iteration 301: residual SS =  8.084401
+Iteration 302: residual SS =  8.084356
+Iteration 303: residual SS =  8.083996
+Iteration 304: residual SS =  8.083669
+Iteration 305: residual SS =  8.082152
+Iteration 306: residual SS =  8.034971
+Iteration 307: residual SS =  8.034891
+Iteration 308: residual SS =  8.034806
+Iteration 309: residual SS =  8.034716
+Iteration 310: residual SS =  8.034705
+Iteration 311: residual SS =  8.034644
+Iteration 312: residual SS =  8.034544
+Iteration 313: residual SS =  8.034412
+Iteration 314: residual SS =  8.034393
+Iteration 315: residual SS =  8.034184
+Iteration 316: residual SS =  8.033994
+Iteration 317: residual SS =  8.033108
+Iteration 318: residual SS =  8.004904
+Iteration 319: residual SS =  8.004843
+Iteration 320: residual SS =  8.004829
+Iteration 321: residual SS =  8.004791
+Iteration 322: residual SS =  8.004732
+Iteration 323: residual SS =  8.004657
+Iteration 324: residual SS =  8.004567
+Iteration 325: residual SS =  8.004523
+Iteration 326: residual SS =  8.004386
+Iteration 327: residual SS =  8.004245
+Iteration 328: residual SS =  8.003716
+Iteration 329: residual SS =  7.987782
+Iteration 330: residual SS =  7.987774
+Iteration 331: residual SS =  7.987751
+Iteration 332: residual SS =  7.987716
+Iteration 333: residual SS =  7.987672
+Iteration 334: residual SS =  7.987621
+Iteration 335: residual SS =  7.987604
+Iteration 336: residual SS =  7.987532
+Iteration 337: residual SS =  7.987472
+Iteration 338: residual SS =  7.987207
+Iteration 339: residual SS =  7.978907
+Iteration 340: residual SS =  7.978887
+Iteration 341: residual SS =  7.978862
+Iteration 342: residual SS =  7.978832
+Iteration 343: residual SS =  7.978799
+Iteration 344: residual SS =  7.978764
+Iteration 345: residual SS =  7.978746
+Iteration 346: residual SS =  7.978699
+Iteration 347: residual SS =  7.978663
+Iteration 348: residual SS =  7.978514
+Iteration 349: residual SS =  7.974032
+Iteration 350: residual SS =  7.974014
+Iteration 351: residual SS =  7.973993
+Iteration 352: residual SS =   7.97397
+Iteration 353: residual SS =  7.973947
+Iteration 354: residual SS =  7.973944
+Iteration 355: residual SS =  7.973921
+Iteration 356: residual SS =  7.973884
+Iteration 357: residual SS =  7.973842
+Iteration 358: residual SS =  7.973723
+Iteration 359: residual SS =   7.97259
+Iteration 360: residual SS =  7.972568
+Iteration 361: residual SS =  7.972546
+Iteration 362: residual SS =  7.972526
+Iteration 363: residual SS =  7.972505
+Iteration 364: residual SS =  7.972484
+Iteration 365: residual SS =  7.972463
+Iteration 366: residual SS =  7.972442
+Iteration 367: residual SS =  7.972421
+Iteration 368: residual SS =  7.972421
+Iteration 369: residual SS =  7.972404
+Iteration 370: residual SS =  7.972376
+Iteration 371: residual SS =  7.972351
+Iteration 372: residual SS =  7.972272
+Iteration 373: residual SS =  7.970035
+Iteration 374: residual SS =  7.970017
+Iteration 375: residual SS =  7.969999
+Iteration 376: residual SS =  7.969983
+Iteration 377: residual SS =  7.969978
+Iteration 378: residual SS =  7.969965
+Iteration 379: residual SS =  7.969946
+Iteration 380: residual SS =  7.969929
+Iteration 381: residual SS =  7.969882
+Iteration 382: residual SS =  7.968585
+Iteration 383: residual SS =  7.968582
+Iteration 384: residual SS =  7.968575
+Iteration 385: residual SS =  7.968565
+Iteration 386: residual SS =  7.968552
+Iteration 387: residual SS =  7.968544
+Iteration 388: residual SS =  7.968521
+Iteration 389: residual SS =  7.967959
+Iteration 390: residual SS =  7.967953
+Iteration 391: residual SS =  7.967945
+Iteration 392: residual SS =  7.967936
+Iteration 393: residual SS =  7.967926
+Iteration 394: residual SS =  7.967921
+Iteration 395: residual SS =  7.967907
+Iteration 396: residual SS =  7.967618
+Iteration 397: residual SS =  7.967608
+Iteration 398: residual SS =  7.967599
+Iteration 399: residual SS =   7.96759
+Iteration 400: residual SS =  7.967581
+Iteration 401: residual SS =  7.967576
+Iteration 402: residual SS =  7.967567
+Iteration 403: residual SS =   7.96741
+Iteration 404: residual SS =  7.967399
+Iteration 405: residual SS =   7.96739
+Iteration 406: residual SS =  7.967382
+Iteration 407: residual SS =  7.967374
+Iteration 408: residual SS =   7.96737
+Iteration 409: residual SS =  7.967363
+Iteration 410: residual SS =   7.96726
+Iteration 411: residual SS =  7.967247
+Iteration 412: residual SS =  7.967238
+Iteration 413: residual SS =   7.96723
+Iteration 414: residual SS =  7.967229
+Iteration 415: residual SS =  7.967222
+Iteration 416: residual SS =   7.96722
+Iteration 417: residual SS =  7.967216
+Iteration 418: residual SS =  7.967216
+Iteration 419: residual SS =  7.967075
+Iteration 420: residual SS =  7.967068
+Iteration 421: residual SS =  7.967065
+Iteration 422: residual SS =  7.967064
+Iteration 423: residual SS =  7.966951
+Iteration 424: residual SS =   7.96695
+Iteration 425: residual SS =  7.966945
+Iteration 426: residual SS =  7.966937
+Iteration 427: residual SS =  7.966795
+Iteration 428: residual SS =  7.966785
+Iteration 429: residual SS =  7.966783
+Iteration 430: residual SS =   7.96678
+Iteration 431: residual SS =  7.966777
+Iteration 432: residual SS =  7.966709
+Iteration 433: residual SS =  7.966705
+Iteration 434: residual SS =  7.966702
+Iteration 435: residual SS =  7.966697
+Iteration 436: residual SS =  7.966619
+Iteration 437: residual SS =  7.966614
+Iteration 438: residual SS =   7.96661
+Iteration 439: residual SS =  7.966609
+Iteration 440: residual SS =  7.966596
+Iteration 441: residual SS =  7.966592
+Iteration 442: residual SS =   7.96659
+Iteration 443: residual SS =  7.966587
+Iteration 444: residual SS =  7.966574
+Iteration 445: residual SS =  7.966566
+Iteration 446: residual SS =  7.966563
+Iteration 447: residual SS =  7.966562
+Iteration 448: residual SS =   7.96655
+Iteration 449: residual SS =  7.966549
+Iteration 450: residual SS =  7.966548
+Iteration 451: residual SS =  7.966543
+Iteration 452: residual SS =  7.966543
+Iteration 453: residual SS =  7.966537
+Iteration 454: residual SS =  7.966536
+Iteration 455: residual SS =   7.96653
+Iteration 456: residual SS =  7.966529
+Iteration 457: residual SS =  7.966523
+Iteration 458: residual SS =  7.966522
+Iteration 459: residual SS =  7.966515
+Iteration 460: residual SS =  7.966514
+Iteration 461: residual SS =  7.966509
+Iteration 462: residual SS =  7.966508
+Iteration 463: residual SS =  7.966503
+Iteration 464: residual SS =  7.966502
+Iteration 465: residual SS =  7.966497
+Iteration 466: residual SS =  7.966496
+Iteration 467: residual SS =  7.966496
+Iteration 468: residual SS =  7.966495
+Iteration 469: residual SS =  7.966494
+Iteration 470: residual SS =  7.966493
+Iteration 471: residual SS =  7.966489
+Iteration 472: residual SS =  7.966488
+Iteration 473: residual SS =  7.966487
+Iteration 474: residual SS =  7.966486
+Iteration 475: residual SS =  7.966481
+Iteration 476: residual SS =   7.96648
+Iteration 477: residual SS =  7.966479
+Iteration 478: residual SS =  7.966479
+Iteration 479: residual SS =  7.966478
+Iteration 480: residual SS =  7.966478
+Iteration 481: residual SS =  7.966478
+Iteration 482: residual SS =  7.966477
+Iteration 483: residual SS =  7.966477
+Iteration 484: residual SS =  7.966476
+Iteration 485: residual SS =  7.966474
+Iteration 486: residual SS =  7.966473
+Iteration 487: residual SS =  7.966473
+Iteration 488: residual SS =  7.966473
+Iteration 489: residual SS =  7.966473
+Iteration 490: residual SS =  7.966472
+Iteration 491: residual SS =  7.966472
+Iteration 492: residual SS =  7.966472
+Iteration 493: residual SS =  7.966472
+Iteration 494: residual SS =  7.966472
+Iteration 495: residual SS =  7.966472
+Iteration 496: residual SS =  7.966472
+Iteration 497: residual SS =  7.966471
+Iteration 498: residual SS =  7.966471
+Iteration 499: residual SS =   7.96647
+Iteration 500: residual SS =   7.96647
+Iteration 501: residual SS =   7.96647
+Iteration 502: residual SS =   7.96647
+Iteration 503: residual SS =  7.966469
+Iteration 504: residual SS =  7.966469
+Iteration 505: residual SS =  7.966469
+Iteration 506: residual SS =  7.966469
+Iteration 507: residual SS =  7.966469
+Iteration 508: residual SS =  7.966469
+Iteration 509: residual SS =  7.966469
+Iteration 510: residual SS =  7.966468
+Iteration 511: residual SS =  7.966468
+Iteration 512: residual SS =  7.966468
+Iteration 513: residual SS =  7.966468
+Iteration 514: residual SS =  7.966468
+Iteration 515: residual SS =  7.966468
+Iteration 516: residual SS =  7.966468
+Iteration 517: residual SS =  7.966468
+Iteration 518: residual SS =  7.966468
+Iteration 519: residual SS =  7.966468
+Iteration 520: residual SS =  7.966468
+Iteration 521: residual SS =  7.966467
+Iteration 522: residual SS =  7.966467
+Iteration 523: residual SS =  7.966467
+Iteration 524: residual SS =  7.966467
+Iteration 525: residual SS =  7.966467
+Iteration 526: residual SS =  7.966467
+Iteration 527: residual SS =  7.966467
+Iteration 528: residual SS =  7.966467
+Iteration 529: residual SS =  7.966467
+Iteration 530: residual SS =  7.966467
+Iteration 531: residual SS =  7.966467
+Iteration 532: residual SS =  7.966467
+Iteration 533: residual SS =  7.966467
+Iteration 534: residual SS =  7.966467
+Iteration 535: residual SS =  7.966467
+Iteration 536: residual SS =  7.966467
+Iteration 537: residual SS =  7.966466
+Iteration 538: residual SS =  7.966466
+Iteration 539: residual SS =  7.966466
+Iteration 540: residual SS =  7.966466
+Iteration 541: residual SS =  7.966466
+Iteration 542: residual SS =  7.966466
+Iteration 543: residual SS =  7.966466
+Iteration 544: residual SS =  7.966466
+Iteration 545: residual SS =  7.966466
+Iteration 546: residual SS =  7.966466
+Iteration 547: residual SS =  7.966466
+Iteration 548: residual SS =  7.966466
+Iteration 549: residual SS =  7.966466
+Iteration 550: residual SS =  7.966466
+Iteration 551: residual SS =  7.966466
+Iteration 552: residual SS =  7.966466
+Iteration 553: residual SS =  7.966466
+Iteration 554: residual SS =  7.966466
+Iteration 555: residual SS =  7.966466
+Iteration 556: residual SS =  7.966466
+Iteration 557: residual SS =  7.966466
+Iteration 558: residual SS =  7.966466
+Iteration 559: residual SS =  7.966466
+Iteration 560: residual SS =  7.966466
+Iteration 561: residual SS =  7.966466
+Iteration 562: residual SS =  7.966466
+Iteration 563: residual SS =  7.966466
+Iteration 564: residual SS =  7.966466
+Iteration 565: residual SS =  7.966466
+Iteration 566: residual SS =  7.966466
+Iteration 567: residual SS =  7.966466
+Iteration 568: residual SS =  7.966466
+Iteration 569: residual SS =  7.966466
+Iteration 570: residual SS =  7.966466
+Iteration 571: residual SS =  7.966466
+Iteration 572: residual SS =  7.966466
+Iteration 573: residual SS =  7.966466
+Iteration 574: residual SS =  7.966466
+Iteration 575: residual SS =  7.966466
+Iteration 576: residual SS =  7.966466
+Iteration 577: residual SS =  7.966466
+Iteration 578: residual SS =  7.966466
+Iteration 579: residual SS =  7.966466
+Iteration 580: residual SS =  7.966466
+Iteration 581: residual SS =  7.966466
+Iteration 582: residual SS =  7.966466
+Iteration 583: residual SS =  7.966466
+Iteration 584: residual SS =  7.966466
+Iteration 585: residual SS =  7.966466
+Iteration 586: residual SS =  7.966466
+Iteration 587: residual SS =  7.966466
+Iteration 588: residual SS =  7.966466
+Iteration 589: residual SS =  7.966466
+Iteration 590: residual SS =  7.966466
+Iteration 591: residual SS =  7.966466
+Iteration 592: residual SS =  7.966466
+Iteration 593: residual SS =  7.966466
+Iteration 594: residual SS =  7.966466
+Iteration 595: residual SS =  7.966466
+Iteration 596: residual SS =  7.966466
+Iteration 597: residual SS =  7.966466
+Iteration 598: residual SS =  7.966466
+Iteration 599: residual SS =  7.966466
+Iteration 600: residual SS =  7.966466
+Iteration 601: residual SS =  7.966466
+Iteration 602: residual SS =  7.966466
+Iteration 603: residual SS =  7.966466
+Iteration 604: residual SS =  7.966466
+Iteration 605: residual SS =  7.966466
+Iteration 606: residual SS =  7.966466
+Iteration 607: residual SS =  7.966466
+Iteration 608: residual SS =  7.966466
+Iteration 609: residual SS =  7.966466
+Iteration 610: residual SS =  7.966466
+Iteration 611: residual SS =  7.966466
+Iteration 612: residual SS =  7.966466
+Iteration 613: residual SS =  7.966466
+Iteration 614: residual SS =  7.966466
+Iteration 615: residual SS =  7.966466
+Iteration 616: residual SS =  7.966466
+Iteration 617: residual SS =  7.966466
+Iteration 618: residual SS =  7.966466
+Iteration 619: residual SS =  7.966466
+Iteration 620: residual SS =  7.966466
+Iteration 621: residual SS =  7.966466
+Iteration 622: residual SS =  7.966466
+Iteration 623: residual SS =  7.966466
+Iteration 624: residual SS =  7.966466
+Iteration 625: residual SS =  7.966466
+Iteration 626: residual SS =  7.966466
+Iteration 627: residual SS =  7.966466
+Iteration 628: residual SS =  7.966466
+Iteration 629: residual SS =  7.966466
+Iteration 630: residual SS =  7.966466
+Iteration 631: residual SS =  7.966466
+Iteration 632: residual SS =  7.966466
+Iteration 633: residual SS =  7.966466
+Iteration 634: residual SS =  7.966466
+Iteration 635: residual SS =  7.966466
+Iteration 636: residual SS =  7.966466
+Iteration 637: residual SS =  7.966466
+Iteration 638: residual SS =  7.966466
+Iteration 639: residual SS =  7.966466
+Iteration 640: residual SS =  7.966466
+Iteration 641: residual SS =  7.966466
+Iteration 642: residual SS =  7.966466
+Iteration 643: residual SS =  7.966466
+Iteration 644: residual SS =  7.966466
+Iteration 645: residual SS =  7.966466
+Iteration 646: residual SS =  7.966466
+Iteration 647: residual SS =  7.966466
+Iteration 648: residual SS =  7.966466
+Iteration 649: residual SS =  7.966466
+Iteration 650: residual SS =  7.966466
+Iteration 651: residual SS =  7.966466
+Iteration 652: residual SS =  7.966466
+Iteration 653: residual SS =  7.966466
+Iteration 654: residual SS =  7.966466
+Iteration 655: residual SS =  7.966466
+Iteration 656: residual SS =  7.966466
+Iteration 657: residual SS =  7.966466
+Iteration 658: residual SS =  7.966466
+Iteration 659: residual SS =  7.966466
+Iteration 660: residual SS =  7.966466
+Iteration 661: residual SS =  7.966466
+Iteration 662: residual SS =  7.966466
+Iteration 663: residual SS =  7.966466
+Iteration 664: residual SS =  7.966466
+Iteration 665: residual SS =  7.966466
+Iteration 666: residual SS =  7.966466
+Iteration 667: residual SS =  7.966466
+Iteration 668: residual SS =  7.966466
+Iteration 669: residual SS =  7.966466
+Iteration 670: residual SS =  7.966466
+Iteration 671: residual SS =  7.966466
+Iteration 672: residual SS =  7.966466
+Iteration 673: residual SS =  7.966466
+Iteration 674: residual SS =  7.966466
+Iteration 675: residual SS =  7.966466
+Iteration 676: residual SS =  7.966466
+Iteration 677: residual SS =  7.966466
+Iteration 678: residual SS =  7.966466
+Iteration 679: residual SS =  7.966466
+Iteration 680: residual SS =  7.966466
+Iteration 681: residual SS =  7.966466
+Iteration 682: residual SS =  7.966466
+Iteration 683: residual SS =  7.966466
+Iteration 684: residual SS =  7.966466
+Iteration 685: residual SS =  7.966466
+Iteration 686: residual SS =  7.966466
+Iteration 687: residual SS =  7.966466
+Iteration 688: residual SS =  7.966466
+Iteration 689: residual SS =  7.966466
+Iteration 690: residual SS =  7.966466
+Iteration 691: residual SS =  7.966466
+Iteration 692: residual SS =  7.966466
+Iteration 693: residual SS =  7.966466
+Iteration 694: residual SS =  7.966466
+Iteration 695: residual SS =  7.966466
+Iteration 696: residual SS =  7.966466
+Iteration 697: residual SS =  7.966466
+Iteration 698: residual SS =  7.966466
+Iteration 699: residual SS =  7.966466
+Iteration 700: residual SS =  7.966466
+Iteration 701: residual SS =  7.966466
+Iteration 702: residual SS =  7.966466
+Iteration 703: residual SS =  7.966466
+Iteration 704: residual SS =  7.966466
+Iteration 705: residual SS =  7.966466
+
+      Source |       SS       df       MS            Number of obs =       404
+-------------+------------------------------         F( 48,   356) =    660.25
+       Model |  709.194518    48  14.7748858         Prob > F      =    0.0000
+    Residual |  7.96646553   356  .022377712         R-squared     =    0.9889
+-------------+------------------------------         Adj R-squared =    0.9874
+       Total |  717.160983   404  1.77515095         Root MSE      =  .1495918
+                                                     Res. dev.     = -439.6719
+(ct_2)
+------------------------------------------------------------------------------
+      nprice |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+          a3 |   734.9432   503.0787     1.46   0.145    -254.4365    1724.323
+          a4 |   811.8784   535.6913     1.52   0.131    -241.6389    1865.396
+          a5 |   859.9771   526.5314     1.63   0.103    -175.5258     1895.48
+          a6 |    945.024   527.8999     1.79   0.074    -93.17038    1983.218
+          a7 |   450.3389    579.345     0.78   0.437    -689.0301    1589.708
+          a8 |    725.567   698.5813     1.04   0.300    -648.2979    2099.432
+          a9 |   1212.369   671.2086     1.81   0.072    -107.6629    2532.402
+         a10 |  -51.05579   931.6632    -0.05   0.956    -1883.311      1781.2
+         a11 |  -53.23228    912.887    -0.06   0.954    -1848.562    1742.097
+         a12 |  -217.8427   972.9089    -0.22   0.823    -2131.214    1695.529
+          b2 |  -.1700182   .0516685    -3.29   0.001     -.271632   -.0684043
+          b3 |  -.1672112   .1165432    -1.43   0.152    -.3964109    .0619886
+          b4 |  -.1364319   .1189651    -1.15   0.252    -.3703947    .0975309
+          b5 |  -.1678046    .116889    -1.44   0.152    -.3976843    .0620751
+          b6 |  -.1187765   .1130927    -1.05   0.294    -.3411903    .1036372
+          b7 |   .0027724   .1073729     0.03   0.979    -.2083925    .2139373
+          b8 |   .0083828   .1202947     0.07   0.944    -.2281947    .2449603
+          b9 |   .0722563   .1111482     0.65   0.516    -.1463333    .2908459
+         b10 |   .1921118   .1236317     1.55   0.121    -.0510286    .4352521
+         b11 |   .1767444   .1254828     1.41   0.160    -.0700362    .4235251
+         b12 |    .124542   .1343276     0.93   0.354    -.1396333    .3887174
+          c1 |   .2644223   .1493313     1.77   0.077    -.0292602    .5581048
+          c2 |   1.028573   .1865784     5.51   0.000     .6616382    1.395507
+          c3 |  -.1981295    .074137    -2.67   0.008    -.3439312   -.0523279
+          c4 |   .4020387   .0759905     5.29   0.000     .2525919    .5514855
+          c5 |   .0675951   .0326762     2.07   0.039     .0033324    .1318578
+          c6 |   .1552683   .0366316     4.24   0.000     .0832268    .2273098
+          c7 |   .1491266   .0387902     3.84   0.000     .0728399    .2254133
+          c8 |   3.307344   1.074511     3.08   0.002     1.194158    5.420531
+          d1 |   .7231065    .119554     6.05   0.000     .4879856    .9582274
+          d2 |   .3303981   .1291179     2.56   0.011     .0764684    .5843278
+          d3 |   -.267597   .0829423    -3.23   0.001    -.4307154   -.1044785
+          d4 |   .5081312   .1273821     3.99   0.000     .2576152    .7586472
+          d5 |   .1645018   .0368046     4.47   0.000       .09212    .2368836
+          d6 |   .0892036   .0628575     1.42   0.157     -.034415    .2128223
+          d7 |   .1904291   .1205351     1.58   0.115    -.0466212    .4274794
+          d8 |   6.374857   .7038929     9.06   0.000     4.990546    7.759168
+          e2 |  -.1798449   .0710735    -2.53   0.012    -.3196216   -.0400681
+          e3 |   .1727863   .0528975     3.27   0.001     .0687554    .2768172
+          e4 |   .1637826   .0530403     3.09   0.002     .0594709    .2680942
+          e5 |   .0199666   .0524922     0.38   0.704    -.0832672    .1232004
+          e6 |   .0365099   .0530112     0.69   0.491    -.0677445    .1407643
+          e7 |  -.0699329   .0514782    -1.36   0.175    -.1711726    .0313067
+          e8 |   .0069641   .0512908     0.14   0.892    -.0939069    .1078352
+          e9 |  -.0513169   .0541998    -0.95   0.344    -.1579089     .055275
+         e10 |   -.029118   .0467261    -0.62   0.534     -.121012    .0627759
+         e11 |   .0074579   .0446832     0.17   0.868    -.0804183    .0953341
+         e12 |   .0590645    .044435     1.33   0.185    -.0283236    .1464527
+------------------------------------------------------------------------------
+ (SEs, P values, CIs, and correlations are asymptotic approximations)
+
+. 
+. program drop _all
+
+. log close
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
+> er-8\system_nocon.log
+  log type:  text
+ closed on:  20 Jun 2024, 12:51:03
+----------------------------------------------------------------------------------
