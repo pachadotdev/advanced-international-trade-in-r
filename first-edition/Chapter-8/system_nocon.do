@@ -1,9 +1,9 @@
 capture log close
-log using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\system_nocon.log,replace
+log using c:\Empirical_Exercise\Chapter_8\system_nocon.log,replace
 
 set matsize 400
 
-use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\truck_7990,clear
+use c:\Empirical_Exercise\Chapter_8\truck_7990,clear
 gen ve=2
 rename wdth wdth_t
 rename hght hght_t
@@ -14,9 +14,9 @@ rename tran tran_t
 rename ps ps_t
 rename ac ac_t
 
-save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\truck_temp,replace
+save c:\Empirical_Exercise\Chapter_8\truck_temp,replace
 
-use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\car_7990,clear
+use c:\Empirical_Exercise\Chapter_8\car_7990,clear
 gen ve=1
 rename wdth wdth_c
 rename hght hght_c
@@ -27,7 +27,7 @@ rename tran tran_c
 rename ps ps_c
 rename ac ac_c
 
-append using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\truck_temp
+append using c:\Empirical_Exercise\Chapter_8\truck_temp
 
 replace wdth_c=0 if wdth_c==.
 replace hght_c=0 if hght_c==.
@@ -90,18 +90,18 @@ replace tyd9=0 if type~="JT"
 
 gen cyd10=yd10
 gen tyd10=yd10
-replace cyd10=10 if type=="JT"
-replace tyd10=10 if type~="JT"
+replace cyd7=10 if type=="JT"
+replace tyd7=10 if type~="JT"
 
 gen cyd11=yd11
 gen tyd11=yd11
-replace cyd11=11 if type=="JT"
-replace tyd11=11 if type~="JT"
+replace cyd7=11 if type=="JT"
+replace tyd7=11 if type~="JT"
 
 gen cyd12=yd12
 gen tyd12=yd12
-replace cyd12=12 if type=="JT"
-replace tyd12=12 if type~="JT"
+replace cyd7=12 if type=="JT"
+replace tyd7=12 if type~="JT"
 
 program define nlct_1
 version 7.0
