@@ -1,0 +1,616 @@
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\system_nocon.log
+  log type:  text
+ opened on:  18 Oct 2024, 11:55:52
+
+. 
+. set matsize 400
+
+Current memory allocation
+
+                    current                                 memory usage
+    settable          value     description                 (1M = 1024k)
+    --------------------------------------------------------------------
+    set maxvar         5000     max. variables allowed           1.909M
+    set memory           50M    max. data space                 50.000M
+    set matsize         400     max. RHS vars in models          1.254M
+                                                            -----------
+                                                                53.163M
+
+. 
+. use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\truck_7990,clear
+
+. gen ve=2
+
+. rename wdth wdth_t
+
+. rename hght hght_t
+
+. rename weight wght_t
+
+. rename hp hp_t
+
+. rename four four_t
+
+. rename tran tran_t
+
+. rename ps ps_t
+
+. rename ac ac_t
+
+. 
+. save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\truck_temp,replace
+file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\truck_temp.dta saved
+
+. 
+. use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\car_7990,clear
+
+. gen ve=1
+
+. rename wdth wdth_c
+
+. rename hght hght_c
+
+. rename wght wght_c
+
+. rename hp hp_c
+
+. rename four four_c
+
+. rename tran tran_c
+
+. rename ps ps_c
+
+. rename ac ac_c
+
+. 
+. append using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\truck_temp
+
+. 
+. replace wdth_c=0 if wdth_c==.
+(120 real changes made)
+
+. replace hght_c=0 if hght_c==.
+(120 real changes made)
+
+. replace wght_c=0 if wght_c==.
+(120 real changes made)
+
+. replace hp_c=0 if hp_c==.
+(120 real changes made)
+
+. replace four_c=0 if four_c==.
+(120 real changes made)
+
+. replace tran_c=0 if tran_c==.
+(120 real changes made)
+
+. replace ps_c=0 if ps_c==.
+(120 real changes made)
+
+. replace ac_c=0 if ac_c==.
+(120 real changes made)
+
+. replace wdth_t=0 if wdth_t==.
+(284 real changes made)
+
+. replace hght_t=0 if hght_t==.
+(284 real changes made)
+
+. replace wght_t=0 if wght_t==.
+(284 real changes made)
+
+. replace hp_t=0 if hp_t==.
+(284 real changes made)
+
+. replace four_t=0 if four_t==.
+(284 real changes made)
+
+. replace tran_t=0 if tran_t==.
+(284 real changes made)
+
+. replace ps_t=0 if ps_t==.
+(284 real changes made)
+
+. replace ac_t=0 if ac_t==.
+(284 real changes made)
+
+. 
+. tab year, gen(yd)
+
+       year |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         79 |         31        7.67        7.67
+         80 |         34        8.42       16.09
+         81 |         35        8.66       24.75
+         82 |         35        8.66       33.42
+         83 |         36        8.91       42.33
+         84 |         40        9.90       52.23
+         85 |         43       10.64       62.87
+         86 |         33        8.17       71.04
+         87 |         35        8.66       79.70
+         88 |         30        7.43       87.13
+         89 |         26        6.44       93.56
+         90 |         26        6.44      100.00
+------------+-----------------------------------
+      Total |        404      100.00
+
+. 
+. gen cyd2=yd2
+
+. gen tyd2=yd2
+
+. replace cyd2=0 if type=="JT"
+(8 real changes made)
+
+. replace tyd2=0 if type~="JT"
+(26 real changes made)
+
+. 
+. gen cyd3=yd3
+
+. gen tyd3=yd3
+
+. replace cyd3=0 if type=="JT"
+(9 real changes made)
+
+. replace tyd3=0 if type~="JT"
+(26 real changes made)
+
+. 
+. gen cyd4=yd4
+
+. gen tyd4=yd4
+
+. replace cyd4=0 if type=="JT"
+(9 real changes made)
+
+. replace tyd4=0 if type~="JT"
+(26 real changes made)
+
+. 
+. gen cyd5=yd5
+
+. gen tyd5=yd5
+
+. replace cyd5=0 if type=="JT"
+(7 real changes made)
+
+. replace tyd5=0 if type~="JT"
+(29 real changes made)
+
+. 
+. gen cyd6=yd6
+
+. gen tyd6=yd6
+
+. replace cyd6=0 if type=="JT"
+(7 real changes made)
+
+. replace tyd6=0 if type~="JT"
+(33 real changes made)
+
+. 
+. gen cyd7=yd7
+
+. gen tyd7=yd7
+
+. replace cyd7=0 if type=="JT"
+(7 real changes made)
+
+. replace tyd7=0 if type~="JT"
+(36 real changes made)
+
+. 
+. gen cyd8=yd8
+
+. gen tyd8=yd8
+
+. replace cyd8=0 if type=="JT"
+(7 real changes made)
+
+. replace tyd8=0 if type~="JT"
+(26 real changes made)
+
+. 
+. gen cyd9=yd9
+
+. gen tyd9=yd9
+
+. replace cyd9=0 if type=="JT"
+(6 real changes made)
+
+. replace tyd9=0 if type~="JT"
+(29 real changes made)
+
+. 
+. gen cyd10=yd10
+
+. gen tyd10=yd10
+
+. replace cyd7=10 if type=="JT"
+(84 real changes made)
+
+. replace tyd7=10 if type~="JT"
+(320 real changes made)
+
+. 
+. gen cyd11=yd11
+
+. gen tyd11=yd11
+
+. replace cyd7=11 if type=="JT"
+(84 real changes made)
+
+. replace tyd7=11 if type~="JT"
+(320 real changes made)
+
+. 
+. gen cyd12=yd12
+
+. gen tyd12=yd12
+
+. replace cyd7=12 if type=="JT"
+(84 real changes made)
+
+. replace tyd7=12 if type~="JT"
+(320 real changes made)
+
+. 
+. program define nlct_1
+  1. version 7.0
+  2. if "`1'"=="?"{
+  3. global S_1 "a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 c1 c2 c3 c4 c5 c6 c7 c8 d1 d2 d3 d4 d5 d6 d7 d8 e2 e3 e4 e5 e6 e7 e8 e9 e10 e11 e12"
+  4. global a3=1
+  5. global a4=1
+  6. global a5=1
+  7. global a6=1
+  8. global a7=1
+  9. global a8=1
+ 10. global a9=1
+ 11. global a10=1
+ 12. global a11=1
+ 13. global a12=1
+ 14. global b2=.1
+ 15. global b3=.1
+ 16. global b4=.1
+ 17. global b5=.1
+ 18. global b6=.1
+ 19. global b7=.1
+ 20. global b8=.1
+ 21. global b9=.1
+ 22. global b10=.1
+ 23. global b11=.1
+ 24. global b12=.1
+ 25. global c1=.1
+ 26. global c2=.1
+ 27. global c3=.1
+ 28. global c4=.1
+ 29. global c5=.1
+ 30. global c6=.1
+ 31. global c7=.1
+ 32. global c8=.1
+ 33. global d1=.1
+ 34. global d2=.1
+ 35. global d3=.1
+ 36. global d4=.1
+ 37. global d5=.1
+ 38. global d6=.1
+ 39. global d7=.1
+ 40. global d8=.1
+ 41. global e2=.1
+ 42. global e3=.1
+ 43. global e4=.1
+ 44. global e5=.1
+ 45. global e6=.1
+ 46. global e7=.1
+ 47. global e8=.1
+ 48. global e9=.1
+ 49. global e10=.1
+ 50. global e11=.1
+ 51. global e12=.1
+ 52. exit
+ 53. }
+ 54. 
+. replace `1'=$a3*cyd3+$a4*cyd4+$a5*cyd5+$a6*cyd6+$a7*cyd7/*
+> */+$a8*cyd8+$a9*cyd9+$a10*cyd10+$a11*cyd11+$a12*cyd12/*
+> */+exp($b2*cyd2+$b3*cyd3+$b4*cyd4+$b5*cyd5+$b6*cyd6+$b7*cyd7/*
+> */+$b8*cyd8+$b9*cyd9+$b10*cyd10+$b11*cyd11+$b12*cyd12/*
+> */+$c1*wght_c+$c2*wdth_c+$c3*hght_c+$c4*hp_c+$c5*tran_c+$c6*ps_c+$c7*ac_c/*
+> */+$c8)+exp($e2*tyd2+$e3*tyd3+$e4*tyd4+$e5*tyd5+$e6*tyd6+$e7*tyd7/*
+> */+$e8*tyd8+$e9*tyd9+$e10*tyd10+$e11*tyd11+$e12*tyd12/*
+> */+$d1*wght_t+$d2*wdth_t+$d3*hght_t+$d4*hp_t+$d5*tran_t+$d6*ps_t+$d7*four_t+$d8)
+ 55. 
+. end
+
+. 
+. nl ct_1 price
+(obs = 404)
+
+Iteration 0:   residual SS =  3.68e+10
+Iteration 1:   residual SS =  3.17e+10
+Iteration 2:   residual SS =  2.99e+10
+Iteration 3:   residual SS =  2.98e+10
+Iteration 4:   residual SS =  1.30e+10
+Iteration 5:   residual SS =  9.32e+09
+Iteration 6:   residual SS =  2.70e+09
+Iteration 7:   residual SS =  2.55e+09
+Iteration 8:   residual SS =  3.71e+08
+Iteration 9:   residual SS =  3.16e+08
+Iteration 10:  residual SS =  3.14e+08
+Iteration 11:  residual SS =  3.13e+08
+Iteration 12:  residual SS =  3.13e+08
+Iteration 13:  residual SS =  3.13e+08
+Iteration 14:  residual SS =  3.13e+08
+Iteration 15:  residual SS =  3.13e+08
+Iteration 16:  residual SS =  3.13e+08
+Iteration 17:  residual SS =  3.13e+08
+Iteration 18:  residual SS =  3.13e+08
+Iteration 19:  residual SS =  3.13e+08
+Iteration 20:  residual SS =  3.13e+08
+Iteration 21:  residual SS =  3.13e+08
+Iteration 22:  residual SS =  3.13e+08
+Iteration 23:  residual SS =  3.13e+08
+Iteration 24:  residual SS =  3.13e+08
+Iteration 25:  residual SS =  3.13e+08
+
+      Source |       SS       df       MS            Number of obs =       404
+-------------+------------------------------         F( 46,   357) =    147.07
+       Model |  5.9297e+09    46   128906902         Prob > F      =    0.0000
+    Residual |   312918865   357  876523.431         R-squared     =    0.9499
+-------------+------------------------------         Adj R-squared =    0.9434
+       Total |  6.2426e+09   403  15490412.8         Root MSE      =  936.2283
+                                                     Res. dev.     =  6624.758
+(ct_1)
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+          a3 |   277.0869   551.2618     0.50   0.616    -807.0417    1361.215
+          a4 |   21.66828   535.0463     0.04   0.968    -1030.571    1073.907
+          a5 |   147.2889   494.2067     0.30   0.766    -824.6333    1119.211
+          a6 |    556.957   484.3219     1.15   0.251    -395.5256     1509.44
+          a7 |  -7.057291   101.5543    -0.07   0.945    -206.7772    192.6626
+          a8 |   771.0952   521.6698     1.48   0.140     -254.837    1797.027
+          a9 |    1191.93   517.0276     2.31   0.022     175.1272    2208.733
+         a10 |   657.8229   728.4691     0.90   0.367    -774.8072    2090.453
+         a11 |  -450.8028   817.0406    -0.55   0.581     -2057.62    1156.015
+         a12 |  -433.4064   772.5761    -0.56   0.575    -1952.779    1085.966
+          b2 |  -.0841009     .04192    -2.01   0.046    -.1665421   -.0016597
+          b3 |  -.0056866   .0864787    -0.07   0.948    -.1757583    .1643851
+          b4 |   .0872793   .0747481     1.17   0.244    -.0597227    .2342813
+          b5 |   .0666161   .0692594     0.96   0.337    -.0695916    .2028239
+          b6 |   .0749652   .0668452     1.12   0.263    -.0564948    .2064251
+          b7 |   .1526226   .0314581     4.85   0.000     .0907562    .2144891
+          b8 |   .1437711    .065557     2.19   0.029     .0148446    .2726975
+          b9 |   .1988908    .062616     3.18   0.002     .0757482    .3220335
+         b10 |   .2857005   .0719646     3.97   0.000     .1441727    .4272282
+         b11 |   .4104976   .0690287     5.95   0.000     .2747436    .5462515
+         b12 |   .3679665   .0684655     5.37   0.000     .2333201    .5026129
+          c1 |   .4662111   .0865907     5.38   0.000     .2959191    .6365031
+          c2 |   .5300141   .0640388     8.28   0.000     .4040735    .6559547
+          c3 |  -.3625191   .0443666    -8.17   0.000    -.4497719   -.2752663
+          c4 |   .2502107   .0387283     6.46   0.000     .1740464     .326375
+          c5 |    .063748   .0203705     3.13   0.002     .0236867    .1038093
+          c6 |    .108309   .0205511     5.27   0.000     .0678925    .1487255
+          c7 |   .1667295   .0205709     8.11   0.000     .1262742    .2071848
+          c8 |   6.664738   .3769454    17.68   0.000     5.923426    7.406051
+          d1 |   .4827909   .0948538     5.09   0.000     .2962486    .6693333
+          d2 |   .6237576   .3207663     1.94   0.053    -.0070714    1.254587
+          d3 |  -.1758063   .0807852    -2.18   0.030    -.3346811   -.0169316
+          d4 |   .4714717   .1961516     2.40   0.017     .0857138    .8572296
+          d5 |   .0368238   .0705556     0.52   0.602     -.101933    .1755805
+          d6 |   .0595696    .060131     0.99   0.323    -.0586858     .177825
+          d7 |    .184348   .0926225     1.99   0.047     .0021937    .3665023
+          d8 |   2.773037   1.807071     1.53   0.126    -.7808051     6.32688
+          e2 |  -2.59e+09          .        .       .            .           .
+          e3 |   1.002811   .5449131     1.84   0.067    -.0688323    2.074454
+          e4 |   1.089538   .5484653     1.99   0.048     .0109092    2.168167
+          e5 |   .7809413   .5636633     1.39   0.167    -.3275767    1.889459
+          e6 |   .8176126   .5623188     1.45   0.147    -.2882611    1.923486
+          e7 |   .1963533   .0542407     3.62   0.000     .0896819    .3030248
+          e8 |   .9909852   .5576036     1.78   0.076    -.1056155    2.087586
+          e9 |   1.011894   .5669185     1.78   0.075    -.1030257    2.126813
+         e10 |   .0766676   .1003499     0.76   0.445    -.1206836    .2740188
+         e11 |   .3305375   .0754574     4.38   0.000     .1821406    .4789343
+         e12 |   .4674833   .0740926     6.31   0.000     .3217704    .6131961
+------------------------------------------------------------------------------
+* Parameter e2 taken as constant term in model & ANOVA table
+ (SEs, P values, CIs, and correlations are asymptotic approximations)
+
+. 
+. gen winv=1/exp(_b[b2]*cyd2+_b[b3]*cyd3+_b[b4]*cyd4+_b[b5]*cyd5+_b[b6]*cyd6+_b[b7]*cyd7/*
+> */+_b[b8]*cyd8+_b[b9]*cyd9+_b[b10]*cyd10+_b[b11]*cyd11+_b[b12]*cyd12/*
+> */+_b[c1]*wght_c+_b[c2]*wdth_c+_b[c3]*hght_c+_b[c4]*hp_c+_b[c5]*tran_c+_b[c6]*ps_c/*
+> */+_b[c7]*ac_c+_b[c8])
+
+. 
+. replace winv=1/exp(_b[e2]*tyd2+_b[e3]*tyd3+_b[e4]*tyd4+_b[e5]*tyd5+_b[e6]*tyd6/*
+> */+_b[e7]*tyd7+_b[e8]*tyd8+_b[e9]*tyd9+_b[e10]*tyd10+_b[e11]*tyd11+_b[e12]*tyd12/*
+> */+_b[d1]*wght_t+_b[d2]*wdth_t+_b[d3]*hght_t+_b[d4]*hp_t/*
+> */+_b[d5]*tran_t+_b[d6]*ps_t+_b[d7]*four_t+_b[d8]) if ve==2
+(120 real changes made, 8 to missing)
+
+. 
+. gen nprice=price*winv
+(8 missing values generated)
+
+. 
+. 
+. program define nlct_2
+  1. version 7.0
+  2. if "`1'"=="?"{
+  3. global S_1 "a3 a4 a5 a6 a7 a8 a9 a10 a11 a12 b2 b3 b4 b5 b6 b7 b8 b9 b10 b11 b12 c1 c2 c3 c4 c5 c6 c7 c8 d1 d2 d3 d4 d5 d6 d7 d8 e2 e3 e4 e5 e6 e7 e8 e9 e10 e11 e12"
+  4. global a3=1
+  5. global a4=1
+  6. global a5=1
+  7. global a6=1
+  8. global a7=1
+  9. global a8=1
+ 10. global a9=1
+ 11. global a10=1
+ 12. global a11=1
+ 13. global a12=1
+ 14. global b2=.1
+ 15. global b3=.1
+ 16. global b4=.1
+ 17. global b5=.1
+ 18. global b6=.1
+ 19. global b7=.1
+ 20. global b8=.1
+ 21. global b9=.1
+ 22. global b10=.1
+ 23. global b11=.1
+ 24. global b12=.1
+ 25. global c1=.1
+ 26. global c2=.1
+ 27. global c3=.1
+ 28. global c4=.1
+ 29. global c5=.1
+ 30. global c6=.1
+ 31. global c7=.1
+ 32. global c8=.1
+ 33. global d1=.1
+ 34. global d2=.1
+ 35. global d3=.1
+ 36. global d4=.1
+ 37. global d5=.1
+ 38. global d6=.1
+ 39. global d7=.1
+ 40. global d8=.1
+ 41. global e2=.1
+ 42. global e3=.1
+ 43. global e4=.1
+ 44. global e5=.1
+ 45. global e6=.1
+ 46. global e7=.1
+ 47. global e8=.1
+ 48. global e9=.1
+ 49. global e10=.1
+ 50. global e11=.1
+ 51. global e12=.1
+ 52. exit
+ 53. }
+ 54. 
+. replace `1'=winv*($a3*cyd3+$a4*cyd4+$a5*cyd5+$a6*cyd6+$a7*cyd7/*
+> */+$a8*cyd8+$a9*cyd9+$a10*cyd10+$a11*cyd11+$a12*cyd12)/*
+> */+winv*exp($b2*cyd2+$b3*cyd3+$b4*cyd4+$b5*cyd5+$b6*cyd6+$b7*cyd7/*
+> */+$b8*cyd8+$b9*cyd9+$b10*cyd10+$b11*cyd11+$b12*cyd12/*
+> */+$c1*wght_c+$c2*wdth_c+$c3*hght_c+$c4*hp_c+$c5*tran_c+$c6*ps_c+$c7*ac_c/*
+> */+$c8)+winv*exp($e2*tyd2+$e3*tyd3+$e4*tyd4+$e5*tyd5+$e6*tyd6+$e7*tyd7/*
+> */+$e8*tyd8+$e9*tyd9+$e10*tyd10+$e11*tyd11+$e12*tyd12/*
+> */+$d1*wght_t+$d2*wdth_t+$d3*hght_t+$d4*hp_t+$d5*tran_t+$d6*ps_t+$d7*four_t+$d8)
+ 55. 
+. end
+
+. 
+. nl ct_2 nprice
+(obs = 396)
+
+Iteration 0:   residual SS =  3738.817
+Iteration 1:   residual SS =  3198.871
+Iteration 2:   residual SS =  3196.514
+Iteration 3:   residual SS =  3098.033
+Iteration 4:   residual SS =  2280.967
+Iteration 5:   residual SS =  56.61615
+Iteration 6:   residual SS =  53.55158
+Iteration 7:   residual SS =  51.21389
+Iteration 8:   residual SS =  49.12062
+Iteration 9:   residual SS =  44.21178
+Iteration 10:  residual SS =  42.81696
+Iteration 11:  residual SS =  39.78808
+Iteration 12:  residual SS =  15.46706
+Iteration 13:  residual SS =  15.35658
+Iteration 14:  residual SS =  15.13135
+Iteration 15:  residual SS =  15.12231
+Iteration 16:  residual SS =  15.12064
+Iteration 17:  residual SS =  15.11927
+Iteration 18:  residual SS =  15.11499
+Iteration 19:  residual SS =  15.11499
+Iteration 20:  residual SS =  15.11498
+Iteration 21:  residual SS =  15.11498
+Iteration 22:  residual SS =  15.11498
+Iteration 23:  residual SS =  15.11498
+Iteration 24:  residual SS =  15.11498
+Iteration 25:  residual SS =  15.11498
+Iteration 26:  residual SS =  15.11498
+Iteration 27:  residual SS =  15.11498
+Iteration 28:  residual SS =  15.11498
+Iteration 29:  residual SS =  15.11498
+Iteration 30:  residual SS =  15.11498
+Iteration 31:  residual SS =  15.11498
+Iteration 32:  residual SS =  15.11498
+Iteration 33:  residual SS =  15.11498
+
+      Source |       SS       df       MS            Number of obs =       396
+-------------+------------------------------         F( 46,   349) =   1037.51
+       Model |  2066.95212    46  44.9337418         Prob > F      =    0.0000
+    Residual |  15.1149771   349   .04330939         R-squared     =    0.9927
+-------------+------------------------------         Adj R-squared =    0.9918
+       Total |   2082.0671   395  5.27105594         Root MSE      =  .2081091
+                                                     Res. dev.     =  -169.429
+(ct_2)
+------------------------------------------------------------------------------
+      nprice |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+          a3 |   165.6435   524.1069     0.32   0.752    -865.1618    1196.449
+          a4 |   255.2019   575.0953     0.44   0.657    -875.8867     1386.29
+          a5 |    382.162   544.9258     0.70   0.484    -689.5897    1453.914
+          a6 |    561.334   534.9376     1.05   0.295    -490.7731    1613.441
+          a7 |    32.3127   99.45926     0.32   0.745    -163.3022    227.9276
+          a8 |    427.688   694.9132     0.62   0.539    -939.0566    1794.433
+          a9 |   1338.024   667.4732     2.00   0.046     25.24802      2650.8
+         a10 |   1354.805   1272.661     1.06   0.288    -1148.245    3857.854
+         a11 |   3732.851    1148.03     3.25   0.001     1474.923    5990.778
+         a12 |   4310.495   998.1988     4.32   0.000     2347.253    6273.737
+          b2 |   -.053796    .124424    -0.43   0.666    -.2985112    .1909192
+          b3 |   .1024193   .1947552     0.53   0.599    -.2806223    .4854609
+          b4 |   .1508038   .1964602     0.77   0.443    -.2355911    .5371987
+          b5 |    .104406   .1879434     0.56   0.579    -.2652381      .47405
+          b6 |    .161327   .1825493     0.88   0.377    -.1977082    .5203622
+          b7 |    .299865   .1270196     2.36   0.019     .0500448    .5496851
+          b8 |   .4180167   .1963952     2.13   0.034     .0317497    .8042836
+          b9 |   .4275378    .190593     2.24   0.026     .0526824    .8023932
+         b10 |    .473833   .1983748     2.39   0.017     .0836725    .8639936
+         b11 |   .3078561    .206895     1.49   0.138    -.0990619    .7147741
+         b12 |   .1790811   .2035596     0.88   0.380    -.2212767     .579439
+          c1 |   .6665196   .3118486     2.14   0.033     .0531805    1.279859
+          c2 |   1.066573   .3592669     2.97   0.003     .3599729    1.773174
+          c3 |  -.3333017   .1511001    -2.21   0.028    -.6304831   -.0361203
+          c4 |   .4277256   .1382984     3.09   0.002     .1557224    .6997287
+          c5 |   .2157146   .0848215     2.54   0.011     .0488889    .3825402
+          c6 |   .1948046   .0696014     2.80   0.005     .0579136    .3316957
+          c7 |   .1545815   .0715104     2.16   0.031      .013936     .295227
+          c8 |   2.456385    2.09751     1.17   0.242    -1.668965    6.581735
+          d1 |   .5464099   .0950598     5.75   0.000     .3594477    .7333721
+          d2 |   .0486571   .0432501     1.13   0.261    -.0364066    .1337208
+          d3 |  -.0695537   .0449695    -1.55   0.123     -.157999    .0188915
+          d4 |   .3998404   .0759349     5.27   0.000     .2504929    .5491879
+          d5 |   .0875427   .0184166     4.75   0.000     .0513213    .1237641
+          d6 |    .039679    .075099     0.53   0.598    -.1080246    .1873827
+          d7 |  -.0740434   .1046904    -0.71   0.480    -.2799468      .13186
+          d8 |   7.377294   .2976717    24.78   0.000     6.791838     7.96275
+          e2 |         .1          .        .       .            .           .
+          e3 |   .2699934   .0481155     5.61   0.000     .1753605    .3646263
+          e4 |   .2654374    .048439     5.48   0.000     .1701684    .3607065
+          e5 |   .1633878    .033666     4.85   0.000      .097174    .2296016
+          e6 |   .1719965   .0352488     4.88   0.000     .1026697    .2413233
+          e7 |   .0506695    .015178     3.34   0.001     .0208177    .0805213
+          e8 |   .1550894   .0392545     3.95   0.000     .0778843    .2322944
+          e9 |   .1318401   .0385509     3.42   0.001     .0560188    .2076615
+         e10 |   -.047726   .2001646    -0.24   0.812    -.4414067    .3459547
+         e11 |  -.5569037   .3050303    -1.83   0.069    -1.156833    .0430251
+         e12 |  -.6348534    .314223    -2.02   0.044    -1.252862   -.0168445
+------------------------------------------------------------------------------
+* Parameter e2 taken as constant term in model & ANOVA table
+ (SEs, P values, CIs, and correlations are asymptotic approximations)
+
+. 
+. program drop _all
+
+. log close
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\system_nocon.log
+  log type:  text
+ closed on:  18 Oct 2024, 11:56:02
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

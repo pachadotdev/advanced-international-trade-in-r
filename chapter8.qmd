@@ -479,6 +479,7 @@ library(archive)
 library(haven)
 library(dplyr)
 library(tidyr)
+library(knitr)
 
 # Extract ----
 
@@ -1710,18 +1711,18 @@ truck_7990 <- truck_7990 %>%
 
 truck_7990 <- truck_7990 %>%
   mutate(
-    cyd2 = case_when(type == "JT" ~ 0, TRUE ~ yd2),
-    tyd2 = case_when(type != "JT" ~ 0, TRUE ~ yd2),
-    cyd3 = case_when(type == "JT" ~ 0, TRUE ~ yd3),
-    tyd3 = case_when(type != "JT" ~ 0, TRUE ~ yd3),
-    cyd4 = case_when(type == "JT" ~ 0, TRUE ~ yd4),
-    tyd4 = case_when(type != "JT" ~ 0, TRUE ~ yd4),
-    cyd5 = case_when(type == "JT" ~ 0, TRUE ~ yd5),
-    tyd5 = case_when(type != "JT" ~ 0, TRUE ~ yd5),
-    cyd6 = case_when(type == "JT" ~ 0, TRUE ~ yd6),
-    tyd6 = case_when(type != "JT" ~ 0, TRUE ~ yd6),
-    cyd7 = case_when(type == "JT" ~ 0, TRUE ~ yd7),
-    tyd7 = case_when(type != "JT" ~ 0, TRUE ~ yd7)
+    cyd2 = ifelse(type == "JT", 0, yd2),
+    cyd3 = ifelse(type == "JT", 0, yd3),
+    cyd4 = ifelse(type == "JT", 0, yd4),
+    cyd5 = ifelse(type == "JT", 0, yd5),
+    cyd6 = ifelse(type == "JT", 0, yd6),
+    cyd7 = ifelse(type == "JT", 0, yd7),
+    tyd2 = ifelse(type != "JT", 0, yd2),
+    tyd3 = ifelse(type != "JT", 0, yd3),
+    tyd4 = ifelse(type != "JT", 0, yd4),
+    tyd5 = ifelse(type != "JT", 0, yd5),
+    tyd6 = ifelse(type != "JT", 0, yd6),
+    tyd7 = ifelse(type != "JT", 0, yd7)
   )
 
 # fit the models
@@ -2880,54 +2881,18 @@ truck_7990 <- truck_7990 %>%
 
 truck_7990 <- truck_7990 %>%
   mutate(
-    cyd2 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd2
-    ),
-    tyd2 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd2
-    ),
-    cyd3 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd3
-    ),
-    tyd3 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd3
-    ),
-    cyd4 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd4
-    ),
-    tyd4 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd4
-    ),
-    cyd5 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd5
-    ),
-    tyd5 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd5
-    ),
-    cyd6 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd6
-    ),
-    tyd6 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd6
-    ),
-    cyd7 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd7
-    ),
-    tyd7 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd7
-    )
+    cyd2 = ifelse(type == "JT", 0, yd2),
+    cyd3 = ifelse(type == "JT", 0, yd3),
+    cyd4 = ifelse(type == "JT", 0, yd4),
+    cyd5 = ifelse(type == "JT", 0, yd5),
+    cyd6 = ifelse(type == "JT", 0, yd6),
+    cyd7 = ifelse(type == "JT", 0, yd7),
+    tyd2 = ifelse(type != "JT", 0, yd2),
+    tyd3 = ifelse(type != "JT", 0, yd3),
+    tyd4 = ifelse(type != "JT", 0, yd4),
+    tyd5 = ifelse(type != "JT", 0, yd5),
+    tyd6 = ifelse(type != "JT", 0, yd6),
+    tyd7 = ifelse(type != "JT", 0, yd7)
   )
 
 initial_values <- list(
@@ -2993,7 +2958,9 @@ fit2 <- nlsLM(
 summary(fit2)
 
 fit2_coef <- coef(fit2)
+```
 
+```{r ch8_ex4b}
 truck_7990_2 <- truck_7990 %>%
   filter(ve == 1) %>%
   mutate(
@@ -3004,7 +2971,7 @@ truck_7990_2 <- truck_7990 %>%
     nvalue = quality * quan_c
   )
 
-truck_7990_2 %>%
+car_uquality <- truck_7990_2 %>%
   group_by(year) %>%
   summarise(
     aquan = mean(quan_c),
@@ -3014,6 +2981,8 @@ truck_7990_2 %>%
   mutate(uquality = anvalue / aquan) %>%
   group_by(year) %>%
   summarise(mean_uquality = mean(uquality))
+
+car_uquality
 
 truck_7990_3 <- truck_7990 %>%
   filter(ve == 2) %>%
@@ -3025,7 +2994,7 @@ truck_7990_3 <- truck_7990 %>%
     nvalue = quality * quan_t
   )
 
-truck_7990_3 %>%
+truck_uquality <- truck_7990_3 %>%
   group_by(year) %>%
   summarise(
     aquan = mean(quan_t),
@@ -3035,12 +3004,14 @@ truck_7990_3 %>%
   mutate(uquality = anvalue / aquan) %>%
   group_by(year) %>%
   summarise(mean_uquality = mean(uquality))
+
+truck_uquality
 ```
 
 #### qindex_c.do
 
-```{r ch8_ex4b}
-truck_7990_2_80 <- truck_7990_2 %>%
+```{r ch8_ex4c}
+car_7990_2_80 <- truck_7990_2 %>%
   filter(year == 80) %>%
   select(model, type, quality, quan_c) %>%
   rename(
@@ -3048,9 +3019,9 @@ truck_7990_2_80 <- truck_7990_2 %>%
     quan_80 = quan_c
   )
 
-truck_7990_2 %>%
+car_qindex <- truck_7990_2 %>%
   select(year, model, type, quality, quan_c) %>%
-  inner_join(truck_7990_2_80, by = c("model", "type")) %>%
+  inner_join(car_7990_2_80, by = c("model", "type")) %>%
   group_by(year, model) %>%
   mutate(
     value_80 = sum(quality_80 * quan_80),
@@ -3065,11 +3036,13 @@ truck_7990_2 %>%
     qindex = sqrt(lasp * pasp)
   ) %>%
   summarise(mean_qindex = mean(qindex))
+
+car_qindex
 ```
 
 #### qindex_t.do
 
-```{r ch8_ex4c}
+```{r ch8_ex4d}
 truck_7990_3_80 <- truck_7990_3 %>%
   filter(year == 80) %>%
   select(model, type, quality, quan_t) %>%
@@ -3078,7 +3051,7 @@ truck_7990_3_80 <- truck_7990_3 %>%
     quan_80 = quan_t
   )
 
-truck_7990_3 %>%
+truck_qindex <- truck_7990_3 %>%
   select(year, model, type, quality, quan_t) %>%
   inner_join(truck_7990_3_80, by = c("model", "type")) %>%
   group_by(year, model) %>%
@@ -3095,6 +3068,46 @@ truck_7990_3 %>%
     qindex = sqrt(lasp * pasp)
   ) %>%
   summarise(mean_qindex = mean(qindex))
+
+truck_qindex
+```
+
+### Extra step: formatting the tables
+
+```{r ch8_ex4e}
+# function to avoid code quadruplication
+reshape_qindex <- function(data, mean_qindex_col, group, measurement) {
+  data %>%
+    rename(mean_qindex = !!mean_qindex_col) %>%
+    mutate(
+      qindex_pct = (mean_qindex - lag(mean_qindex)) / mean_qindex
+    ) %>%
+    pivot_longer(
+      cols = c(mean_qindex, qindex_pct),
+      names_to = "metric",
+      values_to = "value"
+    ) %>%
+    pivot_wider(names_from = year, values_from = value) %>%
+    mutate(type = group) %>%
+    mutate(metric = c(measurement, paste(measurement, "(% Change)"))) %>%
+    select(type, metric, everything()) %>%
+    mutate_if(is.numeric, ~ round(., 3))
+}
+
+table83 <- reshape_qindex(car_uquality, "mean_uquality", "Japanese Cars", "Unit quality") %>%
+  bind_rows(
+    reshape_qindex(car_qindex, "mean_qindex", "Japanese Cars", "Quality index")
+  ) %>%
+  bind_rows(
+    reshape_qindex(truck_uquality, "mean_uquality", "Japanese Trucks", "Unit quality")
+  ) %>%
+  bind_rows(
+    reshape_qindex(truck_qindex, "mean_qindex", "Japanese Trucks", "Quality index")
+  )
+
+colnames(table83) <- c("Type", "Metric", paste0("19", 79:85))
+
+kable(table83)
 ```
 
 ## Exercise 5
@@ -3106,25 +3119,6 @@ Pooling car and truck data, run `system_nocom.do` and `system_wcon.do` to reprod
 #### system_nocom.do
 
 I think there is a typo in the original code, in specific in the lines:
-
-```stata
-gen cyd10=yd10
-gen tyd10=yd10
-replace cyd7=10 if type=="JT"
-replace tyd7=10 if type~="JT"
-
-gen cyd11=yd11
-gen tyd11=yd11
-replace cyd7=11 if type=="JT"
-replace tyd7=11 if type~="JT"
-
-gen cyd12=yd12
-gen tyd12=yd12
-replace cyd7=12 if type=="JT"
-replace tyd7=12 if type~="JT"
-```
-
-To me, it is not clear why overwriting `cyd7` three times instead of replacing with "12" in one step. I corrected `cyd10`, `cyd11`, and `cyd12` below.
 
 ```stata
 capture log close
@@ -3219,18 +3213,18 @@ replace tyd9=0 if type~="JT"
 
 gen cyd10=yd10
 gen tyd10=yd10
-replace cyd10=0 if type=="JT"
-replace tyd10=0 if type~="JT"
+replace cyd7=10 if type=="JT"
+replace tyd7=10 if type~="JT"
 
 gen cyd11=yd11
 gen tyd11=yd11
-replace cyd11=0 if type=="JT"
-replace tyd11=0 if type~="JT"
+replace cyd7=11 if type=="JT"
+replace tyd7=11 if type~="JT"
 
 gen cyd12=yd12
 gen tyd12=yd12
-replace cyd12=0 if type=="JT"
-replace tyd12=0 if type~="JT"
+replace cyd7=12 if type=="JT"
+replace tyd7=12 if type~="JT"
 
 program define nlct_1
 version 7.0
@@ -3394,14 +3388,12 @@ Output:
 
 . log using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapte
 > r-8\system_nocon.log,replace
-(note: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapte
-> r-8\system_nocon.log not found)
 ----------------------------------------------------------------------------------
       name:  <unnamed>
        log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
 > er-8\system_nocon.log
   log type:  text
- opened on:  24 Jun 2024, 00:33:59
+ opened on:   6 Jul 2024, 23:01:56
 
 . 
 . set matsize 400
@@ -3442,8 +3434,6 @@ Current memory allocation
 . 
 . save Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\t
 > ruck_temp,replace
-(note: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapte
-> r-8\truck_temp.dta not found)
 file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\tru
 > ck_temp.dta saved
 
@@ -3635,33 +3625,33 @@ file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\t
 
 . gen tyd10=yd10
 
-. replace cyd10=0 if type=="JT"
-(5 real changes made)
+. replace cyd7=10 if type=="JT"
+(84 real changes made)
 
-. replace tyd10=0 if type~="JT"
-(25 real changes made)
+. replace tyd7=10 if type~="JT"
+(320 real changes made)
 
 . 
 . gen cyd11=yd11
 
 . gen tyd11=yd11
 
-. replace cyd11=0 if type=="JT"
-(6 real changes made)
+. replace cyd7=11 if type=="JT"
+(84 real changes made)
 
-. replace tyd11=0 if type~="JT"
-(20 real changes made)
+. replace tyd7=11 if type~="JT"
+(320 real changes made)
 
 . 
 . gen cyd12=yd12
 
 . gen tyd12=yd12
 
-. replace cyd12=0 if type=="JT"
-(5 real changes made)
+. replace cyd7=12 if type=="JT"
+(84 real changes made)
 
-. replace tyd12=0 if type~="JT"
-(21 real changes made)
+. replace tyd7=12 if type~="JT"
+(320 real changes made)
 
 . 
 . program define nlct_1
@@ -3736,70 +3726,70 @@ file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\t
 . nl ct_1 price
 (obs = 404)
 
-Iteration 0:   residual SS =  3.69e+10
+Iteration 0:   residual SS =  3.68e+10
 ...
-Iteration 59:  residual SS =  3.48e+08
-Iteration 60:  residual SS =  3.48e+08
+Iteration 24:  residual SS =  3.13e+08
+Iteration 25:  residual SS =  3.13e+08
 
       Source |       SS       df       MS            Number of obs =       404
--------------+------------------------------         F( 45,   358) =    134.73
-       Model |  5.8946e+09    45   130990377         Prob > F      =    0.0000
-    Residual |   348069386   358  972260.856         R-squared     =    0.9442
--------------+------------------------------         Adj R-squared =    0.9372
-       Total |  6.2426e+09   403  15490412.8         Root MSE      =  986.0329
-                                                     Res. dev.     =  6667.767
+-------------+------------------------------         F( 46,   357) =    147.07
+       Model |  5.9297e+09    46   128906902         Prob > F      =    0.0000
+    Residual |   312918865   357  876523.431         R-squared     =    0.9499
+-------------+------------------------------         Adj R-squared =    0.9434
+       Total |  6.2426e+09   403  15490412.8         Root MSE      =  936.2283
+                                                     Res. dev.     =  6624.758
 (ct_1)
 ------------------------------------------------------------------------------
        price |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-          a3 |  -591.4105   1021.533    -0.58   0.563    -2600.371     1417.55
-          a4 |  -1145.046   1057.554    -1.08   0.280    -3224.844    934.7527
-          a5 |  -824.1875    1016.79    -0.81   0.418    -2823.819    1175.444
-          a6 |  -592.6532   1010.202    -0.59   0.558    -2579.329    1394.023
-          a7 |  -1306.657     1083.9    -1.21   0.229    -3438.268    824.9532
-          a8 |  -98.11828   1087.933    -0.09   0.928    -2237.661    2041.425
-          a9 |  -257.0587   1177.715    -0.22   0.827    -2573.168     2059.05
-         a10 |  -413.3716   1310.795    -0.32   0.753    -2991.198    2164.455
-         a11 |  -1220.982   1430.616    -0.85   0.394     -4034.45    1592.486
-         a12 |  -1076.411   1450.708    -0.74   0.459    -3929.392    1776.569
-          b2 |   .0197206   .0474133     0.42   0.678    -.0735229    .1129641
-          b3 |   .2183407   .1415785     1.54   0.124    -.0600893    .4967707
-          b4 |   .3398839   .1306741     2.60   0.010     .0828985    .5968693
-          b5 |     .30743    .128895     2.39   0.018     .0539436    .5609165
-          b6 |    .338236   .1254585     2.70   0.007     .0915077    .5849643
-          b7 |   .4292664   .1225126     3.50   0.001     .1883316    .6702011
-          b8 |   .3855295   .1262504     3.05   0.002     .1372438    .6338152
-          b9 |   .4743625   .1264804     3.75   0.000     .2256246    .7231004
-         b10 |   .5337515   .1278549     4.17   0.000     .2823104    .7851925
-         b11 |   .6487194   .1271098     5.10   0.000     .3987437    .8986951
-         b12 |   .6188886   .1311527     4.72   0.000      .360962    .8768152
-          c1 |   .4598504   .0886104     5.19   0.000      .285588    .6341127
-          c2 |   .1780578   .0341819     5.21   0.000     .1108352    .2452803
-          c3 |  -.3850267   .0481769    -7.99   0.000     -.479772   -.2902814
-          c4 |   .2680433   .0393044     6.82   0.000     .1907467    .3453399
-          c5 |   .0679777   .0194236     3.50   0.001      .029779    .1061764
-          c6 |   .0932556    .021253     4.39   0.000     .0514591     .135052
-          c7 |   .1534133    .021252     7.22   0.000     .1116189    .1952077
-          c8 |   8.572183   .0409525   209.32   0.000     8.491646    8.652721
-          d1 |   1.024883   .2198255     4.66   0.000     .5925712    1.457194
-          d2 |   .5861134   .7924544     0.74   0.460    -.9723374    2.144564
-          d3 |   -.149842   .2155522    -0.70   0.487    -.5737496    .2740656
-          d4 |   1.150419    .347234     3.31   0.001     .4675444    1.833294
-          d5 |   .3132963   .1385789     2.26   0.024     .0407654    .5858273
-          d6 |   .0163816   .1407749     0.12   0.907     -.260468    .2932313
-          d7 |   226.2423   4.491789    50.37   0.000     217.4087    235.0759
-          d8 |  -223.6678          .        .       .            .           .
-          e2 |  -9.321882          .        .       .            .           .
-          e3 |   225.8105   4.416818    51.13   0.000     217.1244    234.4967
-          e4 |    225.818   4.410297    51.20   0.000     217.1447    234.4914
-          e5 |   225.3464   4.385453    51.38   0.000      216.722    233.9709
-          e6 |   225.4068   4.379008    51.47   0.000      216.795    234.0186
-          e7 |   225.3594   4.388533    51.35   0.000     216.7288    233.9899
-          e8 |   225.6487   4.417134    51.08   0.000     216.9619    234.3355
-          e9 |   225.5402   4.407819    51.17   0.000     216.8718    234.2087
-         e10 |   226.0232   4.412848    51.22   0.000     217.3448    234.7015
-         e11 |   226.0775   4.462525    50.66   0.000     217.3015    234.8536
-         e12 |    226.117   4.421014    51.15   0.000     217.4226    234.8115
+          a3 |   277.0869   551.2618     0.50   0.616    -807.0417    1361.215
+          a4 |   21.66828   535.0463     0.04   0.968    -1030.571    1073.907
+          a5 |   147.2889   494.2067     0.30   0.766    -824.6333    1119.211
+          a6 |    556.957   484.3219     1.15   0.251    -395.5256     1509.44
+          a7 |  -7.057291   101.5543    -0.07   0.945    -206.7772    192.6626
+          a8 |   771.0952   521.6698     1.48   0.140     -254.837    1797.027
+          a9 |    1191.93   517.0276     2.31   0.022     175.1272    2208.733
+         a10 |   657.8229   728.4691     0.90   0.367    -774.8072    2090.453
+         a11 |  -450.8028   817.0406    -0.55   0.581     -2057.62    1156.015
+         a12 |  -433.4064   772.5761    -0.56   0.575    -1952.779    1085.966
+          b2 |  -.0841009     .04192    -2.01   0.046    -.1665421   -.0016597
+          b3 |  -.0056866   .0864787    -0.07   0.948    -.1757583    .1643851
+          b4 |   .0872793   .0747481     1.17   0.244    -.0597227    .2342813
+          b5 |   .0666161   .0692594     0.96   0.337    -.0695916    .2028239
+          b6 |   .0749652   .0668452     1.12   0.263    -.0564948    .2064251
+          b7 |   .1526226   .0314581     4.85   0.000     .0907562    .2144891
+          b8 |   .1437711    .065557     2.19   0.029     .0148446    .2726975
+          b9 |   .1988908    .062616     3.18   0.002     .0757482    .3220335
+         b10 |   .2857005   .0719646     3.97   0.000     .1441727    .4272282
+         b11 |   .4104976   .0690287     5.95   0.000     .2747436    .5462515
+         b12 |   .3679665   .0684655     5.37   0.000     .2333201    .5026129
+          c1 |   .4662111   .0865907     5.38   0.000     .2959191    .6365031
+          c2 |   .5300141   .0640388     8.28   0.000     .4040735    .6559547
+          c3 |  -.3625191   .0443666    -8.17   0.000    -.4497719   -.2752663
+          c4 |   .2502107   .0387283     6.46   0.000     .1740464     .326375
+          c5 |    .063748   .0203705     3.13   0.002     .0236867    .1038093
+          c6 |    .108309   .0205511     5.27   0.000     .0678925    .1487255
+          c7 |   .1667295   .0205709     8.11   0.000     .1262742    .2071848
+          c8 |   6.664738   .3769454    17.68   0.000     5.923426    7.406051
+          d1 |   .4827909   .0948538     5.09   0.000     .2962486    .6693333
+          d2 |   .6237576   .3207663     1.94   0.053    -.0070714    1.254587
+          d3 |  -.1758063   .0807852    -2.18   0.030    -.3346811   -.0169316
+          d4 |   .4714717   .1961516     2.40   0.017     .0857138    .8572296
+          d5 |   .0368238   .0705556     0.52   0.602     -.101933    .1755805
+          d6 |   .0595696    .060131     0.99   0.323    -.0586858     .177825
+          d7 |    .184348   .0926225     1.99   0.047     .0021937    .3665023
+          d8 |   2.773037   1.807071     1.53   0.126    -.7808051     6.32688
+          e2 |  -2.59e+09          .        .       .            .           .
+          e3 |   1.002811   .5449131     1.84   0.067    -.0688323    2.074454
+          e4 |   1.089538   .5484653     1.99   0.048     .0109092    2.168167
+          e5 |   .7809413   .5636633     1.39   0.167    -.3275767    1.889459
+          e6 |   .8176126   .5623188     1.45   0.147    -.2882611    1.923486
+          e7 |   .1963533   .0542407     3.62   0.000     .0896819    .3030248
+          e8 |   .9909852   .5576036     1.78   0.076    -.1056155    2.087586
+          e9 |   1.011894   .5669185     1.78   0.075    -.1030257    2.126813
+         e10 |   .0766676   .1003499     0.76   0.445    -.1206836    .2740188
+         e11 |   .3305375   .0754574     4.38   0.000     .1821406    .4789343
+         e12 |   .4674833   .0740926     6.31   0.000     .3217704    .6131961
 ------------------------------------------------------------------------------
 * Parameter e2 taken as constant term in model & ANOVA table
  (SEs, P values, CIs, and correlations are asymptotic approximations)
@@ -3818,11 +3808,11 @@ Iteration 60:  residual SS =  3.48e+08
 > /*
 > */+_b[d1]*wght_t+_b[d2]*wdth_t+_b[d3]*hght_t+_b[d4]*hp_t/*
 > */+_b[d5]*tran_t+_b[d6]*ps_t+_b[d7]*four_t+_b[d8]) if ve==2
-(120 real changes made, 18 to missing)
+(120 real changes made, 8 to missing)
 
 . 
 . gen nprice=price*winv
-(18 missing values generated)
+(8 missing values generated)
 
 . 
 . 
@@ -3896,72 +3886,72 @@ Iteration 60:  residual SS =  3.48e+08
 
 . 
 . nl ct_2 nprice
-(obs = 386)
+(obs = 396)
 
-Iteration 0:   residual SS =  3793.244
+Iteration 0:   residual SS =  3738.817
 ...
-Iteration 51:  residual SS =  11.84729
-Iteration 52:  residual SS =  11.84729
+Iteration 32:  residual SS =  15.11498
+Iteration 33:  residual SS =  15.11498
 
-      Source |       SS       df       MS            Number of obs =       386
--------------+------------------------------         F( 46,   339) =   1272.95
-       Model |  2046.39509    46  44.4868497         Prob > F      =    0.0000
-    Residual |  11.8472856   339  .034947745         R-squared     =    0.9942
--------------+------------------------------         Adj R-squared =    0.9935
-       Total |  2058.24237   385  5.34608409         Root MSE      =  .1869432
-                                                     Res. dev.     = -249.3025
+      Source |       SS       df       MS            Number of obs =       396
+-------------+------------------------------         F( 46,   349) =   1037.51
+       Model |  2066.95212    46  44.9337418         Prob > F      =    0.0000
+    Residual |  15.1149771   349   .04330939         R-squared     =    0.9927
+-------------+------------------------------         Adj R-squared =    0.9918
+       Total |   2082.0671   395  5.27105594         Root MSE      =  .2081091
+                                                     Res. dev.     =  -169.429
 (ct_2)
 ------------------------------------------------------------------------------
       nprice |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-          a3 |   129.1587   649.8698     0.20   0.843    -1149.127    1407.444
-          a4 |  -332.9346   853.5884    -0.39   0.697    -2011.931    1346.062
-          a5 |  -39.00799   816.3593    -0.05   0.962    -1644.776     1566.76
-          a6 |  -49.30975   887.7125    -0.06   0.956    -1795.428    1696.809
-          a7 |  -251.5048   1055.969    -0.24   0.812    -2328.582    1825.572
-          a8 |   475.7476   1105.123     0.43   0.667    -1698.014    2649.509
-          a9 |   1305.252   1054.533     1.24   0.217    -769.0007    3379.505
-         a10 |   1500.556   1475.416     1.02   0.310    -1401.567    4402.679
-         a11 |   275.3094    1918.11     0.14   0.886    -3497.586    4048.205
-         a12 |  -369.0768   2256.641    -0.16   0.870    -4807.859    4069.706
-          b2 |  -.0382212   .0476313    -0.80   0.423    -.1319113    .0554688
-          b3 |   .1007584   .1545476     0.65   0.515    -.2032345    .4047514
-          b4 |   .3643006   .1549828     2.35   0.019     .0594514    .6691497
-          b5 |   .3350521   .1522164     2.20   0.028     .0356445    .6344596
-          b6 |    .448507   .1460037     3.07   0.002     .1613198    .7356943
-          b7 |   .5008198   .1605704     3.12   0.002     .1849799    .8166597
-          b8 |   .5229822   .1722726     3.04   0.003     .1841243      .86184
-          b9 |   .3892165   .1802644     2.16   0.032     .0346389    .7437941
-         b10 |   .5894213   .2041663     2.89   0.004     .1878289    .9910137
-         b11 |   .8546564    .199235     4.29   0.000      .462764    1.246549
-         b12 |   1.000789   .1993482     5.02   0.000     .6086733    1.392904
-          c1 |   1.059199   .3598464     2.94   0.003     .3513857    1.767012
-          c2 |   .1615223   .1132255     1.43   0.155    -.0611907    .3842354
-          c3 |  -.6524711   .2018085    -3.23   0.001    -1.049426   -.2555164
-          c4 |   .2672449   .1289842     2.07   0.039     .0135347    .5209551
-          c5 |   .2030882   .0598443     3.39   0.001     .0853753    .3208011
-          c6 |   .2113444   .0828113     2.55   0.011     .0484557    .3742331
-          c7 |   .1550375   .0660018     2.35   0.019     .0252129    .2848621
-          c8 |   8.340437    .114401    72.91   0.000     8.115411    8.565462
-          d1 |   1.111578   .2140655     5.19   0.000     .6905136    1.532641
-          d2 |  -.4348055    .168151    -2.59   0.010    -.7655563   -.1040547
-          d3 |   .0754878   .0932058     0.81   0.419    -.1078468    .2588223
-          d4 |    .559007    .181628     3.08   0.002     .2017472    .9162667
-          d5 |   .1239908   .0427616     2.90   0.004     .0398792    .2081023
-          d6 |  -.0185416   .0827602    -0.22   0.823    -.1813297    .1442466
-          d7 |  -.5680364   .7627409    -0.74   0.457    -2.068338    .9322647
-          d8 |   7.995761   .1883688    42.45   0.000     7.625242     8.36628
+          a3 |   165.6435   524.1069     0.32   0.752    -865.1618    1196.449
+          a4 |   255.2019   575.0953     0.44   0.657    -875.8867     1386.29
+          a5 |    382.162   544.9258     0.70   0.484    -689.5897    1453.914
+          a6 |    561.334   534.9376     1.05   0.295    -490.7731    1613.441
+          a7 |    32.3127   99.45926     0.32   0.745    -163.3022    227.9276
+          a8 |    427.688   694.9132     0.62   0.539    -939.0566    1794.433
+          a9 |   1338.024   667.4732     2.00   0.046     25.24802      2650.8
+         a10 |   1354.805   1272.661     1.06   0.288    -1148.245    3857.854
+         a11 |   3732.851    1148.03     3.25   0.001     1474.923    5990.778
+         a12 |   4310.495   998.1988     4.32   0.000     2347.253    6273.737
+          b2 |   -.053796    .124424    -0.43   0.666    -.2985112    .1909192
+          b3 |   .1024193   .1947552     0.53   0.599    -.2806223    .4854609
+          b4 |   .1508038   .1964602     0.77   0.443    -.2355911    .5371987
+          b5 |    .104406   .1879434     0.56   0.579    -.2652381      .47405
+          b6 |    .161327   .1825493     0.88   0.377    -.1977082    .5203622
+          b7 |    .299865   .1270196     2.36   0.019     .0500448    .5496851
+          b8 |   .4180167   .1963952     2.13   0.034     .0317497    .8042836
+          b9 |   .4275378    .190593     2.24   0.026     .0526824    .8023932
+         b10 |    .473833   .1983748     2.39   0.017     .0836725    .8639936
+         b11 |   .3078561    .206895     1.49   0.138    -.0990619    .7147741
+         b12 |   .1790811   .2035596     0.88   0.380    -.2212767     .579439
+          c1 |   .6665196   .3118486     2.14   0.033     .0531805    1.279859
+          c2 |   1.066573   .3592669     2.97   0.003     .3599729    1.773174
+          c3 |  -.3333017   .1511001    -2.21   0.028    -.6304831   -.0361203
+          c4 |   .4277256   .1382984     3.09   0.002     .1557224    .6997287
+          c5 |   .2157146   .0848215     2.54   0.011     .0488889    .3825402
+          c6 |   .1948046   .0696014     2.80   0.005     .0579136    .3316957
+          c7 |   .1545815   .0715104     2.16   0.031      .013936     .295227
+          c8 |   2.456385    2.09751     1.17   0.242    -1.668965    6.581735
+          d1 |   .5464099   .0950598     5.75   0.000     .3594477    .7333721
+          d2 |   .0486571   .0432501     1.13   0.261    -.0364066    .1337208
+          d3 |  -.0695537   .0449695    -1.55   0.123     -.157999    .0188915
+          d4 |   .3998404   .0759349     5.27   0.000     .2504929    .5491879
+          d5 |   .0875427   .0184166     4.75   0.000     .0513213    .1237641
+          d6 |    .039679    .075099     0.53   0.598    -.1080246    .1873827
+          d7 |  -.0740434   .1046904    -0.71   0.480    -.2799468      .13186
+          d8 |   7.377294   .2976717    24.78   0.000     6.791838     7.96275
           e2 |         .1          .        .       .            .           .
-          e3 |  -.3274455   .7327471    -0.45   0.655    -1.768749    1.113858
-          e4 |  -.3156744   .7324389    -0.43   0.667    -1.756372    1.125023
-          e5 |  -.5595854   .7452185    -0.75   0.453     -2.02542    .9062493
-          e6 |  -.5473584   .7454929    -0.73   0.463    -2.013733    .9190161
-          e7 |  -.6603122   .7473731    -0.88   0.378    -2.130385    .8097605
-          e8 |  -.4940828   .7382813    -0.67   0.504    -1.946272    .9581066
-          e9 |  -.4857295   .7335855    -0.66   0.508    -1.928682    .9572232
-         e10 |  -.2352299   .7308603    -0.32   0.748    -1.672822    1.202362
-         e11 |  -.1529434   .7360252    -0.21   0.836    -1.600695    1.294808
-         e12 |  -.0194963   .7348633    -0.03   0.979    -1.464963     1.42597
+          e3 |   .2699934   .0481155     5.61   0.000     .1753605    .3646263
+          e4 |   .2654374    .048439     5.48   0.000     .1701684    .3607065
+          e5 |   .1633878    .033666     4.85   0.000      .097174    .2296016
+          e6 |   .1719965   .0352488     4.88   0.000     .1026697    .2413233
+          e7 |   .0506695    .015178     3.34   0.001     .0208177    .0805213
+          e8 |   .1550894   .0392545     3.95   0.000     .0778843    .2322944
+          e9 |   .1318401   .0385509     3.42   0.001     .0560188    .2076615
+         e10 |   -.047726   .2001646    -0.24   0.812    -.4414067    .3459547
+         e11 |  -.5569037   .3050303    -1.83   0.069    -1.156833    .0430251
+         e12 |  -.6348534    .314223    -2.02   0.044    -1.252862   -.0168445
 ------------------------------------------------------------------------------
 * Parameter e2 taken as constant term in model & ANOVA table
  (SEs, P values, CIs, and correlations are asymptotic approximations)
@@ -3974,7 +3964,7 @@ Iteration 52:  residual SS =  11.84729
        log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapt
 > er-8\system_nocon.log
   log type:  text
- closed on:  24 Jun 2024, 00:34:17
+ closed on:   6 Jul 2024, 23:02:18
 ----------------------------------------------------------------------------------
 
 . exit
@@ -4041,94 +4031,28 @@ truck_7990 <- truck_7990 %>%
 
 truck_7990 <- truck_7990 %>%
   mutate(
-    cyd2 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd2
-    ),
-    tyd2 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd2
-    ),
-    cyd3 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd3
-    ),
-    tyd3 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd3
-    ),
-    cyd4 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd4
-    ),
-    tyd4 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd4
-    ),
-    cyd5 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd5
-    ),
-    tyd5 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd5
-    ),
-    cyd6 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd6
-    ),
-    tyd6 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd6
-    ),
-    cyd7 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd7
-    ),
-    tyd7 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd7
-    ),
-    cyd8 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd8
-    ),
-    tyd8 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd8
-    ),
-    cyd9 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd9
-    ),
-    tyd9 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd9
-    ),
-    cyd10 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd10
-    ),
-    tyd10 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd10
-    ),
-    cyd11 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd11
-    ),
-    tyd11 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd11
-    ),
-    cyd12 = case_when(
-      type == "JT" ~ 0,
-      TRUE ~ yd12
-    ),
-    tyd12 = case_when(
-      type != "JT" ~ 0,
-      TRUE ~ yd12
-    )
+    cyd2 = ifelse(type == "JT", 0, yd2),
+    cyd3 = ifelse(type == "JT", 0, yd3),
+    cyd4 = ifelse(type == "JT", 0, yd4),
+    cyd5 = ifelse(type == "JT", 0, yd5),
+    cyd6 = ifelse(type == "JT", 0, yd6),
+    cyd7 = ifelse(type == "JT", 12, yd7),
+    cyd8 = ifelse(type == "JT", 0, yd8),
+    cyd9 = ifelse(type == "JT", 0, yd9),
+    cyd10 = yd10,
+    cyd11 = yd11,
+    cyd12 = yd12,
+    tyd2 = ifelse(type != "JT", 0, yd2),
+    tyd3 = ifelse(type != "JT", 0, yd3),
+    tyd4 = ifelse(type != "JT", 0, yd4),
+    tyd5 = ifelse(type != "JT", 0, yd5),
+    tyd6 = ifelse(type != "JT", 0, yd6),
+    tyd7 = ifelse(type != "JT", 12, yd7),
+    tyd8 = ifelse(type != "JT", 0, yd8),
+    tyd9 = ifelse(type != "JT", 0, yd9),
+    tyd10 = yd10,
+    tyd11 = yd11,
+    tyd12 = yd12
   )
 
 initial_values <- list(
@@ -4189,7 +4113,7 @@ truck_7990 <- truck_7990 %>%
   )
 
 fit2 <- nlsLM(
-  nprice ~winv * (a3 * cyd3 + a4 * cyd4 + a5 * cyd5 + a6 * cyd6 + a7 * cyd7 +
+  nprice ~ winv * (a3 * cyd3 + a4 * cyd4 + a5 * cyd5 + a6 * cyd6 + a7 * cyd7 +
     a8 * cyd8 + a9 * cyd9 + a10 * cyd10 + a11 * cyd11 + a12 * cyd12) +
     winv * exp(b2 * cyd2 + b3 * cyd3 + b4 * cyd4 + b5 * cyd5 + b6 * cyd6 +
       b7 * cyd7 + b8 * cyd8 + b9 * cyd9 + b10 * cyd10 + b11 * cyd11 +
