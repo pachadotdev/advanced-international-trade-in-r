@@ -479,6 +479,7 @@ library(archive)
 library(haven)
 library(dplyr)
 library(tidyr)
+library(broom)
 library(knitr)
 
 # Extract ----
@@ -4054,7 +4055,9 @@ truck_7990 <- truck_7990 %>%
     tyd11 = yd11,
     tyd12 = yd12
   )
+```
 
+```{r ch8_ex5b}
 initial_values <- list(
   a3 = 1, a4 = 1, a5 = 1, a6 = 1, a7 = 1, a8 = 1, a9 = 1, a10 = 1, a11 = 1,
   a12 = 1,
@@ -4129,4 +4132,100 @@ fit2 <- nlsLM(
 )
 
 summary(fit2)
+```
+
+#### system_nocom.do
+
+```{r ch8_ex5c}
+fit3 <- nlsLM(
+  nprice ~ a3 * cyd3 + a4 * cyd4 + a5 * cyd5 + a6 * cyd6 + a7 * cyd7 +
+    a8 * cyd8 + a9 * cyd9 + a10 * cyd10 + a11 * cyd11 + a12 * cyd12 +
+    exp(b2 * cyd2 + b3 * cyd3 + b4 * cyd4 + b5 * cyd5 + b6 * cyd6 + b7 * cyd7 +
+      b8 * cyd8 + b9 * cyd9 + b10 * cyd10 + b11 * cyd11 + b12 * cyd12 +
+      c1 * wght_c + c2 * wdth_c + c3 * hght_c + c4 * hp_c + c5 * tran_c +
+      c6 * ps_c + c7 * ac_c + c8) +
+    exp(e2 * tyd2 + e3 * tyd3 + e4 * tyd4 + e5 * tyd5 + e6 * tyd6 + e7 * tyd7 +
+      e8 * tyd8 + e9 * tyd9 + e10 * tyd10 + e11 * tyd11 + e12 * tyd12 +
+      d1 * wght_t + d2 * wdth_t + d3 * hght_t + d4 * hp_t + d5 * tran_t +
+      d6 * ps_t + d7 * four_t + d8),
+  data = truck_7990,
+  start = initial_values,
+  control = nls.lm.control(maxiter = 1000, maxfev = 10000)
+)
+
+summary(fit3)
+
+fit4 <- nlsLM(
+  nprice ~ winv * (a3 * cyd3 + a4 * cyd4 + a5 * cyd5 + a6 * cyd6 + a7 * cyd7 +
+    a8 * cyd8 + a9 * cyd9 + a10 * cyd10 + a11 * cyd11 + a12 * cyd12) +
+    winv * exp(b2 * cyd2 + b3 * cyd3 + b4 * cyd4 + b5 * cyd5 + b6 * cyd6 +
+      b7 * cyd7 + b8 * cyd8 + b9 * cyd9 + b10 * cyd10 + b11 * cyd11 +
+      b12 * cyd12 + c1 * wght_c + c2 * wdth_c + c3 * hght_c + c4 * hp_c +
+      c5 * tran_c + c6 * ps_c + c7 * ac_c + c8) +
+    winv * exp(e2 * tyd2 + e3 * tyd3 + e4 * tyd4 + e5 * tyd5 + e6 * tyd6 +
+      e7 * tyd7 + e8 * tyd8 + e9 * tyd9 + e10 * tyd10 + e11 * tyd11 +
+      e12 * tyd12 + d1 * wght_t + d2 * wdth_t + d3 * hght_t + d4 * hp_t +
+      d5 * tran_t + d6 * ps_t + d7 * four_t + d8),
+  data = truck_7990,
+  start = initial_values,
+  control = nls.lm.control(maxiter = 1000, maxfev = 10000)
+)
+
+summary(fit4)
+```
+
+### Extra step: formatting the tables
+
+I need to replace variables such as "c1" with "Weight (tons)" to replicate Table 3.5. I can do this by looking at the coefficients of the variables in the non-linear regression function.
+
+```{r ch8_ex5d}
+# function to avoid repeating the same code four times
+reshape_estimates <- function(fit, vehicle, term_prefix, term_mappings) {
+  tidy(fit) %>%
+    filter(term %in% paste0(term_prefix, 1:8)) %>%
+    mutate(
+      term = case_when(
+        term == paste0(term_prefix, "1") ~ term_mappings[1],
+        term == paste0(term_prefix, "2") ~ term_mappings[2],
+        term == paste0(term_prefix, "3") ~ term_mappings[3],
+        term == paste0(term_prefix, "4") ~ term_mappings[4],
+        term == paste0(term_prefix, "5") ~ term_mappings[5],
+        term == paste0(term_prefix, "6") ~ term_mappings[6],
+        term == paste0(term_prefix, "7") ~ term_mappings[7],
+        term == paste0(term_prefix, "8") ~ term_mappings[8]
+      )
+    ) %>%
+    select(term, estimate, std.error) %>%
+    pivot_longer(
+      cols = c(estimate, std.error), names_to = "stat",
+      values_to = "value"
+    ) %>%
+    mutate(
+      stat = if_else(stat == "estimate", "Estimate", "Std. Error"),
+      value = round(value, 3)
+    ) %>%
+    rename(!!sym(vehicle) := value)
+}
+
+car_vars <- c(
+  "Weight (tons)", "Width (feet)", "Height (feet)", "Horsepower (100)",
+  "Transmission (5-speed or auto)", "Power steering", "Air conditioning", "Constant"
+)
+
+truck_vars <- c(
+  "Weight (tons)", "Width (feet)", "Height (feet)", "Horsepower (100)",
+  "Transmission (5-speed or auto)", "Power steering", "Four-wheel drive", "Constant"
+)
+
+table_85 <- reshape_estimates(fit2, "cars", "c", car_vars) %>%
+  left_join(reshape_estimates(fit2, "trucks", "d", truck_vars)) %>%
+  left_join(reshape_estimates(fit4, "cars", "c", car_vars),
+    by = c("term", "stat")) %>%
+  left_join(reshape_estimates(fit4, "trucks", "d", truck_vars),
+    by = c("term", "stat"))
+
+colnames(table_85) <- c("Variable", "Statistic", "Cars (No Con)", "Trucks (No Con)",
+  "Cars (W Con)", "Trucks (W Con)")
+
+kable(table_85)
 ```

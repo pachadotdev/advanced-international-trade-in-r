@@ -206,6 +206,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#feenstras-code-4" id="toc-feenstras-code-4" class="nav-link" data-scroll-target="#feenstras-code-4">Feenstra’s code</a></li>
   <li><a href="#my-code-4" id="toc-my-code-4" class="nav-link" data-scroll-target="#my-code-4">My code</a></li>
+  <li><a href="#extra-step-formatting-the-tables-1" id="toc-extra-step-formatting-the-tables-1" class="nav-link" data-scroll-target="#extra-step-formatting-the-tables-1">Extra step: formatting the tables</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -693,64 +694,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract ----</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>fzip <span class="ot">&lt;-</span> <span class="st">"first-edition/Chapter-8.zip"</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>dout <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">.zip$"</span>, <span class="st">""</span>, fzip)</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(dout)) {</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">archive_extract</span>(fzip, <span class="at">dir =</span> dout)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Read and transform ----</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>fout <span class="ot">&lt;-</span> <span class="fu">paste0</span>(dout, <span class="st">"/feenstra_88.rds"</span>)</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(fout)) {</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  feenstra_88 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">car_7990 =</span> <span class="fu">read_dta</span>(<span class="fu">paste0</span>(dout, <span class="st">"/car_7990.dta"</span>)),</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">truck_7990 =</span> <span class="fu">read_dta</span>(<span class="fu">paste0</span>(dout, <span class="st">"/truck_7990.dta"</span>))</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(feenstra_88, fout)</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  feenstra_88 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(fout)</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>car_7990 <span class="ot">&lt;-</span> feenstra_88<span class="sc">$</span>car_7990 <span class="sc">%&gt;%</span></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, model, type, price, quan) <span class="sc">%&gt;%</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(year, model)</span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>car_80 <span class="ot">&lt;-</span> car_7990 <span class="sc">%&gt;%</span></span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">80</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model, type, price, quan) <span class="sc">%&gt;%</span></span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">price_80 =</span> price, <span class="at">quan_80 =</span> quan)</span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>car_7990 <span class="ot">&lt;-</span> car_7990 <span class="sc">%&gt;%</span></span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(car_80) <span class="sc">%&gt;%</span></span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">value_80 =</span> <span class="fu">sum</span>(price_80 <span class="sc">*</span> quan_80),</span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">value_cp =</span> <span class="fu">sum</span>(price <span class="sc">*</span> quan_80)</span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lasp =</span> value_cp <span class="sc">/</span> value_80)</span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>car_7990 <span class="ot">&lt;-</span> car_7990 <span class="sc">%&gt;%</span></span>
-<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">value_c =</span> <span class="fu">sum</span>(price <span class="sc">*</span> quan),</span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">value_cq =</span> <span class="fu">sum</span>(price_80 <span class="sc">*</span> quan)</span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pasp =</span> value_c <span class="sc">/</span> value_cq)</span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>car_7990 <span class="sc">%&gt;%</span></span>
-<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pindex =</span> <span class="fu">sqrt</span>(lasp <span class="sc">*</span> pasp)) <span class="sc">%&gt;%</span></span>
-<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
-<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">pindex =</span> <span class="fu">mean</span>(pindex))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract ----</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>fzip <span class="ot">&lt;-</span> <span class="st">"first-edition/Chapter-8.zip"</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>dout <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">.zip$"</span>, <span class="st">""</span>, fzip)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(dout)) {</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">archive_extract</span>(fzip, <span class="at">dir =</span> dout)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Read and transform ----</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>fout <span class="ot">&lt;-</span> <span class="fu">paste0</span>(dout, <span class="st">"/feenstra_88.rds"</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(fout)) {</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  feenstra_88 <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">car_7990 =</span> <span class="fu">read_dta</span>(<span class="fu">paste0</span>(dout, <span class="st">"/car_7990.dta"</span>)),</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">truck_7990 =</span> <span class="fu">read_dta</span>(<span class="fu">paste0</span>(dout, <span class="st">"/truck_7990.dta"</span>))</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(feenstra_88, fout)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  feenstra_88 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(fout)</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>car_7990 <span class="ot">&lt;-</span> feenstra_88<span class="sc">$</span>car_7990 <span class="sc">%&gt;%</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, model, type, price, quan) <span class="sc">%&gt;%</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(year, model)</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>car_80 <span class="ot">&lt;-</span> car_7990 <span class="sc">%&gt;%</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">80</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(model, type, price, quan) <span class="sc">%&gt;%</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">price_80 =</span> price, <span class="at">quan_80 =</span> quan)</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>car_7990 <span class="ot">&lt;-</span> car_7990 <span class="sc">%&gt;%</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(car_80) <span class="sc">%&gt;%</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">value_80 =</span> <span class="fu">sum</span>(price_80 <span class="sc">*</span> quan_80),</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">value_cp =</span> <span class="fu">sum</span>(price <span class="sc">*</span> quan_80)</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lasp =</span> value_cp <span class="sc">/</span> value_80)</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>car_7990 <span class="ot">&lt;-</span> car_7990 <span class="sc">%&gt;%</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">value_c =</span> <span class="fu">sum</span>(price <span class="sc">*</span> quan),</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">value_cq =</span> <span class="fu">sum</span>(price_80 <span class="sc">*</span> quan)</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pasp =</span> value_c <span class="sc">/</span> value_cq)</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>car_7990 <span class="sc">%&gt;%</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pindex =</span> <span class="fu">sqrt</span>(lasp <span class="sc">*</span> pasp)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">pindex =</span> <span class="fu">mean</span>(pindex))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 12 × 2
     year pindex
@@ -4784,39 +4786,40 @@ Achieved convergence tolerance: 1.49e-08</code></pre>
 <span id="cb56-30"><a href="#cb56-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">tyd10 =</span> yd10,</span>
 <span id="cb56-31"><a href="#cb56-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">tyd11 =</span> yd11,</span>
 <span id="cb56-32"><a href="#cb56-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">tyd12 =</span> yd12</span>
-<span id="cb56-33"><a href="#cb56-33" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb56-34"><a href="#cb56-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-35"><a href="#cb56-35" aria-hidden="true" tabindex="-1"></a>initial_values <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb56-36"><a href="#cb56-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">a3 =</span> <span class="dv">1</span>, <span class="at">a4 =</span> <span class="dv">1</span>, <span class="at">a5 =</span> <span class="dv">1</span>, <span class="at">a6 =</span> <span class="dv">1</span>, <span class="at">a7 =</span> <span class="dv">1</span>, <span class="at">a8 =</span> <span class="dv">1</span>, <span class="at">a9 =</span> <span class="dv">1</span>, <span class="at">a10 =</span> <span class="dv">1</span>, <span class="at">a11 =</span> <span class="dv">1</span>,</span>
-<span id="cb56-37"><a href="#cb56-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">a12 =</span> <span class="dv">1</span>,</span>
-<span id="cb56-38"><a href="#cb56-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">b2 =</span> <span class="fl">0.1</span>, <span class="at">b3 =</span> <span class="fl">0.1</span>, <span class="at">b4 =</span> <span class="fl">0.1</span>, <span class="at">b5 =</span> <span class="fl">0.1</span>, <span class="at">b6 =</span> <span class="fl">0.1</span>, <span class="at">b7 =</span> <span class="fl">0.1</span>, <span class="at">b8 =</span> <span class="fl">0.1</span>,</span>
-<span id="cb56-39"><a href="#cb56-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">b9 =</span> <span class="fl">0.1</span>, <span class="at">b10 =</span> <span class="fl">0.1</span>, <span class="at">b11 =</span> <span class="fl">0.1</span>, <span class="at">b12 =</span> <span class="fl">0.1</span>,</span>
-<span id="cb56-40"><a href="#cb56-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">c1 =</span> <span class="fl">0.1</span>, <span class="at">c2 =</span> <span class="fl">0.1</span>, <span class="at">c3 =</span> <span class="fl">0.1</span>, <span class="at">c4 =</span> <span class="fl">0.1</span>, <span class="at">c5 =</span> <span class="fl">0.1</span>, <span class="at">c6 =</span> <span class="fl">0.1</span>, <span class="at">c7 =</span> <span class="fl">0.1</span>,</span>
-<span id="cb56-41"><a href="#cb56-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">c8 =</span> <span class="fl">0.1</span>,</span>
-<span id="cb56-42"><a href="#cb56-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">d1 =</span> <span class="fl">0.1</span>, <span class="at">d2 =</span> <span class="fl">0.1</span>, <span class="at">d3 =</span> <span class="fl">0.1</span>, <span class="at">d4 =</span> <span class="fl">0.1</span>, <span class="at">d5 =</span> <span class="fl">0.1</span>, <span class="at">d6 =</span> <span class="fl">0.1</span>, <span class="at">d7 =</span> <span class="fl">0.1</span>,</span>
-<span id="cb56-43"><a href="#cb56-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">d8 =</span> <span class="fl">0.1</span>,</span>
-<span id="cb56-44"><a href="#cb56-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">e2 =</span> <span class="fl">0.1</span>, <span class="at">e3 =</span> <span class="fl">0.1</span>, <span class="at">e4 =</span> <span class="fl">0.1</span>, <span class="at">e5 =</span> <span class="fl">0.1</span>, <span class="at">e6 =</span> <span class="fl">0.1</span>, <span class="at">e7 =</span> <span class="fl">0.1</span>, <span class="at">e8 =</span> <span class="fl">0.1</span>,</span>
-<span id="cb56-45"><a href="#cb56-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">e9 =</span> <span class="fl">0.1</span>, <span class="at">e10 =</span> <span class="fl">0.1</span>, <span class="at">e11 =</span> <span class="fl">0.1</span>, <span class="at">e12 =</span> <span class="fl">0.1</span></span>
-<span id="cb56-46"><a href="#cb56-46" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb56-47"><a href="#cb56-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-48"><a href="#cb56-48" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">nlsLM</span>(</span>
-<span id="cb56-49"><a href="#cb56-49" aria-hidden="true" tabindex="-1"></a>  price <span class="sc">~</span> a3 <span class="sc">*</span> cyd3 <span class="sc">+</span> a4 <span class="sc">*</span> cyd4 <span class="sc">+</span> a5 <span class="sc">*</span> cyd5 <span class="sc">+</span> a6 <span class="sc">*</span> cyd6 <span class="sc">+</span> a7 <span class="sc">*</span> cyd7 <span class="sc">+</span></span>
-<span id="cb56-50"><a href="#cb56-50" aria-hidden="true" tabindex="-1"></a>    a8 <span class="sc">*</span> cyd8 <span class="sc">+</span> a9 <span class="sc">*</span> cyd9 <span class="sc">+</span> a10 <span class="sc">*</span> cyd10 <span class="sc">+</span> a11 <span class="sc">*</span> cyd11 <span class="sc">+</span> a12 <span class="sc">*</span> cyd12 <span class="sc">+</span></span>
-<span id="cb56-51"><a href="#cb56-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">exp</span>(b2 <span class="sc">*</span> cyd2 <span class="sc">+</span> b3 <span class="sc">*</span> cyd3 <span class="sc">+</span> b4 <span class="sc">*</span> cyd4 <span class="sc">+</span> b5 <span class="sc">*</span> cyd5 <span class="sc">+</span> b6 <span class="sc">*</span> cyd6 <span class="sc">+</span> b7 <span class="sc">*</span> cyd7 <span class="sc">+</span></span>
-<span id="cb56-52"><a href="#cb56-52" aria-hidden="true" tabindex="-1"></a>      b8 <span class="sc">*</span> cyd8 <span class="sc">+</span> b9 <span class="sc">*</span> cyd9 <span class="sc">+</span> b10 <span class="sc">*</span> cyd10 <span class="sc">+</span> b11 <span class="sc">*</span> cyd11 <span class="sc">+</span> b12 <span class="sc">*</span> cyd12 <span class="sc">+</span></span>
-<span id="cb56-53"><a href="#cb56-53" aria-hidden="true" tabindex="-1"></a>      c1 <span class="sc">*</span> wght_c <span class="sc">+</span> c2 <span class="sc">*</span> wdth_c <span class="sc">+</span> c3 <span class="sc">*</span> hght_c <span class="sc">+</span> c4 <span class="sc">*</span> hp_c <span class="sc">+</span> c5 <span class="sc">*</span> tran_c <span class="sc">+</span></span>
-<span id="cb56-54"><a href="#cb56-54" aria-hidden="true" tabindex="-1"></a>      c6 <span class="sc">*</span> ps_c <span class="sc">+</span> c7 <span class="sc">*</span> ac_c <span class="sc">+</span> c8) <span class="sc">+</span></span>
-<span id="cb56-55"><a href="#cb56-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">exp</span>(e2 <span class="sc">*</span> tyd2 <span class="sc">+</span> e3 <span class="sc">*</span> tyd3 <span class="sc">+</span> e4 <span class="sc">*</span> tyd4 <span class="sc">+</span> e5 <span class="sc">*</span> tyd5 <span class="sc">+</span> e6 <span class="sc">*</span> tyd6 <span class="sc">+</span> e7 <span class="sc">*</span> tyd7 <span class="sc">+</span></span>
-<span id="cb56-56"><a href="#cb56-56" aria-hidden="true" tabindex="-1"></a>      e8 <span class="sc">*</span> tyd8 <span class="sc">+</span> e9 <span class="sc">*</span> tyd9 <span class="sc">+</span> e10 <span class="sc">*</span> tyd10 <span class="sc">+</span> e11 <span class="sc">*</span> tyd11 <span class="sc">+</span> e12 <span class="sc">*</span> tyd12 <span class="sc">+</span></span>
-<span id="cb56-57"><a href="#cb56-57" aria-hidden="true" tabindex="-1"></a>      d1 <span class="sc">*</span> wght_t <span class="sc">+</span> d2 <span class="sc">*</span> wdth_t <span class="sc">+</span> d3 <span class="sc">*</span> hght_t <span class="sc">+</span> d4 <span class="sc">*</span> hp_t <span class="sc">+</span> d5 <span class="sc">*</span> tran_t <span class="sc">+</span></span>
-<span id="cb56-58"><a href="#cb56-58" aria-hidden="true" tabindex="-1"></a>      d6 <span class="sc">*</span> ps_t <span class="sc">+</span> d7 <span class="sc">*</span> four_t <span class="sc">+</span> d8),</span>
-<span id="cb56-59"><a href="#cb56-59" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> truck_7990,</span>
-<span id="cb56-60"><a href="#cb56-60" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> initial_values,</span>
-<span id="cb56-61"><a href="#cb56-61" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adjust parameters to account to slow convergence</span></span>
-<span id="cb56-62"><a href="#cb56-62" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">nls.lm.control</span>(<span class="at">maxiter =</span> <span class="dv">1000</span>, <span class="at">maxfev =</span> <span class="dv">10000</span>)</span>
-<span id="cb56-63"><a href="#cb56-63" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb56-64"><a href="#cb56-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-65"><a href="#cb56-65" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb56-33"><a href="#cb56-33" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>initial_values <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">a3 =</span> <span class="dv">1</span>, <span class="at">a4 =</span> <span class="dv">1</span>, <span class="at">a5 =</span> <span class="dv">1</span>, <span class="at">a6 =</span> <span class="dv">1</span>, <span class="at">a7 =</span> <span class="dv">1</span>, <span class="at">a8 =</span> <span class="dv">1</span>, <span class="at">a9 =</span> <span class="dv">1</span>, <span class="at">a10 =</span> <span class="dv">1</span>, <span class="at">a11 =</span> <span class="dv">1</span>,</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">a12 =</span> <span class="dv">1</span>,</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">b2 =</span> <span class="fl">0.1</span>, <span class="at">b3 =</span> <span class="fl">0.1</span>, <span class="at">b4 =</span> <span class="fl">0.1</span>, <span class="at">b5 =</span> <span class="fl">0.1</span>, <span class="at">b6 =</span> <span class="fl">0.1</span>, <span class="at">b7 =</span> <span class="fl">0.1</span>, <span class="at">b8 =</span> <span class="fl">0.1</span>,</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">b9 =</span> <span class="fl">0.1</span>, <span class="at">b10 =</span> <span class="fl">0.1</span>, <span class="at">b11 =</span> <span class="fl">0.1</span>, <span class="at">b12 =</span> <span class="fl">0.1</span>,</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">c1 =</span> <span class="fl">0.1</span>, <span class="at">c2 =</span> <span class="fl">0.1</span>, <span class="at">c3 =</span> <span class="fl">0.1</span>, <span class="at">c4 =</span> <span class="fl">0.1</span>, <span class="at">c5 =</span> <span class="fl">0.1</span>, <span class="at">c6 =</span> <span class="fl">0.1</span>, <span class="at">c7 =</span> <span class="fl">0.1</span>,</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">c8 =</span> <span class="fl">0.1</span>,</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">d1 =</span> <span class="fl">0.1</span>, <span class="at">d2 =</span> <span class="fl">0.1</span>, <span class="at">d3 =</span> <span class="fl">0.1</span>, <span class="at">d4 =</span> <span class="fl">0.1</span>, <span class="at">d5 =</span> <span class="fl">0.1</span>, <span class="at">d6 =</span> <span class="fl">0.1</span>, <span class="at">d7 =</span> <span class="fl">0.1</span>,</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">d8 =</span> <span class="fl">0.1</span>,</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">e2 =</span> <span class="fl">0.1</span>, <span class="at">e3 =</span> <span class="fl">0.1</span>, <span class="at">e4 =</span> <span class="fl">0.1</span>, <span class="at">e5 =</span> <span class="fl">0.1</span>, <span class="at">e6 =</span> <span class="fl">0.1</span>, <span class="at">e7 =</span> <span class="fl">0.1</span>, <span class="at">e8 =</span> <span class="fl">0.1</span>,</span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">e9 =</span> <span class="fl">0.1</span>, <span class="at">e10 =</span> <span class="fl">0.1</span>, <span class="at">e11 =</span> <span class="fl">0.1</span>, <span class="at">e12 =</span> <span class="fl">0.1</span></span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">nlsLM</span>(</span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>  price <span class="sc">~</span> a3 <span class="sc">*</span> cyd3 <span class="sc">+</span> a4 <span class="sc">*</span> cyd4 <span class="sc">+</span> a5 <span class="sc">*</span> cyd5 <span class="sc">+</span> a6 <span class="sc">*</span> cyd6 <span class="sc">+</span> a7 <span class="sc">*</span> cyd7 <span class="sc">+</span></span>
+<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a>    a8 <span class="sc">*</span> cyd8 <span class="sc">+</span> a9 <span class="sc">*</span> cyd9 <span class="sc">+</span> a10 <span class="sc">*</span> cyd10 <span class="sc">+</span> a11 <span class="sc">*</span> cyd11 <span class="sc">+</span> a12 <span class="sc">*</span> cyd12 <span class="sc">+</span></span>
+<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">exp</span>(b2 <span class="sc">*</span> cyd2 <span class="sc">+</span> b3 <span class="sc">*</span> cyd3 <span class="sc">+</span> b4 <span class="sc">*</span> cyd4 <span class="sc">+</span> b5 <span class="sc">*</span> cyd5 <span class="sc">+</span> b6 <span class="sc">*</span> cyd6 <span class="sc">+</span> b7 <span class="sc">*</span> cyd7 <span class="sc">+</span></span>
+<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>      b8 <span class="sc">*</span> cyd8 <span class="sc">+</span> b9 <span class="sc">*</span> cyd9 <span class="sc">+</span> b10 <span class="sc">*</span> cyd10 <span class="sc">+</span> b11 <span class="sc">*</span> cyd11 <span class="sc">+</span> b12 <span class="sc">*</span> cyd12 <span class="sc">+</span></span>
+<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>      c1 <span class="sc">*</span> wght_c <span class="sc">+</span> c2 <span class="sc">*</span> wdth_c <span class="sc">+</span> c3 <span class="sc">*</span> hght_c <span class="sc">+</span> c4 <span class="sc">*</span> hp_c <span class="sc">+</span> c5 <span class="sc">*</span> tran_c <span class="sc">+</span></span>
+<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a>      c6 <span class="sc">*</span> ps_c <span class="sc">+</span> c7 <span class="sc">*</span> ac_c <span class="sc">+</span> c8) <span class="sc">+</span></span>
+<span id="cb57-21"><a href="#cb57-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">exp</span>(e2 <span class="sc">*</span> tyd2 <span class="sc">+</span> e3 <span class="sc">*</span> tyd3 <span class="sc">+</span> e4 <span class="sc">*</span> tyd4 <span class="sc">+</span> e5 <span class="sc">*</span> tyd5 <span class="sc">+</span> e6 <span class="sc">*</span> tyd6 <span class="sc">+</span> e7 <span class="sc">*</span> tyd7 <span class="sc">+</span></span>
+<span id="cb57-22"><a href="#cb57-22" aria-hidden="true" tabindex="-1"></a>      e8 <span class="sc">*</span> tyd8 <span class="sc">+</span> e9 <span class="sc">*</span> tyd9 <span class="sc">+</span> e10 <span class="sc">*</span> tyd10 <span class="sc">+</span> e11 <span class="sc">*</span> tyd11 <span class="sc">+</span> e12 <span class="sc">*</span> tyd12 <span class="sc">+</span></span>
+<span id="cb57-23"><a href="#cb57-23" aria-hidden="true" tabindex="-1"></a>      d1 <span class="sc">*</span> wght_t <span class="sc">+</span> d2 <span class="sc">*</span> wdth_t <span class="sc">+</span> d3 <span class="sc">*</span> hght_t <span class="sc">+</span> d4 <span class="sc">*</span> hp_t <span class="sc">+</span> d5 <span class="sc">*</span> tran_t <span class="sc">+</span></span>
+<span id="cb57-24"><a href="#cb57-24" aria-hidden="true" tabindex="-1"></a>      d6 <span class="sc">*</span> ps_t <span class="sc">+</span> d7 <span class="sc">*</span> four_t <span class="sc">+</span> d8),</span>
+<span id="cb57-25"><a href="#cb57-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> truck_7990,</span>
+<span id="cb57-26"><a href="#cb57-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> initial_values,</span>
+<span id="cb57-27"><a href="#cb57-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adjust parameters to account to slow convergence</span></span>
+<span id="cb57-28"><a href="#cb57-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">nls.lm.control</span>(<span class="at">maxiter =</span> <span class="dv">1000</span>, <span class="at">maxfev =</span> <span class="dv">10000</span>)</span>
+<span id="cb57-29"><a href="#cb57-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb57-30"><a href="#cb57-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-31"><a href="#cb57-31" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Formula: price ~ a3 * cyd3 + a4 * cyd4 + a5 * cyd5 + a6 * cyd6 + a7 * 
@@ -4889,48 +4892,48 @@ Residual standard error: 936.3 on 356 degrees of freedom
 Number of iterations to convergence: 42 
 Achieved convergence tolerance: 1.49e-08</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>fit_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(fit)</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>truck_7990 <span class="ot">&lt;-</span> truck_7990 <span class="sc">%&gt;%</span></span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">winv =</span> <span class="fu">case_when</span>(</span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>      ve <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">exp</span>(fit_coef[<span class="st">"b2"</span>] <span class="sc">*</span> cyd2 <span class="sc">+</span> fit_coef[<span class="st">"b3"</span>] <span class="sc">*</span> cyd3 <span class="sc">+</span></span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"b4"</span>] <span class="sc">*</span> cyd4 <span class="sc">+</span> fit_coef[<span class="st">"b5"</span>] <span class="sc">*</span> cyd5 <span class="sc">+</span> fit_coef[<span class="st">"b6"</span>] <span class="sc">*</span> cyd6 <span class="sc">+</span></span>
-<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"b7"</span>] <span class="sc">*</span> cyd7 <span class="sc">+</span> fit_coef[<span class="st">"b8"</span>] <span class="sc">*</span> cyd8 <span class="sc">+</span> fit_coef[<span class="st">"b9"</span>] <span class="sc">*</span> cyd9 <span class="sc">+</span></span>
-<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"b10"</span>] <span class="sc">*</span> cyd10 <span class="sc">+</span> fit_coef[<span class="st">"b11"</span>] <span class="sc">*</span> cyd11 <span class="sc">+</span></span>
-<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"b12"</span>] <span class="sc">*</span> cyd12 <span class="sc">+</span> fit_coef[<span class="st">"c1"</span>] <span class="sc">*</span> wght_c <span class="sc">+</span></span>
-<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"c2"</span>] <span class="sc">*</span> wdth_c <span class="sc">+</span> fit_coef[<span class="st">"c3"</span>] <span class="sc">*</span> hght_c <span class="sc">+</span></span>
-<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"c4"</span>] <span class="sc">*</span> hp_c <span class="sc">+</span> fit_coef[<span class="st">"c5"</span>] <span class="sc">*</span> tran_c <span class="sc">+</span></span>
-<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"c6"</span>] <span class="sc">*</span> ps_c <span class="sc">+</span> fit_coef[<span class="st">"c7"</span>] <span class="sc">*</span> ac_c <span class="sc">+</span> fit_coef[<span class="st">"c8"</span>]),</span>
-<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a>      ve <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">exp</span>(fit_coef[<span class="st">"e2"</span>] <span class="sc">*</span> tyd2 <span class="sc">+</span> fit_coef[<span class="st">"e3"</span>] <span class="sc">*</span> tyd3 <span class="sc">+</span></span>
-<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"e4"</span>] <span class="sc">*</span> tyd4 <span class="sc">+</span> fit_coef[<span class="st">"e5"</span>] <span class="sc">*</span> tyd5 <span class="sc">+</span> fit_coef[<span class="st">"e6"</span>] <span class="sc">*</span> tyd6 <span class="sc">+</span></span>
-<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"e7"</span>] <span class="sc">*</span> tyd7 <span class="sc">+</span> fit_coef[<span class="st">"e8"</span>] <span class="sc">*</span> tyd8 <span class="sc">+</span> fit_coef[<span class="st">"e9"</span>] <span class="sc">*</span> tyd9 <span class="sc">+</span></span>
-<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"e10"</span>] <span class="sc">*</span> tyd10 <span class="sc">+</span> fit_coef[<span class="st">"e11"</span>] <span class="sc">*</span> tyd11 <span class="sc">+</span></span>
-<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"e12"</span>] <span class="sc">*</span> tyd12 <span class="sc">+</span> fit_coef[<span class="st">"d1"</span>] <span class="sc">*</span> wght_t <span class="sc">+</span></span>
-<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"d2"</span>] <span class="sc">*</span> wdth_t <span class="sc">+</span> fit_coef[<span class="st">"d3"</span>] <span class="sc">*</span> hght_t <span class="sc">+</span></span>
-<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"d4"</span>] <span class="sc">*</span> hp_t <span class="sc">+</span> fit_coef[<span class="st">"d5"</span>] <span class="sc">*</span> tran_t <span class="sc">+</span></span>
-<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"d6"</span>] <span class="sc">*</span> ps_t <span class="sc">+</span> fit_coef[<span class="st">"d7"</span>] <span class="sc">*</span> four_t <span class="sc">+</span> fit_coef[<span class="st">"d8"</span>]),</span>
-<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">nprice =</span> price <span class="sc">*</span> winv</span>
-<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">nlsLM</span>(</span>
-<span id="cb58-27"><a href="#cb58-27" aria-hidden="true" tabindex="-1"></a>  nprice <span class="sc">~</span> winv <span class="sc">*</span> (a3 <span class="sc">*</span> cyd3 <span class="sc">+</span> a4 <span class="sc">*</span> cyd4 <span class="sc">+</span> a5 <span class="sc">*</span> cyd5 <span class="sc">+</span> a6 <span class="sc">*</span> cyd6 <span class="sc">+</span> a7 <span class="sc">*</span> cyd7 <span class="sc">+</span></span>
-<span id="cb58-28"><a href="#cb58-28" aria-hidden="true" tabindex="-1"></a>    a8 <span class="sc">*</span> cyd8 <span class="sc">+</span> a9 <span class="sc">*</span> cyd9 <span class="sc">+</span> a10 <span class="sc">*</span> cyd10 <span class="sc">+</span> a11 <span class="sc">*</span> cyd11 <span class="sc">+</span> a12 <span class="sc">*</span> cyd12) <span class="sc">+</span></span>
-<span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a>    winv <span class="sc">*</span> <span class="fu">exp</span>(b2 <span class="sc">*</span> cyd2 <span class="sc">+</span> b3 <span class="sc">*</span> cyd3 <span class="sc">+</span> b4 <span class="sc">*</span> cyd4 <span class="sc">+</span> b5 <span class="sc">*</span> cyd5 <span class="sc">+</span> b6 <span class="sc">*</span> cyd6 <span class="sc">+</span></span>
-<span id="cb58-30"><a href="#cb58-30" aria-hidden="true" tabindex="-1"></a>      b7 <span class="sc">*</span> cyd7 <span class="sc">+</span> b8 <span class="sc">*</span> cyd8 <span class="sc">+</span> b9 <span class="sc">*</span> cyd9 <span class="sc">+</span> b10 <span class="sc">*</span> cyd10 <span class="sc">+</span> b11 <span class="sc">*</span> cyd11 <span class="sc">+</span></span>
-<span id="cb58-31"><a href="#cb58-31" aria-hidden="true" tabindex="-1"></a>      b12 <span class="sc">*</span> cyd12 <span class="sc">+</span> c1 <span class="sc">*</span> wght_c <span class="sc">+</span> c2 <span class="sc">*</span> wdth_c <span class="sc">+</span> c3 <span class="sc">*</span> hght_c <span class="sc">+</span> c4 <span class="sc">*</span> hp_c <span class="sc">+</span></span>
-<span id="cb58-32"><a href="#cb58-32" aria-hidden="true" tabindex="-1"></a>      c5 <span class="sc">*</span> tran_c <span class="sc">+</span> c6 <span class="sc">*</span> ps_c <span class="sc">+</span> c7 <span class="sc">*</span> ac_c <span class="sc">+</span> c8) <span class="sc">+</span></span>
-<span id="cb58-33"><a href="#cb58-33" aria-hidden="true" tabindex="-1"></a>    winv <span class="sc">*</span> <span class="fu">exp</span>(e2 <span class="sc">*</span> tyd2 <span class="sc">+</span> e3 <span class="sc">*</span> tyd3 <span class="sc">+</span> e4 <span class="sc">*</span> tyd4 <span class="sc">+</span> e5 <span class="sc">*</span> tyd5 <span class="sc">+</span> e6 <span class="sc">*</span> tyd6 <span class="sc">+</span></span>
-<span id="cb58-34"><a href="#cb58-34" aria-hidden="true" tabindex="-1"></a>      e7 <span class="sc">*</span> tyd7 <span class="sc">+</span> e8 <span class="sc">*</span> tyd8 <span class="sc">+</span> e9 <span class="sc">*</span> tyd9 <span class="sc">+</span> e10 <span class="sc">*</span> tyd10 <span class="sc">+</span> e11 <span class="sc">*</span> tyd11 <span class="sc">+</span></span>
-<span id="cb58-35"><a href="#cb58-35" aria-hidden="true" tabindex="-1"></a>      e12 <span class="sc">*</span> tyd12 <span class="sc">+</span> d1 <span class="sc">*</span> wght_t <span class="sc">+</span> d2 <span class="sc">*</span> wdth_t <span class="sc">+</span> d3 <span class="sc">*</span> hght_t <span class="sc">+</span> d4 <span class="sc">*</span> hp_t <span class="sc">+</span></span>
-<span id="cb58-36"><a href="#cb58-36" aria-hidden="true" tabindex="-1"></a>      d5 <span class="sc">*</span> tran_t <span class="sc">+</span> d6 <span class="sc">*</span> ps_t <span class="sc">+</span> d7 <span class="sc">*</span> four_t <span class="sc">+</span> d8),</span>
-<span id="cb58-37"><a href="#cb58-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> truck_7990,</span>
-<span id="cb58-38"><a href="#cb58-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> initial_values,</span>
-<span id="cb58-39"><a href="#cb58-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">nls.lm.control</span>(<span class="at">maxiter =</span> <span class="dv">1000</span>, <span class="at">maxfev =</span> <span class="dv">10000</span>)</span>
-<span id="cb58-40"><a href="#cb58-40" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb58-41"><a href="#cb58-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-42"><a href="#cb58-42" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>fit_coef <span class="ot">&lt;-</span> <span class="fu">coef</span>(fit)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>truck_7990 <span class="ot">&lt;-</span> truck_7990 <span class="sc">%&gt;%</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">winv =</span> <span class="fu">case_when</span>(</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>      ve <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">exp</span>(fit_coef[<span class="st">"b2"</span>] <span class="sc">*</span> cyd2 <span class="sc">+</span> fit_coef[<span class="st">"b3"</span>] <span class="sc">*</span> cyd3 <span class="sc">+</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"b4"</span>] <span class="sc">*</span> cyd4 <span class="sc">+</span> fit_coef[<span class="st">"b5"</span>] <span class="sc">*</span> cyd5 <span class="sc">+</span> fit_coef[<span class="st">"b6"</span>] <span class="sc">*</span> cyd6 <span class="sc">+</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"b7"</span>] <span class="sc">*</span> cyd7 <span class="sc">+</span> fit_coef[<span class="st">"b8"</span>] <span class="sc">*</span> cyd8 <span class="sc">+</span> fit_coef[<span class="st">"b9"</span>] <span class="sc">*</span> cyd9 <span class="sc">+</span></span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"b10"</span>] <span class="sc">*</span> cyd10 <span class="sc">+</span> fit_coef[<span class="st">"b11"</span>] <span class="sc">*</span> cyd11 <span class="sc">+</span></span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"b12"</span>] <span class="sc">*</span> cyd12 <span class="sc">+</span> fit_coef[<span class="st">"c1"</span>] <span class="sc">*</span> wght_c <span class="sc">+</span></span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"c2"</span>] <span class="sc">*</span> wdth_c <span class="sc">+</span> fit_coef[<span class="st">"c3"</span>] <span class="sc">*</span> hght_c <span class="sc">+</span></span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"c4"</span>] <span class="sc">*</span> hp_c <span class="sc">+</span> fit_coef[<span class="st">"c5"</span>] <span class="sc">*</span> tran_c <span class="sc">+</span></span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"c6"</span>] <span class="sc">*</span> ps_c <span class="sc">+</span> fit_coef[<span class="st">"c7"</span>] <span class="sc">*</span> ac_c <span class="sc">+</span> fit_coef[<span class="st">"c8"</span>]),</span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>      ve <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="dv">1</span> <span class="sc">/</span> <span class="fu">exp</span>(fit_coef[<span class="st">"e2"</span>] <span class="sc">*</span> tyd2 <span class="sc">+</span> fit_coef[<span class="st">"e3"</span>] <span class="sc">*</span> tyd3 <span class="sc">+</span></span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"e4"</span>] <span class="sc">*</span> tyd4 <span class="sc">+</span> fit_coef[<span class="st">"e5"</span>] <span class="sc">*</span> tyd5 <span class="sc">+</span> fit_coef[<span class="st">"e6"</span>] <span class="sc">*</span> tyd6 <span class="sc">+</span></span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"e7"</span>] <span class="sc">*</span> tyd7 <span class="sc">+</span> fit_coef[<span class="st">"e8"</span>] <span class="sc">*</span> tyd8 <span class="sc">+</span> fit_coef[<span class="st">"e9"</span>] <span class="sc">*</span> tyd9 <span class="sc">+</span></span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"e10"</span>] <span class="sc">*</span> tyd10 <span class="sc">+</span> fit_coef[<span class="st">"e11"</span>] <span class="sc">*</span> tyd11 <span class="sc">+</span></span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"e12"</span>] <span class="sc">*</span> tyd12 <span class="sc">+</span> fit_coef[<span class="st">"d1"</span>] <span class="sc">*</span> wght_t <span class="sc">+</span></span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"d2"</span>] <span class="sc">*</span> wdth_t <span class="sc">+</span> fit_coef[<span class="st">"d3"</span>] <span class="sc">*</span> hght_t <span class="sc">+</span></span>
+<span id="cb59-20"><a href="#cb59-20" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"d4"</span>] <span class="sc">*</span> hp_t <span class="sc">+</span> fit_coef[<span class="st">"d5"</span>] <span class="sc">*</span> tran_t <span class="sc">+</span></span>
+<span id="cb59-21"><a href="#cb59-21" aria-hidden="true" tabindex="-1"></a>        fit_coef[<span class="st">"d6"</span>] <span class="sc">*</span> ps_t <span class="sc">+</span> fit_coef[<span class="st">"d7"</span>] <span class="sc">*</span> four_t <span class="sc">+</span> fit_coef[<span class="st">"d8"</span>]),</span>
+<span id="cb59-22"><a href="#cb59-22" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb59-23"><a href="#cb59-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">nprice =</span> price <span class="sc">*</span> winv</span>
+<span id="cb59-24"><a href="#cb59-24" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb59-25"><a href="#cb59-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-26"><a href="#cb59-26" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">nlsLM</span>(</span>
+<span id="cb59-27"><a href="#cb59-27" aria-hidden="true" tabindex="-1"></a>  nprice <span class="sc">~</span> winv <span class="sc">*</span> (a3 <span class="sc">*</span> cyd3 <span class="sc">+</span> a4 <span class="sc">*</span> cyd4 <span class="sc">+</span> a5 <span class="sc">*</span> cyd5 <span class="sc">+</span> a6 <span class="sc">*</span> cyd6 <span class="sc">+</span> a7 <span class="sc">*</span> cyd7 <span class="sc">+</span></span>
+<span id="cb59-28"><a href="#cb59-28" aria-hidden="true" tabindex="-1"></a>    a8 <span class="sc">*</span> cyd8 <span class="sc">+</span> a9 <span class="sc">*</span> cyd9 <span class="sc">+</span> a10 <span class="sc">*</span> cyd10 <span class="sc">+</span> a11 <span class="sc">*</span> cyd11 <span class="sc">+</span> a12 <span class="sc">*</span> cyd12) <span class="sc">+</span></span>
+<span id="cb59-29"><a href="#cb59-29" aria-hidden="true" tabindex="-1"></a>    winv <span class="sc">*</span> <span class="fu">exp</span>(b2 <span class="sc">*</span> cyd2 <span class="sc">+</span> b3 <span class="sc">*</span> cyd3 <span class="sc">+</span> b4 <span class="sc">*</span> cyd4 <span class="sc">+</span> b5 <span class="sc">*</span> cyd5 <span class="sc">+</span> b6 <span class="sc">*</span> cyd6 <span class="sc">+</span></span>
+<span id="cb59-30"><a href="#cb59-30" aria-hidden="true" tabindex="-1"></a>      b7 <span class="sc">*</span> cyd7 <span class="sc">+</span> b8 <span class="sc">*</span> cyd8 <span class="sc">+</span> b9 <span class="sc">*</span> cyd9 <span class="sc">+</span> b10 <span class="sc">*</span> cyd10 <span class="sc">+</span> b11 <span class="sc">*</span> cyd11 <span class="sc">+</span></span>
+<span id="cb59-31"><a href="#cb59-31" aria-hidden="true" tabindex="-1"></a>      b12 <span class="sc">*</span> cyd12 <span class="sc">+</span> c1 <span class="sc">*</span> wght_c <span class="sc">+</span> c2 <span class="sc">*</span> wdth_c <span class="sc">+</span> c3 <span class="sc">*</span> hght_c <span class="sc">+</span> c4 <span class="sc">*</span> hp_c <span class="sc">+</span></span>
+<span id="cb59-32"><a href="#cb59-32" aria-hidden="true" tabindex="-1"></a>      c5 <span class="sc">*</span> tran_c <span class="sc">+</span> c6 <span class="sc">*</span> ps_c <span class="sc">+</span> c7 <span class="sc">*</span> ac_c <span class="sc">+</span> c8) <span class="sc">+</span></span>
+<span id="cb59-33"><a href="#cb59-33" aria-hidden="true" tabindex="-1"></a>    winv <span class="sc">*</span> <span class="fu">exp</span>(e2 <span class="sc">*</span> tyd2 <span class="sc">+</span> e3 <span class="sc">*</span> tyd3 <span class="sc">+</span> e4 <span class="sc">*</span> tyd4 <span class="sc">+</span> e5 <span class="sc">*</span> tyd5 <span class="sc">+</span> e6 <span class="sc">*</span> tyd6 <span class="sc">+</span></span>
+<span id="cb59-34"><a href="#cb59-34" aria-hidden="true" tabindex="-1"></a>      e7 <span class="sc">*</span> tyd7 <span class="sc">+</span> e8 <span class="sc">*</span> tyd8 <span class="sc">+</span> e9 <span class="sc">*</span> tyd9 <span class="sc">+</span> e10 <span class="sc">*</span> tyd10 <span class="sc">+</span> e11 <span class="sc">*</span> tyd11 <span class="sc">+</span></span>
+<span id="cb59-35"><a href="#cb59-35" aria-hidden="true" tabindex="-1"></a>      e12 <span class="sc">*</span> tyd12 <span class="sc">+</span> d1 <span class="sc">*</span> wght_t <span class="sc">+</span> d2 <span class="sc">*</span> wdth_t <span class="sc">+</span> d3 <span class="sc">*</span> hght_t <span class="sc">+</span> d4 <span class="sc">*</span> hp_t <span class="sc">+</span></span>
+<span id="cb59-36"><a href="#cb59-36" aria-hidden="true" tabindex="-1"></a>      d5 <span class="sc">*</span> tran_t <span class="sc">+</span> d6 <span class="sc">*</span> ps_t <span class="sc">+</span> d7 <span class="sc">*</span> four_t <span class="sc">+</span> d8),</span>
+<span id="cb59-37"><a href="#cb59-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> truck_7990,</span>
+<span id="cb59-38"><a href="#cb59-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> initial_values,</span>
+<span id="cb59-39"><a href="#cb59-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">nls.lm.control</span>(<span class="at">maxiter =</span> <span class="dv">1000</span>, <span class="at">maxfev =</span> <span class="dv">10000</span>)</span>
+<span id="cb59-40"><a href="#cb59-40" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-41"><a href="#cb59-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-42"><a href="#cb59-42" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Formula: nprice ~ winv * (a3 * cyd3 + a4 * cyd4 + a5 * cyd5 + a6 * cyd6 + 
@@ -5004,9 +5007,399 @@ Number of iterations to convergence: 40
 Achieved convergence tolerance: 1.49e-08</code></pre>
 </div>
 </div>
-
-
 </section>
+<section id="system_nocom.do-2" class="level4">
+<h4 class="anchored" data-anchor-id="system_nocom.do-2">system_nocom.do</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>fit3 <span class="ot">&lt;-</span> <span class="fu">nlsLM</span>(</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  nprice <span class="sc">~</span> a3 <span class="sc">*</span> cyd3 <span class="sc">+</span> a4 <span class="sc">*</span> cyd4 <span class="sc">+</span> a5 <span class="sc">*</span> cyd5 <span class="sc">+</span> a6 <span class="sc">*</span> cyd6 <span class="sc">+</span> a7 <span class="sc">*</span> cyd7 <span class="sc">+</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>    a8 <span class="sc">*</span> cyd8 <span class="sc">+</span> a9 <span class="sc">*</span> cyd9 <span class="sc">+</span> a10 <span class="sc">*</span> cyd10 <span class="sc">+</span> a11 <span class="sc">*</span> cyd11 <span class="sc">+</span> a12 <span class="sc">*</span> cyd12 <span class="sc">+</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">exp</span>(b2 <span class="sc">*</span> cyd2 <span class="sc">+</span> b3 <span class="sc">*</span> cyd3 <span class="sc">+</span> b4 <span class="sc">*</span> cyd4 <span class="sc">+</span> b5 <span class="sc">*</span> cyd5 <span class="sc">+</span> b6 <span class="sc">*</span> cyd6 <span class="sc">+</span> b7 <span class="sc">*</span> cyd7 <span class="sc">+</span></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>      b8 <span class="sc">*</span> cyd8 <span class="sc">+</span> b9 <span class="sc">*</span> cyd9 <span class="sc">+</span> b10 <span class="sc">*</span> cyd10 <span class="sc">+</span> b11 <span class="sc">*</span> cyd11 <span class="sc">+</span> b12 <span class="sc">*</span> cyd12 <span class="sc">+</span></span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>      c1 <span class="sc">*</span> wght_c <span class="sc">+</span> c2 <span class="sc">*</span> wdth_c <span class="sc">+</span> c3 <span class="sc">*</span> hght_c <span class="sc">+</span> c4 <span class="sc">*</span> hp_c <span class="sc">+</span> c5 <span class="sc">*</span> tran_c <span class="sc">+</span></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>      c6 <span class="sc">*</span> ps_c <span class="sc">+</span> c7 <span class="sc">*</span> ac_c <span class="sc">+</span> c8) <span class="sc">+</span></span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">exp</span>(e2 <span class="sc">*</span> tyd2 <span class="sc">+</span> e3 <span class="sc">*</span> tyd3 <span class="sc">+</span> e4 <span class="sc">*</span> tyd4 <span class="sc">+</span> e5 <span class="sc">*</span> tyd5 <span class="sc">+</span> e6 <span class="sc">*</span> tyd6 <span class="sc">+</span> e7 <span class="sc">*</span> tyd7 <span class="sc">+</span></span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>      e8 <span class="sc">*</span> tyd8 <span class="sc">+</span> e9 <span class="sc">*</span> tyd9 <span class="sc">+</span> e10 <span class="sc">*</span> tyd10 <span class="sc">+</span> e11 <span class="sc">*</span> tyd11 <span class="sc">+</span> e12 <span class="sc">*</span> tyd12 <span class="sc">+</span></span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>      d1 <span class="sc">*</span> wght_t <span class="sc">+</span> d2 <span class="sc">*</span> wdth_t <span class="sc">+</span> d3 <span class="sc">*</span> hght_t <span class="sc">+</span> d4 <span class="sc">*</span> hp_t <span class="sc">+</span> d5 <span class="sc">*</span> tran_t <span class="sc">+</span></span>
+<span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>      d6 <span class="sc">*</span> ps_t <span class="sc">+</span> d7 <span class="sc">*</span> four_t <span class="sc">+</span> d8),</span>
+<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> truck_7990,</span>
+<span id="cb61-13"><a href="#cb61-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> initial_values,</span>
+<span id="cb61-14"><a href="#cb61-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">nls.lm.control</span>(<span class="at">maxiter =</span> <span class="dv">1000</span>, <span class="at">maxfev =</span> <span class="dv">10000</span>)</span>
+<span id="cb61-15"><a href="#cb61-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb61-16"><a href="#cb61-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-17"><a href="#cb61-17" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Formula: nprice ~ a3 * cyd3 + a4 * cyd4 + a5 * cyd5 + a6 * cyd6 + a7 * 
+    cyd7 + a8 * cyd8 + a9 * cyd9 + a10 * cyd10 + a11 * cyd11 + 
+    a12 * cyd12 + exp(b2 * cyd2 + b3 * cyd3 + b4 * cyd4 + b5 * 
+    cyd5 + b6 * cyd6 + b7 * cyd7 + b8 * cyd8 + b9 * cyd9 + b10 * 
+    cyd10 + b11 * cyd11 + b12 * cyd12 + c1 * wght_c + c2 * wdth_c + 
+    c3 * hght_c + c4 * hp_c + c5 * tran_c + c6 * ps_c + c7 * 
+    ac_c + c8) + exp(e2 * tyd2 + e3 * tyd3 + e4 * tyd4 + e5 * 
+    tyd5 + e6 * tyd6 + e7 * tyd7 + e8 * tyd8 + e9 * tyd9 + e10 * 
+    tyd10 + e11 * tyd11 + e12 * tyd12 + d1 * wght_t + d2 * wdth_t + 
+    d3 * hght_t + d4 * hp_t + d5 * tran_t + d6 * ps_t + d7 * 
+    four_t + d8)
+
+Parameters:
+      Estimate Std. Error t value Pr(&gt;|t|)    
+a3   2.624e-02  4.140e-01   0.063 0.949491    
+a4   8.697e-02  4.183e-01   0.208 0.835437    
+a5  -8.312e-02  4.548e-01  -0.183 0.855098    
+a6  -1.323e-01  4.526e-01  -0.292 0.770199    
+a7   2.344e-01  1.482e-02  15.813  &lt; 2e-16 ***
+a8   3.986e-01  3.092e-01   1.289 0.198254    
+a9   5.016e-01  2.736e-01   1.833 0.067611 .  
+a10  5.424e-01  3.662e-01   1.481 0.139457    
+a11  9.750e-01  2.681e-01   3.637 0.000316 ***
+a12  9.776e-01  3.251e-01   3.007 0.002822 ** 
+b2   9.341e-02  5.898e-02   1.584 0.114102    
+b3   1.123e-01  4.512e-01   0.249 0.803509    
+b4  -1.732e-02  5.231e-01  -0.033 0.973612    
+b5   1.847e-01  4.491e-01   0.411 0.681186    
+b6   2.756e-01  3.967e-01   0.695 0.487667    
+b7  -2.069e-01  7.952e-02  -2.602 0.009669 ** 
+b8  -3.091e-01  5.138e-01  -0.602 0.547748    
+b9  -3.748e-01  4.893e-01  -0.766 0.444214    
+b10 -6.060e-01  7.450e-01  -0.813 0.416582    
+b11 -1.343e+01  2.169e+05   0.000 0.999951    
+b12 -7.439e+00  6.761e+02  -0.011 0.991227    
+c1  -3.546e-01  1.945e-01  -1.823 0.069162 .  
+c2  -3.473e-01  1.416e-01  -2.453 0.014648 *  
+c3   3.854e-01  1.320e-01   2.919 0.003736 ** 
+c4   3.652e-01  1.556e-01   2.346 0.019500 *  
+c5   8.554e-02  4.351e-02   1.966 0.050062 .  
+c6  -4.309e-02  4.620e-02  -0.933 0.351609    
+c7  -4.548e-02  5.820e-02  -0.781 0.435036    
+c8  -9.251e-03  9.580e-02  -0.097 0.923125    
+d1  -1.943e-01  3.195e-01  -0.608 0.543525    
+d2  -9.550e-01  1.593e-01  -5.995 5.00e-09 ***
+d3   8.712e-01  1.543e-01   5.646 3.36e-08 ***
+d4   9.527e-02  1.540e-01   0.619 0.536598    
+d5   1.438e-01  5.331e-02   2.697 0.007324 ** 
+d6   8.713e-02  2.299e+00   0.038 0.969795    
+d7  -1.475e+00  3.011e+00  -0.490 0.624490    
+d8   1.564e+00  8.814e-01   1.775 0.076812 .  
+e2   6.017e-01  5.035e-02  11.951  &lt; 2e-16 ***
+e3  -2.292e+00  7.305e-01  -3.138 0.001844 ** 
+e4  -1.671e+01  1.301e+06   0.000 0.999990    
+e5  -1.534e+00  2.857e-01  -5.371 1.42e-07 ***
+e6  -1.676e+00  3.323e-01  -5.043 7.30e-07 ***
+e7  -2.786e-01  5.847e-02  -4.765 2.76e-06 ***
+e8  -1.922e+01  1.849e+07   0.000 0.999999    
+e9  -1.872e+01  1.117e+07   0.000 0.999999    
+e10  3.423e-02  1.998e-01   0.171 0.864101    
+e11 -1.734e+00  6.989e-01  -2.482 0.013532 *  
+e12 -1.259e+01  4.935e+04   0.000 0.999797    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1665 on 356 degrees of freedom
+
+Number of iterations to convergence: 135 
+Achieved convergence tolerance: 1.49e-08</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>fit4 <span class="ot">&lt;-</span> <span class="fu">nlsLM</span>(</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  nprice <span class="sc">~</span> winv <span class="sc">*</span> (a3 <span class="sc">*</span> cyd3 <span class="sc">+</span> a4 <span class="sc">*</span> cyd4 <span class="sc">+</span> a5 <span class="sc">*</span> cyd5 <span class="sc">+</span> a6 <span class="sc">*</span> cyd6 <span class="sc">+</span> a7 <span class="sc">*</span> cyd7 <span class="sc">+</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>    a8 <span class="sc">*</span> cyd8 <span class="sc">+</span> a9 <span class="sc">*</span> cyd9 <span class="sc">+</span> a10 <span class="sc">*</span> cyd10 <span class="sc">+</span> a11 <span class="sc">*</span> cyd11 <span class="sc">+</span> a12 <span class="sc">*</span> cyd12) <span class="sc">+</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>    winv <span class="sc">*</span> <span class="fu">exp</span>(b2 <span class="sc">*</span> cyd2 <span class="sc">+</span> b3 <span class="sc">*</span> cyd3 <span class="sc">+</span> b4 <span class="sc">*</span> cyd4 <span class="sc">+</span> b5 <span class="sc">*</span> cyd5 <span class="sc">+</span> b6 <span class="sc">*</span> cyd6 <span class="sc">+</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>      b7 <span class="sc">*</span> cyd7 <span class="sc">+</span> b8 <span class="sc">*</span> cyd8 <span class="sc">+</span> b9 <span class="sc">*</span> cyd9 <span class="sc">+</span> b10 <span class="sc">*</span> cyd10 <span class="sc">+</span> b11 <span class="sc">*</span> cyd11 <span class="sc">+</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>      b12 <span class="sc">*</span> cyd12 <span class="sc">+</span> c1 <span class="sc">*</span> wght_c <span class="sc">+</span> c2 <span class="sc">*</span> wdth_c <span class="sc">+</span> c3 <span class="sc">*</span> hght_c <span class="sc">+</span> c4 <span class="sc">*</span> hp_c <span class="sc">+</span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>      c5 <span class="sc">*</span> tran_c <span class="sc">+</span> c6 <span class="sc">*</span> ps_c <span class="sc">+</span> c7 <span class="sc">*</span> ac_c <span class="sc">+</span> c8) <span class="sc">+</span></span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>    winv <span class="sc">*</span> <span class="fu">exp</span>(e2 <span class="sc">*</span> tyd2 <span class="sc">+</span> e3 <span class="sc">*</span> tyd3 <span class="sc">+</span> e4 <span class="sc">*</span> tyd4 <span class="sc">+</span> e5 <span class="sc">*</span> tyd5 <span class="sc">+</span> e6 <span class="sc">*</span> tyd6 <span class="sc">+</span></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>      e7 <span class="sc">*</span> tyd7 <span class="sc">+</span> e8 <span class="sc">*</span> tyd8 <span class="sc">+</span> e9 <span class="sc">*</span> tyd9 <span class="sc">+</span> e10 <span class="sc">*</span> tyd10 <span class="sc">+</span> e11 <span class="sc">*</span> tyd11 <span class="sc">+</span></span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>      e12 <span class="sc">*</span> tyd12 <span class="sc">+</span> d1 <span class="sc">*</span> wght_t <span class="sc">+</span> d2 <span class="sc">*</span> wdth_t <span class="sc">+</span> d3 <span class="sc">*</span> hght_t <span class="sc">+</span> d4 <span class="sc">*</span> hp_t <span class="sc">+</span></span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>      d5 <span class="sc">*</span> tran_t <span class="sc">+</span> d6 <span class="sc">*</span> ps_t <span class="sc">+</span> d7 <span class="sc">*</span> four_t <span class="sc">+</span> d8),</span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> truck_7990,</span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> initial_values,</span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">nls.lm.control</span>(<span class="at">maxiter =</span> <span class="dv">1000</span>, <span class="at">maxfev =</span> <span class="dv">10000</span>)</span>
+<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb63-16"><a href="#cb63-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-17"><a href="#cb63-17" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Formula: nprice ~ winv * (a3 * cyd3 + a4 * cyd4 + a5 * cyd5 + a6 * cyd6 + 
+    a7 * cyd7 + a8 * cyd8 + a9 * cyd9 + a10 * cyd10 + a11 * cyd11 + 
+    a12 * cyd12) + winv * exp(b2 * cyd2 + b3 * cyd3 + b4 * cyd4 + 
+    b5 * cyd5 + b6 * cyd6 + b7 * cyd7 + b8 * cyd8 + b9 * cyd9 + 
+    b10 * cyd10 + b11 * cyd11 + b12 * cyd12 + c1 * wght_c + c2 * 
+    wdth_c + c3 * hght_c + c4 * hp_c + c5 * tran_c + c6 * ps_c + 
+    c7 * ac_c + c8) + winv * exp(e2 * tyd2 + e3 * tyd3 + e4 * 
+    tyd4 + e5 * tyd5 + e6 * tyd6 + e7 * tyd7 + e8 * tyd8 + e9 * 
+    tyd9 + e10 * tyd10 + e11 * tyd11 + e12 * tyd12 + d1 * wght_t + 
+    d2 * wdth_t + d3 * hght_t + d4 * hp_t + d5 * tran_t + d6 * 
+    ps_t + d7 * four_t + d8)
+
+Parameters:
+      Estimate Std. Error t value Pr(&gt;|t|)    
+a3   2.558e+02  4.717e+02   0.542 0.587994    
+a4   3.602e+02  5.124e+02   0.703 0.482532    
+a5   5.100e+02  4.823e+02   1.057 0.291011    
+a6   6.946e+02  4.770e+02   1.456 0.146214    
+a7   6.024e+01  9.338e+01   0.645 0.519292    
+a8   6.719e+02  6.023e+02   1.116 0.265324    
+a9   1.317e+03  5.831e+02   2.259 0.024505 *  
+a10  8.590e+02  1.067e+03   0.805 0.421102    
+a11  8.514e+02  1.135e+03   0.750 0.453477    
+a12  8.496e+02  1.123e+03   0.756 0.449875    
+b2  -4.359e-02  6.986e-02  -0.624 0.533015    
+b3   6.083e-02  1.322e-01   0.460 0.645668    
+b4   9.350e-02  1.340e-01   0.698 0.485782    
+b5   5.018e-02  1.275e-01   0.393 0.694188    
+b6   9.386e-02  1.238e-01   0.758 0.448940    
+b7   2.288e-01  7.452e-02   3.071 0.002300 ** 
+b8   2.835e-01  1.330e-01   2.131 0.033774 *  
+b9   3.347e-01  1.255e-01   2.667 0.008003 ** 
+b10  4.105e-01  1.389e-01   2.956 0.003328 ** 
+b11  4.014e-01  1.454e-01   2.761 0.006058 ** 
+b12  3.202e-01  1.418e-01   2.258 0.024519 *  
+c1   4.797e-01  2.005e-01   2.392 0.017269 *  
+c2   8.180e-01  2.096e-01   3.903 0.000114 ***
+c3  -2.666e-01  9.648e-02  -2.763 0.006022 ** 
+c4   4.243e-01  9.175e-02   4.624 5.27e-06 ***
+c5   1.603e-01  5.221e-02   3.070 0.002302 ** 
+c6   1.633e-01  4.580e-02   3.567 0.000411 ***
+c7   1.522e-01  4.696e-02   3.241 0.001306 ** 
+c8   4.049e+00  1.249e+00   3.243 0.001296 ** 
+d1   4.943e-01  9.277e-02   5.328 1.77e-07 ***
+d2   7.392e-02  6.277e-02   1.178 0.239734    
+d3  -3.155e-02  5.003e-02  -0.631 0.528681    
+d4   3.573e-01  8.138e-02   4.390 1.49e-05 ***
+d5   9.111e-02  2.193e-02   4.154 4.10e-05 ***
+d6   8.898e-03  5.962e-02   0.149 0.881454    
+d7   8.680e-02  1.017e-01   0.853 0.394034    
+d8   6.958e+00  4.030e-01  17.264  &lt; 2e-16 ***
+e2  -6.496e-03  1.990e-02  -0.326 0.744316    
+e3   3.050e-01  5.749e-02   5.306 1.98e-07 ***
+e4   3.021e-01  5.829e-02   5.182 3.68e-07 ***
+e5   1.918e-01  4.357e-02   4.402 1.42e-05 ***
+e6   2.001e-01  4.508e-02   4.439 1.21e-05 ***
+e7   5.227e-02  1.667e-02   3.135 0.001862 ** 
+e8   2.051e-01  5.229e-02   3.923 0.000105 ***
+e9   1.869e-01  5.223e-02   3.578 0.000395 ***
+e10  5.322e-02  1.533e-01   0.347 0.728665    
+e11  1.145e-01  1.635e-01   0.700 0.484378    
+e12  2.044e-01  1.760e-01   1.161 0.246236    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1606 on 356 degrees of freedom
+
+Number of iterations to convergence: 40 
+Achieved convergence tolerance: 1.49e-08</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="extra-step-formatting-the-tables-1" class="level3">
+<h3 class="anchored" data-anchor-id="extra-step-formatting-the-tables-1">Extra step: formatting the tables</h3>
+<p>I need to replace variables such as “c1” with “Weight (tons)” to replicate Table 3.5. I can do this by looking at the coefficients of the variables in the non-linear regression function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to avoid repeating the same code four times</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>reshape_estimates <span class="ot">&lt;-</span> <span class="cf">function</span>(fit, vehicle, term_prefix, term_mappings) {</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(fit) <span class="sc">%&gt;%</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(term <span class="sc">%in%</span> <span class="fu">paste0</span>(term_prefix, <span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">term =</span> <span class="fu">case_when</span>(</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>        term <span class="sc">==</span> <span class="fu">paste0</span>(term_prefix, <span class="st">"1"</span>) <span class="sc">~</span> term_mappings[<span class="dv">1</span>],</span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>        term <span class="sc">==</span> <span class="fu">paste0</span>(term_prefix, <span class="st">"2"</span>) <span class="sc">~</span> term_mappings[<span class="dv">2</span>],</span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>        term <span class="sc">==</span> <span class="fu">paste0</span>(term_prefix, <span class="st">"3"</span>) <span class="sc">~</span> term_mappings[<span class="dv">3</span>],</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a>        term <span class="sc">==</span> <span class="fu">paste0</span>(term_prefix, <span class="st">"4"</span>) <span class="sc">~</span> term_mappings[<span class="dv">4</span>],</span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>        term <span class="sc">==</span> <span class="fu">paste0</span>(term_prefix, <span class="st">"5"</span>) <span class="sc">~</span> term_mappings[<span class="dv">5</span>],</span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a>        term <span class="sc">==</span> <span class="fu">paste0</span>(term_prefix, <span class="st">"6"</span>) <span class="sc">~</span> term_mappings[<span class="dv">6</span>],</span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a>        term <span class="sc">==</span> <span class="fu">paste0</span>(term_prefix, <span class="st">"7"</span>) <span class="sc">~</span> term_mappings[<span class="dv">7</span>],</span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a>        term <span class="sc">==</span> <span class="fu">paste0</span>(term_prefix, <span class="st">"8"</span>) <span class="sc">~</span> term_mappings[<span class="dv">8</span>]</span>
+<span id="cb65-15"><a href="#cb65-15" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb65-16"><a href="#cb65-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb65-17"><a href="#cb65-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(term, estimate, std.error) <span class="sc">%&gt;%</span></span>
+<span id="cb65-18"><a href="#cb65-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(</span>
+<span id="cb65-19"><a href="#cb65-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">cols =</span> <span class="fu">c</span>(estimate, std.error), <span class="at">names_to =</span> <span class="st">"stat"</span>,</span>
+<span id="cb65-20"><a href="#cb65-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">values_to =</span> <span class="st">"value"</span></span>
+<span id="cb65-21"><a href="#cb65-21" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb65-22"><a href="#cb65-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb65-23"><a href="#cb65-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">stat =</span> <span class="fu">if_else</span>(stat <span class="sc">==</span> <span class="st">"estimate"</span>, <span class="st">"Estimate"</span>, <span class="st">"Std. Error"</span>),</span>
+<span id="cb65-24"><a href="#cb65-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">value =</span> <span class="fu">round</span>(value, <span class="dv">3</span>)</span>
+<span id="cb65-25"><a href="#cb65-25" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb65-26"><a href="#cb65-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="sc">!!</span><span class="fu">sym</span>(vehicle) <span class="sc">:</span><span class="er">=</span> value)</span>
+<span id="cb65-27"><a href="#cb65-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb65-28"><a href="#cb65-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-29"><a href="#cb65-29" aria-hidden="true" tabindex="-1"></a>car_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb65-30"><a href="#cb65-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Weight (tons)"</span>, <span class="st">"Width (feet)"</span>, <span class="st">"Height (feet)"</span>, <span class="st">"Horsepower (100)"</span>,</span>
+<span id="cb65-31"><a href="#cb65-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Transmission (5-speed or auto)"</span>, <span class="st">"Power steering"</span>, <span class="st">"Air conditioning"</span>, <span class="st">"Constant"</span></span>
+<span id="cb65-32"><a href="#cb65-32" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb65-33"><a href="#cb65-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-34"><a href="#cb65-34" aria-hidden="true" tabindex="-1"></a>truck_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb65-35"><a href="#cb65-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Weight (tons)"</span>, <span class="st">"Width (feet)"</span>, <span class="st">"Height (feet)"</span>, <span class="st">"Horsepower (100)"</span>,</span>
+<span id="cb65-36"><a href="#cb65-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Transmission (5-speed or auto)"</span>, <span class="st">"Power steering"</span>, <span class="st">"Four-wheel drive"</span>, <span class="st">"Constant"</span></span>
+<span id="cb65-37"><a href="#cb65-37" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb65-38"><a href="#cb65-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-39"><a href="#cb65-39" aria-hidden="true" tabindex="-1"></a>table_85 <span class="ot">&lt;-</span> <span class="fu">reshape_estimates</span>(fit2, <span class="st">"cars"</span>, <span class="st">"c"</span>, car_vars) <span class="sc">%&gt;%</span></span>
+<span id="cb65-40"><a href="#cb65-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">reshape_estimates</span>(fit2, <span class="st">"trucks"</span>, <span class="st">"d"</span>, truck_vars)) <span class="sc">%&gt;%</span></span>
+<span id="cb65-41"><a href="#cb65-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">reshape_estimates</span>(fit4, <span class="st">"cars"</span>, <span class="st">"c"</span>, car_vars),</span>
+<span id="cb65-42"><a href="#cb65-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"term"</span>, <span class="st">"stat"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb65-43"><a href="#cb65-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">reshape_estimates</span>(fit4, <span class="st">"trucks"</span>, <span class="st">"d"</span>, truck_vars),</span>
+<span id="cb65-44"><a href="#cb65-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"term"</span>, <span class="st">"stat"</span>))</span>
+<span id="cb65-45"><a href="#cb65-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-46"><a href="#cb65-46" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(table_85) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Variable"</span>, <span class="st">"Statistic"</span>, <span class="st">"Cars (No Con)"</span>, <span class="st">"Trucks (No Con)"</span>,</span>
+<span id="cb65-47"><a href="#cb65-47" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Cars (W Con)"</span>, <span class="st">"Trucks (W Con)"</span>)</span>
+<span id="cb65-48"><a href="#cb65-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-49"><a href="#cb65-49" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(table_85)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 11%">
+<col style="width: 14%">
+<col style="width: 16%">
+<col style="width: 13%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Statistic</th>
+<th style="text-align: right;">Cars (No Con)</th>
+<th style="text-align: right;">Trucks (No Con)</th>
+<th style="text-align: right;">Cars (W Con)</th>
+<th style="text-align: right;">Trucks (W Con)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Weight (tons)</td>
+<td style="text-align: left;">Estimate</td>
+<td style="text-align: right;">0.480</td>
+<td style="text-align: right;">0.494</td>
+<td style="text-align: right;">0.480</td>
+<td style="text-align: right;">0.494</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Weight (tons)</td>
+<td style="text-align: left;">Std. Error</td>
+<td style="text-align: right;">0.201</td>
+<td style="text-align: right;">0.093</td>
+<td style="text-align: right;">0.201</td>
+<td style="text-align: right;">0.093</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Width (feet)</td>
+<td style="text-align: left;">Estimate</td>
+<td style="text-align: right;">0.818</td>
+<td style="text-align: right;">0.074</td>
+<td style="text-align: right;">0.818</td>
+<td style="text-align: right;">0.074</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Width (feet)</td>
+<td style="text-align: left;">Std. Error</td>
+<td style="text-align: right;">0.210</td>
+<td style="text-align: right;">0.063</td>
+<td style="text-align: right;">0.210</td>
+<td style="text-align: right;">0.063</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Height (feet)</td>
+<td style="text-align: left;">Estimate</td>
+<td style="text-align: right;">-0.267</td>
+<td style="text-align: right;">-0.032</td>
+<td style="text-align: right;">-0.267</td>
+<td style="text-align: right;">-0.032</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Height (feet)</td>
+<td style="text-align: left;">Std. Error</td>
+<td style="text-align: right;">0.096</td>
+<td style="text-align: right;">0.050</td>
+<td style="text-align: right;">0.096</td>
+<td style="text-align: right;">0.050</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Horsepower (100)</td>
+<td style="text-align: left;">Estimate</td>
+<td style="text-align: right;">0.424</td>
+<td style="text-align: right;">0.357</td>
+<td style="text-align: right;">0.424</td>
+<td style="text-align: right;">0.357</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Horsepower (100)</td>
+<td style="text-align: left;">Std. Error</td>
+<td style="text-align: right;">0.092</td>
+<td style="text-align: right;">0.081</td>
+<td style="text-align: right;">0.092</td>
+<td style="text-align: right;">0.081</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Transmission (5-speed or auto)</td>
+<td style="text-align: left;">Estimate</td>
+<td style="text-align: right;">0.160</td>
+<td style="text-align: right;">0.091</td>
+<td style="text-align: right;">0.160</td>
+<td style="text-align: right;">0.091</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Transmission (5-speed or auto)</td>
+<td style="text-align: left;">Std. Error</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.022</td>
+<td style="text-align: right;">0.052</td>
+<td style="text-align: right;">0.022</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Power steering</td>
+<td style="text-align: left;">Estimate</td>
+<td style="text-align: right;">0.163</td>
+<td style="text-align: right;">0.009</td>
+<td style="text-align: right;">0.163</td>
+<td style="text-align: right;">0.009</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Power steering</td>
+<td style="text-align: left;">Std. Error</td>
+<td style="text-align: right;">0.046</td>
+<td style="text-align: right;">0.060</td>
+<td style="text-align: right;">0.046</td>
+<td style="text-align: right;">0.060</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Air conditioning</td>
+<td style="text-align: left;">Estimate</td>
+<td style="text-align: right;">0.152</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.152</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Air conditioning</td>
+<td style="text-align: left;">Std. Error</td>
+<td style="text-align: right;">0.047</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">0.047</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Constant</td>
+<td style="text-align: left;">Estimate</td>
+<td style="text-align: right;">4.049</td>
+<td style="text-align: right;">6.958</td>
+<td style="text-align: right;">4.049</td>
+<td style="text-align: right;">6.958</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Constant</td>
+<td style="text-align: left;">Std. Error</td>
+<td style="text-align: right;">1.249</td>
+<td style="text-align: right;">0.403</td>
+<td style="text-align: right;">1.249</td>
+<td style="text-align: right;">0.403</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
 </section>
 </section>
 
