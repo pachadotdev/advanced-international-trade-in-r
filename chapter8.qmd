@@ -932,9 +932,223 @@ Iteration 14:  residual SS =  1.672068
 end of do-file
 ```
 
+#### truck_reg.do
+
+```stata
+. clear
+
+. capture log close
+
+. log using Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\truck_reg.log,replace
+(note: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\truck_reg.log not found)
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\truck_reg.log
+  log type:  text
+ opened on:  18 Oct 2024, 17:38:02
+
+. 
+. use Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\truck_7990,clear
+
+. 
+. drop if year>=86
+(45 observations deleted)
+
+. gen lnprice=log(price)
+
+. 
+. tab year, gen(yd)
+
+       year |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         79 |         10       13.33       13.33
+         80 |         10       13.33       26.67
+         81 |         11       14.67       41.33
+         82 |         11       14.67       56.00
+         83 |         10       13.33       69.33
+         84 |         11       14.67       84.00
+         85 |         12       16.00      100.00
+------------+-----------------------------------
+      Total |         75      100.00
+
+. 
+. program define nltruck_1
+  1. version 7.0
+  2.         if "`1'"=="?"{
+  3.                 global S_1"a2 a3 a4 a5 a6 a7 b1 b2 b3 b4 b5 b6 b7 c1"
+  4.                 global a2=1
+  5.                 global a3=1
+  6.                 global a4=1
+  7.                 global a5=1
+  8.                 global a6=1
+  9.                 global a7=1
+ 10.                 global b1=1
+ 11.                 global b2=1
+ 12.                 global b3=1
+ 13.                 global b4=1
+ 14.                 global b5=1
+ 15.                 global b6=1
+ 16.                 global b7=1
+ 17.                 global c1=1
+ 18.                 exit
+ 19.         }
+ 20.         replace `1'=exp($a2*yd2+$a3*yd3+$a4*yd4+$a5*yd5+$a6*yd6+$a7*yd7/*
+> */+$b1*weight+$b2*wdth+$b3*hght+$b4*hp+$b5*tran+$b6*ps+$b7*four+$c1*1)
+ 21. end
+
+. 
+. nl truck_1 price
+(obs = 75)
+
+Iteration 0:   residual SS =  2.50e+17
+Iteration 1:   residual SS =  3.38e+16
+Iteration 2:   residual SS =  4.57e+15
+Iteration 3:   residual SS =  6.18e+14
+Iteration 4:   residual SS =  8.35e+13
+Iteration 5:   residual SS =  1.12e+13
+Iteration 6:   residual SS =  1.50e+12
+Iteration 7:   residual SS =  1.96e+11
+Iteration 8:   residual SS =  2.44e+10
+Iteration 9:   residual SS =  2.65e+09
+Iteration 10:  residual SS =  2.09e+08
+Iteration 11:  residual SS =  2.03e+07
+Iteration 12:  residual SS =  1.53e+07
+Iteration 13:  residual SS =  1.53e+07
+Iteration 14:  residual SS =  1.53e+07
+Iteration 15:  residual SS =  1.53e+07
+Iteration 16:  residual SS =  1.53e+07
+
+      Source |       SS       df       MS            Number of obs =        75
+-------------+------------------------------         F( 14,    61) =   1004.27
+       Model |  3.5299e+09    14   252133551         Prob > F      =    0.0000
+    Residual |  15314779.4    61  251061.957         R-squared     =    0.9957
+-------------+------------------------------         Adj R-squared =    0.9947
+       Total |  3.5452e+09    75  47269126.6         Root MSE      =  501.0608
+                                                     Res. dev.     =  1129.854
+(truck_1)
+------------------------------------------------------------------------------
+       price |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+          a2 |  -.0210733   .0423824    -0.50   0.621    -.1058222    .0636756
+          a3 |   .1734177   .0382242     4.54   0.000     .0969837    .2498518
+          a4 |   .2001205   .0385602     5.19   0.000     .1230145    .2772264
+          a5 |   .1454809   .0400948     3.63   0.001     .0653064    .2256555
+          a6 |   .1825347   .0394306     4.63   0.000     .1036883    .2613811
+          a7 |   .1592055    .042285     3.77   0.000     .0746514    .2437595
+          b1 |   .4398295   .0564709     7.79   0.000     .3269091      .55275
+          b2 |     .08571   .1119267     0.77   0.447    -.1381014    .3095213
+          b3 |  -.0487976   .0470736    -1.04   0.304     -.142927    .0453318
+          b4 |   .2482011   .1089575     2.28   0.026     .0303272     .466075
+          b5 |   .0341161   .0249591     1.37   0.177    -.0157928    .0840249
+          b6 |   .0942558   .0337561     2.79   0.007     .0267564    .1617552
+          b7 |   .2292275   .0271818     8.43   0.000     .1748741    .2835808
+          c1 |   7.536871   .5461675    13.80   0.000     6.444741       8.629
+------------------------------------------------------------------------------
+ (SEs, P values, CIs, and correlations are asymptotic approximations)
+
+. 
+. gen winv=1/exp(_b[a2]*yd2+_b[a3]*yd3+_b[a4]*yd4+_b[a5]*yd5+_b[a6]*yd6+_b[a7]*yd7/*
+> */+_b[b1]*weight+_b[b2]*wdth+_b[b3]*hght+_b[b4]*hp+_b[b5]*tran+_b[b6]*ps+_b[b7]*four+_b[c1]*1)
+
+. 
+. gen nprice=price*winv
+
+. 
+. program define nltruck_2
+  1.         version 7.0
+  2.         if "`1'"=="?"{
+  3.                 global S_1"a2 a3 a4 a5 a6 a7 b1 b2 b3 b4 b5 b6 b7 c1"
+  4.                 global a2=1
+  5.                 global a3=1
+  6.                 global a4=1
+  7.                 global a5=1
+  8.                 global a6=1
+  9.                 global a7=1
+ 10.                 global b1=1
+ 11.                 global b2=1
+ 12.                 global b3=1
+ 13.                 global b4=1
+ 14.                 global b5=1
+ 15.                 global b6=1
+ 16.                 global b7=1
+ 17.                 global c1=1
+ 18.                 exit
+ 19.         }
+ 20.         replace `1'=winv*exp($a2*yd2+$a3*yd3+$a4*yd4+$a5*yd5+$a6*yd6+$a7*yd7/*
+> */+$b1*weight+$b2*wdth+$b3*hght+$b4*hp+$b5*tran+$b6*ps+$b7*four+$c1*1)
+ 21. end
+
+. 
+. nl truck_2 nprice
+(obs = 75)
+
+Iteration 0:   residual SS =  2.27e+09
+Iteration 1:   residual SS =  3.07e+08
+Iteration 2:   residual SS =  4.15e+07
+Iteration 3:   residual SS =   5608900
+Iteration 4:   residual SS =  757532.6
+Iteration 5:   residual SS =  101968.1
+Iteration 6:   residual SS =  13611.98
+Iteration 7:   residual SS =   1784.24
+Iteration 8:   residual SS =  224.5781
+Iteration 9:   residual SS =  24.89367
+Iteration 10:  residual SS =  2.123931
+Iteration 11:  residual SS =  .3646277
+Iteration 12:  residual SS =  .3191061
+Iteration 13:  residual SS =  .3190177
+Iteration 14:  residual SS =  .3190176
+Iteration 15:  residual SS =  .3190176
+Iteration 16:  residual SS =  .3190176
+
+      Source |       SS       df       MS            Number of obs =        75
+-------------+------------------------------         F( 14,    61) =   1023.93
+       Model |  74.9691322    14  5.35493802         Prob > F      =    0.0000
+    Residual |  .319017551    61  .005229796         R-squared     =    0.9958
+-------------+------------------------------         Adj R-squared =    0.9948
+       Total |  75.2881498    75    1.003842         Root MSE      =  .0723173
+                                                     Res. dev.     =  -196.659
+(truck_2)
+------------------------------------------------------------------------------
+      nprice |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+          a2 |   .0041382   .0326606     0.13   0.900    -.0611707    .0694472
+          a3 |   .2093262   .0318227     6.58   0.000     .1456929    .2729596
+          a4 |   .2295212   .0329551     6.96   0.000     .1636235     .295419
+          a5 |   .1715058   .0348772     4.92   0.000     .1017645    .2412471
+          a6 |   .1898806   .0347216     5.47   0.000     .1204505    .2593108
+          a7 |   .1803588   .0370176     4.87   0.000     .1063376      .25438
+          b1 |   .4115021   .0823391     5.00   0.000      .246855    .5761493
+          b2 |   .0141524   .1005163     0.14   0.888    -.1868423    .2151472
+          b3 |   .0054683   .0515606     0.11   0.916    -.0976334      .10857
+          b4 |   .1979945   .1020843     1.94   0.057    -.0061357    .4021247
+          b5 |   .0294082     .02481     1.19   0.240    -.0202025    .0790188
+          b6 |   .0901756   .0435822     2.07   0.043     .0030275    .1773236
+          b7 |   .2159646   .0267321     8.08   0.000     .1625105    .2694187
+          c1 |   7.705805   .4974887    15.49   0.000     6.711015    8.700595
+------------------------------------------------------------------------------
+ (SEs, P values, CIs, and correlations are asymptotic approximations)
+
+. 
+. clear
+
+. 
+. program drop _all
+
+. log close
+      name:  <unnamed>
+       log:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-8\truck_reg.log
+  log type:  text
+ closed on:  18 Oct 2024, 17:38:02
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+. exit
+
+end of do-file
+```
+
 ### My code
 
-#### truck_reg.do
+#### car_reg.do
 
 ```{r ch8_ex2a}
 library(minpack.lm) # for nlsLM()
@@ -1019,11 +1233,143 @@ fit2 <- nlsLM(
   data = car_7990,
   start = initial_values,
   # increase the number of iterations to avoid convergence issues
-  control = nls.lm.control(maxiter = 100)
+  control = nls.lm.control(maxiter = 1000, maxfev = 10000)
 )
 
 summary(fit2)
 ```
+
+#### truck_reg.do
+
+```{r ch8_ex2b}
+truck_7990 <- feenstra_88$truck_7990 %>%
+  filter(year < 86) %>%
+  mutate(
+    lnprice = log(price),
+    yd = factor(year)
+  ) %>%
+  group_by(yd) %>%
+  mutate(id = row_number()) %>%
+  ungroup() %>%
+  rename(wght = weight)
+
+truck_7990 %>%
+  group_by(yd) %>%
+  summarise(freq = n()) %>%
+  ungroup() %>%
+  mutate(
+    percent = freq / sum(freq) * 100,
+    cum = cumsum(percent)
+  )
+
+# I will use b8 instead of c1 to avoid extra tidying later
+initial_values <- list(
+  a2 = 1, a3 = 1, a4 = 1, a5 = 1, a6 = 1, a7 = 1,
+  b1 = 1, b2 = 1, b3 = 1, b4 = 1, b5 = 1, b6 = 1, b7 = 1, b8 = 1
+)
+
+truck_7990 <- truck_7990 %>%
+  mutate(yd_ind = as.integer(yd)) %>%
+  mutate(yd_ind = as.factor(yd_ind - min(yd_ind) + 1))
+
+truck_7990_dummy <- model.matrix(~ yd_ind - 1, data = truck_7990)
+
+colnames(truck_7990_dummy) <- gsub("_ind", "", colnames(truck_7990_dummy))
+
+truck_7990 <- truck_7990 %>%
+  bind_cols(as.data.frame(truck_7990_dummy))
+
+fit3 <- nlsLM(
+  lnprice ~ exp(a2 * yd2 + a3 * yd3 + a4 * yd4 + a5 * yd5 + a6 * yd6 +
+    a7 * yd7 + b1 * wght + b2 * wdth + b3 * hght + b4 * hp + b5 * tran +
+    b6 * ps + b7 * four + b8),
+  data = truck_7990,
+  start = initial_values
+)
+
+summary(fit3)
+
+fit_coef <- coef(fit3)
+
+truck_7990 <- truck_7990 %>%
+  mutate(
+    winv = 1 / exp(fit_coef["a2"] * yd2 + fit_coef["a3"] * yd3 +
+      fit_coef["a4"] * yd4 + fit_coef["a5"] * yd5 + fit_coef["a6"] * yd6 +
+      fit_coef["a7"] * yd7 + fit_coef["b1"] * wght + fit_coef["b2"] * wdth +
+      fit_coef["b3"] * hght + fit_coef["b4"] * hp + fit_coef["b5"] * tran +
+      fit_coef["b6"] * ps + fit_coef["b7"] * four + fit_coef["b8"]),
+    nprice = price * winv
+  )
+
+fit4 <- nlsLM(
+  nprice ~ winv * exp(a2 * yd2 + a3 * yd3 + a4 * yd4 + a5 * yd5 + a6 * yd6 +
+    a7 * yd7 + b1 * wght + b2 * wdth + b3 * hght + b4 * hp + b5 * tran +
+    b6 * ps + b7 * four + b8),
+  data = truck_7990,
+  start = initial_values,
+  control = nls.lm.control(maxiter = 1000, maxfev = 10000)
+)
+
+summary(fit4)
+```
+
+### Extra step: formatting the tables
+
+```{r ch8_ex2c}
+# function to avoid repeating the same code four times
+reshape_estimates <- function(fit, vehicle, term_prefix, term_mappings) {
+  tidy(fit) %>%
+    filter(term %in% paste0(term_prefix, 1:8)) %>%
+    mutate(
+      term = case_when(
+        term == paste0(term_prefix, "1") ~ term_mappings[1],
+        term == paste0(term_prefix, "2") ~ term_mappings[2],
+        term == paste0(term_prefix, "3") ~ term_mappings[3],
+        term == paste0(term_prefix, "4") ~ term_mappings[4],
+        term == paste0(term_prefix, "5") ~ term_mappings[5],
+        term == paste0(term_prefix, "6") ~ term_mappings[6],
+        term == paste0(term_prefix, "7") ~ term_mappings[7],
+        term == paste0(term_prefix, "8") ~ term_mappings[8]
+      )
+    ) %>%
+    select(term, estimate, std.error) %>%
+    pivot_longer(
+      cols = c(estimate, std.error), names_to = "stat",
+      values_to = "value"
+    ) %>%
+    mutate(
+      stat = if_else(stat == "estimate", "Estimate", "Std. Error"),
+      value = round(value, 3)
+    ) %>%
+    rename(!!sym(vehicle) := value)
+}
+
+car_vars <- c(
+  "Weight (tons)", "Width (feet)", "Height (feet)", "Horsepower (100)",
+  "Transmission (5-speed or auto)", "Power steering", "Air conditioning", "Constant"
+)
+
+truck_vars <- c(
+  "Weight (tons)", "Width (feet)", "Height (feet)", "Horsepower (100)",
+  "Transmission (5-speed or auto)", "Power steering", "Four-wheel drive", "Constant"
+)
+
+ordered_vars <- unique(c(car_vars, truck_vars))
+ordered_vars <- c("Constant", ordered_vars[ordered_vars != "Constant"])
+
+table_84_1 <- reshape_estimates(fit2, "Car", "c", car_vars) %>%
+  full_join(reshape_estimates(fit4, "Truck", "b", truck_vars)) %>%
+  # mutate term to factor + keep Constant at the beginning
+  mutate(
+    term = factor(term, levels = ordered_vars)
+  ) %>%
+  arrange(term)
+
+colnames(table_84_1) <- c("Variable", "Statistic", "Car", "Truck")
+
+kable(table_84_1)
+```
+
 
 ## Exercise 3
 
@@ -1652,20 +1998,20 @@ end of do-file
 ### My code
 
 ```{r ch8_ex3}
-truck_7990 <- feenstra_88$truck_7990 %>%
-  filter(year < 86) %>%
-  mutate(ve = 2) %>%
-  rename(
-    wdth_t = wdth, hght_t = hght, wght_t = weight, hp_t = hp, four_t = four,
-    tran_t = tran, ps_t = ps, ac_t = ac
-  )
-
 car_7990 <- feenstra_88$car_7990 %>%
   filter(year < 86) %>%
   mutate(ve = 1) %>%
   rename(
     wdth_c = wdth, hght_c = hght, wght_c = wght, hp_c = hp, four_c = four,
     tran_c = tran, ps_c = ps, ac_c = ac
+  )
+
+truck_7990 <- feenstra_88$truck_7990 %>%
+  filter(year < 86) %>%
+  mutate(ve = 2) %>%
+  rename(
+    wdth_t = wdth, hght_t = hght, wght_t = weight, hp_t = hp, four_t = four,
+    tran_t = tran, ps_t = ps, ac_t = ac
   )
 
 truck_7990 <- truck_7990 %>%
@@ -1788,6 +2134,53 @@ fit2 <- nlsLM(
 )
 
 summary(fit2)
+```
+
+### Extra step: formatting the tables
+
+```{r ch8_ex3_table}
+table_84_2 <- tidy(fit2) %>%
+  select(term, estimate, std.error) %>%
+  mutate(
+    vehicle = substr(term, 1, 1),
+    vehicle = case_when(
+      vehicle == "c" ~ "car",
+      vehicle == "d" ~ "truck",
+      TRUE ~ "Exclude"
+    )
+  ) %>%
+  filter(vehicle != "Exclude") %>%
+  mutate(
+    term = case_when(
+      term == "c1" | term == "d1" ~ "Weight (tons)",
+      term == "c2" | term == "d2" ~ "Width (feet)",
+      term == "c3" | term == "d3" ~ "Height (feet)",
+      term == "c4" | term == "d4" ~ "Horsepower (100)",
+      term == "c5" | term == "d5" ~ "Transmission (5-speed or auto)",
+      term == "c6" | term == "d6" ~ "Power steering",
+      term == "c7"                ~ "Air conditioning",
+      term == "d7"                ~ "Four-wheel drive",
+      term == "c8" | term == "d8" ~ "Constant",
+      TRUE ~ "Exclude"
+    )
+  ) %>%
+  filter(term != "Exclude") %>%
+  pivot_longer(cols = c(estimate, std.error), names_to = "stat") %>%
+  pivot_wider(names_from = "vehicle", values_from = "value") %>%
+  mutate_if(is.numeric, ~ round(., 3)) %>%
+  mutate(
+    term = factor(term, levels = c(
+      "Constant", "Weight (tons)", "Width (feet)", "Height (feet)",
+      "Horsepower (100)", "Transmission (5-speed or auto)", "Power steering",
+      "Air conditioning", "Four-wheel drive"
+    )),
+    stat = if_else(stat == "estimate", "Estimate", "Std. Error")
+  ) %>%
+  arrange(term)
+
+colnames(table_84_2) <- c("Variable", "Statistic", "Car", "Truck")
+
+kable(table_84_2)
 ```
 
 ## Exercise 4
@@ -3119,7 +3512,42 @@ Pooling car and truck data, run `system_nocom.do` and `system_wcon.do` to reprod
 
 #### system_nocom.do
 
-I think there is a typo in the original code, in specific in the lines:
+In the original code:
+
+```stata
+gen cyd10=yd10
+gen tyd10=yd10
+replace cyd7=10 if type=="JT"
+replace tyd7=10 if type~="JT"
+
+gen cyd11=yd11
+gen tyd11=yd11
+replace cyd7=11 if type=="JT"
+replace tyd7=11 if type~="JT"
+
+gen cyd12=yd12
+gen tyd12=yd12
+replace cyd7=12 if type=="JT"
+replace tyd7=12 if type~="JT"
+```
+
+Can be simplified to:
+
+```stata
+gen cyd10=yd10
+gen tyd10=yd10
+
+gen cyd11=yd11
+gen tyd11=yd11
+
+gen cyd12=yd12
+gen tyd12=yd12
+
+replace cyd7=12 if type=="JT"
+replace tyd7=12 if type~="JT"
+```
+
+The original code is:
 
 ```stata
 capture log close
@@ -4217,15 +4645,26 @@ truck_vars <- c(
   "Transmission (5-speed or auto)", "Power steering", "Four-wheel drive", "Constant"
 )
 
-table_85 <- reshape_estimates(fit2, "cars", "c", car_vars) %>%
-  left_join(reshape_estimates(fit2, "trucks", "d", truck_vars)) %>%
-  left_join(reshape_estimates(fit4, "cars", "c", car_vars),
-    by = c("term", "stat")) %>%
-  left_join(reshape_estimates(fit4, "trucks", "d", truck_vars),
-    by = c("term", "stat"))
+ordered_vars <- unique(c(car_vars, truck_vars))
+ordered_vars <- c("Constant", ordered_vars[!ordered_vars %in% "Constant"])
 
-colnames(table_85) <- c("Variable", "Statistic", "Cars (No Con)", "Trucks (No Con)",
-  "Cars (W Con)", "Trucks (W Con)")
+table_85 <- reshape_estimates(fit2, "cars", "c", car_vars) %>%
+  full_join(reshape_estimates(fit2, "trucks", "d", truck_vars)) %>%
+  full_join(reshape_estimates(fit4, "cars", "c", car_vars),
+    by = c("term", "stat")
+  ) %>%
+  full_join(reshape_estimates(fit4, "trucks", "d", truck_vars),
+    by = c("term", "stat")
+  ) %>%
+  mutate(
+    term = factor(term, levels = ordered_vars)
+  ) %>%
+  arrange(term)
+
+colnames(table_85) <- c(
+  "Variable", "Statistic", "Cars (No Con)", "Trucks (No Con)",
+  "Cars (W Con)", "Trucks (W Con)"
+)
 
 kable(table_85)
 ```
