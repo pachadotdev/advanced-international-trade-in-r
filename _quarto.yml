@@ -16,6 +16,7 @@ book:
     - chapter5.qmd
     - chapter7.qmd
     - chapter8.qmd
+    - chapter9.qmd
     
 format:
   html:

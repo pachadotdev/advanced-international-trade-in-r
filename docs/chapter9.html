@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Chapter 9. Political Economy of Trade Policy – Advanced International Trade in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./chapter8.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./chapter9.html"><span class="chapter-title">Chapter 9. Political Economy of Trade Policy</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Advanced International Trade in R</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">About</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter2.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 2. The Heckscher-Ohlin Model</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter4.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 4. Trade in Intermediate Inputs and Wages</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter5.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 5. Increasing Returns and the Gravity Equation</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter7.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 7. Import Tariffs and Dumping</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter8.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Chapter 8. Import Quotas and Export Subsidies</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./chapter9.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Chapter 9. Political Economy of Trade Policy</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#empirical-exercise" id="toc-empirical-exercise" class="nav-link active" data-scroll-target="#empirical-exercise">Empirical exercise</a></li>
+  <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a>
+  <ul class="collapse">
+  <li><a href="#feenstras-code" id="toc-feenstras-code" class="nav-link" data-scroll-target="#feenstras-code">Feenstra’s code</a></li>
+  <li><a href="#my-code" id="toc-my-code" class="nav-link" data-scroll-target="#my-code">My code</a></li>
+  </ul></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">Chapter 9. Political Economy of Trade Policy</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="empirical-exercise" class="level2">
+<h2 class="anchored" data-anchor-id="empirical-exercise">Empirical exercise</h2>
+<p>This exercise is to reproduce regression results Branstetter and Feenstra (2002). To complete the exercise, the file “china_fdi.dta” should be stored in <code>Chapter-9</code>.</p>
+</section>
+<section id="documentation" class="level2">
+<h2 class="anchored" data-anchor-id="documentation">Documentation</h2>
+<p>The primary data set is a file, in STATA format, called china_fdi.dta. An extended list and description of the variables are given below.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 83%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Brief Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>pcode</td>
+<td>Province Code</td>
+</tr>
+<tr class="even">
+<td>pname</td>
+<td>Province Name</td>
+</tr>
+<tr class="odd">
+<td>year</td>
+<td>1978-1996</td>
+</tr>
+<tr class="even">
+<td>output</td>
+<td>Total output</td>
+</tr>
+<tr class="odd">
+<td>state</td>
+<td>State-owned firm output</td>
+</tr>
+<tr class="even">
+<td>coll</td>
+<td>Output of collectives</td>
+</tr>
+<tr class="odd">
+<td>indi</td>
+<td>Output of individual enterprises</td>
+</tr>
+<tr class="even">
+<td>others</td>
+<td>Output of other firms</td>
+</tr>
+<tr class="odd">
+<td>fiech</td>
+<td>fie2 + oversea2</td>
+</tr>
+<tr class="even">
+<td>other2</td>
+<td>Finer breakdown of other output</td>
+</tr>
+<tr class="odd">
+<td>stock2</td>
+<td>Output of stock companies</td>
+</tr>
+<tr class="even">
+<td>fie2</td>
+<td>Output of Foreign-Invested Enterprises (FIEs)</td>
+</tr>
+<tr class="odd">
+<td>oversea2</td>
+<td>Output of Overseas Chinese FIEs</td>
+</tr>
+<tr class="even">
+<td>fiexrat</td>
+<td>cx_fo / fiech</td>
+</tr>
+<tr class="odd">
+<td>cx_fo</td>
+<td>(cx_or_fo + cx_pr_fo + cx_ot_fo)</td>
+</tr>
+<tr class="even">
+<td>import</td>
+<td>Imports from provincial data</td>
+</tr>
+<tr class="odd">
+<td>export</td>
+<td>Exports from provincial data</td>
+</tr>
+<tr class="even">
+<td>loan</td>
+<td>Foreign loans</td>
+</tr>
+<tr class="odd">
+<td>fdi</td>
+<td>Foreign direct investments</td>
+</tr>
+<tr class="even">
+<td>ofdi</td>
+<td>Other Foreign Direct Investment (FDI)</td>
+</tr>
+<tr class="odd">
+<td>fdidum</td>
+<td>Dummy variable (1 if fdi &gt; 0 &amp; fdi != .)</td>
+</tr>
+<tr class="even">
+<td>cx_tot</td>
+<td>Total exports from customs data</td>
+</tr>
+<tr class="odd">
+<td>cm_tot</td>
+<td>Total imports from customs data</td>
+</tr>
+<tr class="even">
+<td>cx_or_st</td>
+<td>Ordinary trade exports, State-Owned Enterprises (SOEs)</td>
+</tr>
+<tr class="odd">
+<td>cm_or_st</td>
+<td>Ordinary trade imports, SOEs</td>
+</tr>
+<tr class="even">
+<td>cx_or_fo</td>
+<td>Ordinary trade exports, FIEs</td>
+</tr>
+<tr class="odd">
+<td>cm_or_fo</td>
+<td>Ordinary trade imports, FIEs</td>
+</tr>
+<tr class="even">
+<td>cx_or_ot</td>
+<td>Ordinary trade exports, others</td>
+</tr>
+<tr class="odd">
+<td>cm_or_ot</td>
+<td>Ordinary trade imports, others</td>
+</tr>
+<tr class="even">
+<td>cx_pr_st</td>
+<td>Processing trade exports, SOEs</td>
+</tr>
+<tr class="odd">
+<td>cm_pr_st</td>
+<td>Processing trade imports, SOEs</td>
+</tr>
+<tr class="even">
+<td>cx_pr_fo</td>
+<td>Processing trade exports, FIEs</td>
+</tr>
+<tr class="odd">
+<td>cm_pr_fo</td>
+<td>Processing trade imports, FIEs</td>
+</tr>
+<tr class="even">
+<td>cx_pr_ot</td>
+<td>Processing trade exports, others</td>
+</tr>
+<tr class="odd">
+<td>cm_pr_ot</td>
+<td>Processing trade imports, others</td>
+</tr>
+<tr class="even">
+<td>cx_ot_st</td>
+<td>Other trade exports, SOEs</td>
+</tr>
+<tr class="odd">
+<td>cm_ot_st</td>
+<td>Other trade imports, SOEs</td>
+</tr>
+<tr class="even">
+<td>cx_ot_fo</td>
+<td>Other trade exports, FIEs</td>
+</tr>
+<tr class="odd">
+<td>cm_ot_fo</td>
+<td>Other trade imports, FIEs</td>
+</tr>
+<tr class="even">
+<td>cx_ot_ot</td>
+<td>Other trade exports, others</td>
+</tr>
+<tr class="odd">
+<td>cm_ot_ot</td>
+<td>Other trade imports, others</td>
+</tr>
+<tr class="even">
+<td>totwage</td>
+<td>Total wages</td>
+</tr>
+<tr class="odd">
+<td>soewage</td>
+<td>SOE wages</td>
+</tr>
+<tr class="even">
+<td>collwage</td>
+<td>Urban collective wages</td>
+</tr>
+<tr class="odd">
+<td>othwage</td>
+<td>Other wages</td>
+</tr>
+<tr class="even">
+<td>premium</td>
+<td>othwage / ((soewage + collwage) / 2)</td>
+</tr>
+<tr class="odd">
+<td>totalemp</td>
+<td>Total provincial employment</td>
+</tr>
+<tr class="even">
+<td>urbanemp</td>
+<td>Total urban employment (in 10,000 people)</td>
+</tr>
+<tr class="odd">
+<td>soeemp</td>
+<td>SOE employment</td>
+</tr>
+<tr class="even">
+<td>collemp</td>
+<td>Total (urban) collective employment</td>
+</tr>
+<tr class="odd">
+<td>ruralemp</td>
+<td>Total rural employment</td>
+</tr>
+<tr class="even">
+<td>tveemp</td>
+<td>Total township and village enterprise employment</td>
+</tr>
+<tr class="odd">
+<td>jointemp</td>
+<td>Total joint-owned employment</td>
+</tr>
+<tr class="even">
+<td>fieemp</td>
+<td>FIE employment</td>
+</tr>
+<tr class="odd">
+<td>overemp</td>
+<td>Employment by overseas Chinese</td>
+</tr>
+<tr class="even">
+<td>indemp</td>
+<td>Employment by individual businesses</td>
+</tr>
+<tr class="odd">
+<td>fieshr</td>
+<td>fieemp / (jointemp + fieemp + overemp)</td>
+</tr>
+<tr class="even">
+<td>fiechshr</td>
+<td>(fieemp + overemp) / (jointemp + fieemp)</td>
+</tr>
+<tr class="odd">
+<td>statrat1</td>
+<td>state / appcons</td>
+</tr>
+<tr class="even">
+<td>impute</td>
+<td>=1 if output is imputed</td>
+</tr>
+<tr class="odd">
+<td>coastal</td>
+<td>=1 if coastal province</td>
+</tr>
+<tr class="even">
+<td>suprox</td>
+<td>=1 if Fujian or Guangdong</td>
+</tr>
+<tr class="odd">
+<td>tariff96</td>
+<td>1996 tariff estimates</td>
+</tr>
+<tr class="even">
+<td>merge1</td>
+<td>Old merge variable for tariffs?</td>
+</tr>
+<tr class="odd">
+<td>fdirv</td>
+<td>Sets fdi=0 if missing</td>
+</tr>
+<tr class="even">
+<td>fdistock</td>
+<td>Cumulative FDI stock</td>
+</tr>
+<tr class="odd">
+<td>fdidum2</td>
+<td>=1 if fdistock &gt; 0</td>
+</tr>
+<tr class="even">
+<td>fierat1</td>
+<td>fiech / (output + import)</td>
+</tr>
+<tr class="odd">
+<td>imprat1</td>
+<td>import / (output + import)</td>
+</tr>
+<tr class="even">
+<td>fdi_imp1</td>
+<td>fdistock * imprat1</td>
+</tr>
+<tr class="odd">
+<td>tar_imp1</td>
+<td>tariff96 * imprat1</td>
+</tr>
+<tr class="even">
+<td>lfdistok</td>
+<td>Lagged fdistock</td>
+</tr>
+<tr class="odd">
+<td>tar_imp</td>
+<td>tariff96 * import</td>
+</tr>
+<tr class="even">
+<td>fdi_imp</td>
+<td>fdistock * import</td>
+</tr>
+<tr class="odd">
+<td>lfdi_imp</td>
+<td>Lagged fdistock * import</td>
+</tr>
+<tr class="even">
+<td>tar_stat</td>
+<td>tariff96 * state</td>
+</tr>
+<tr class="odd">
+<td>lfdi_sta</td>
+<td>Lagged fdistock * state</td>
+</tr>
+<tr class="even">
+<td>tar_lfdi</td>
+<td>tariff96 * lagged fdistock</td>
+</tr>
+<tr class="odd">
+<td>stat_imp</td>
+<td>state * import</td>
+</tr>
+<tr class="even">
+<td>imp_prem</td>
+<td>import * newprem</td>
+</tr>
+<tr class="odd">
+<td>sta_prem</td>
+<td>state * newprem</td>
+</tr>
+<tr class="even">
+<td>lfdi_pre</td>
+<td>lfdistok * newprem</td>
+</tr>
+<tr class="odd">
+<td>newprem</td>
+<td>(othwage - collwage) / other</td>
+</tr>
+<tr class="even">
+<td>tar_prem</td>
+<td>tariff96 * newprem</td>
+</tr>
+<tr class="odd">
+<td>statrat3</td>
+<td>= statrat2 if y &gt;= 1988, pc != 11,54</td>
+</tr>
+<tr class="even">
+<td>fierat3</td>
+<td>= fierat2 if y &gt;= 1988, pc != 11,54</td>
+</tr>
+<tr class="odd">
+<td>imprat3</td>
+<td>= imprat2 if y &gt;= 1988, pc != 11,54</td>
+</tr>
+<tr class="even">
+<td>fdi_imp3</td>
+<td>fdistock * imprat3</td>
+</tr>
+<tr class="odd">
+<td>tar_imp3</td>
+<td>tariff96 * imprat3</td>
+</tr>
+</tbody>
+</table>
+<p><em>Note: Additional interaction terms and various residuals are present in the dataset, often used as instruments for econometric analyses.</em></p>
+</section>
+<section id="exercise-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
+<p>Run the program <code>share_reg.do</code> to reproduce the regression results in Table 9.1. Notice that apparent consumption (<code>appcon3</code>) is included as a control variables in these regressions. What happens if this variable is dropped?</p>
+<section id="feenstras-code" class="level3">
+<h3 class="anchored" data-anchor-id="feenstras-code">Feenstra’s code</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">clear</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">capture</span> <span class="fu">log</span> <span class="kw">close</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span> <span class="kw">using</span> Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-9\share_reg.<span class="fu">log</span>,<span class="kw">replace</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-9\china_fdi,<span class="kw">clear</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">set</span> <span class="dv">matsize</span> 100</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">reg</span> fiech3 state3 premsta3 tar_cm3 newprem fdi2_cm3 appcons3 pd1-pd30 yd1-yd18  <span class="kw">if</span> fiech3&gt;0, <span class="fu">r</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="kw">reg</span> fiech3 state3 premsta3 tar_cm3 newprem fdi2_cm3 appcons3 pd1-pd30 yd1-yd18 <span class="co">/*</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span> (elecpro elecgdp elecpop elecurb elecrur elecwag elecwags elecwagu cmpr3 <span class="co">/*</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span> cmprgdp  cmprpop cmprelec indewag indewags indewagu gdp pop urbaninc rurinc <span class="co">/*</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span>  pd1-pd30 yd1-yd18)  <span class="kw">if</span> fiech3&gt;0, <span class="fu">r</span> </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="kw">reg</span> fiech3 state3 premsta3 tar_cm3 newprem fdi2_cm3 appcons3 pd1-pd30 yd1-yd18 <span class="co">/*</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span> (elecpro elecgdp elecpop elecurb elecrur elecwag elecwags elecwagu cmpr3 <span class="co">/*</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span> cmprgdp  cmprpop cmprelec indewag indewags indewagu gdp pop urbaninc rurinc <span class="co">/*</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span>  pd1-pd30 yd1-yd18) [<span class="fu">w</span>=gdp]  <span class="kw">if</span> fiech3&gt;0, <span class="fu">r</span> </span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span> cv=<span class="fu">get</span>(<span class="kw">VCE</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span> cv1 = cv[1..3,1..3]</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span> <span class="ot">list</span> cv1</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="kw">reg</span> fiech3 state3 premsta3 tar_cm3 newprem fdi2_cm3 appcons3 pd1-pd30 yd1-yd18 <span class="co">/*</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span> (elecpro elecgdp elecpop elecurb elecrur elecwag elecwags elecwagu cmpr3 <span class="co">/*</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span> cmprgdp  cmprpop cmprelec indewag indewags indewagu gdp pop urbaninc rurinc <span class="co">/*</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span>  pd1-pd30 yd1-yd18) [<span class="fu">w</span>=gdp]  <span class="kw">if</span> fiech3&gt;0 &amp; <span class="fu">year</span>&gt;=1988, <span class="fu">r</span> </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span> cv=<span class="fu">get</span>(<span class="kw">VCE</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span> cv1 = cv[1..3,1..3]</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span> <span class="ot">list</span> cv1</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="kw">reg</span> fiech3 state3 premsta3 tar_cm3 newprem fdi2_cm3 appcons3 pd1-pd30 yd1-yd18 <span class="co">/*</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span> (elecpro elecgdp elecpop elecurb elecrur elecwag elecwags elecwagu cmpr3 <span class="co">/*</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span> cmprgdp  cmprpop cmprelec indewag indewags indewagu gdp pop urbaninc rurinc <span class="co">/*</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span>  pd1-pd30 yd1-yd18) [<span class="fu">w</span>=gdp]  <span class="kw">if</span> fiech3&gt;0 &amp; <span class="fu">year</span>&gt;=1990, <span class="fu">r</span> </span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span> cv=<span class="fu">get</span>(<span class="kw">VCE</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span> cv1 = cv[1..3,1..3]</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="fu">matrix</span> <span class="ot">list</span> cv1</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span> <span class="kw">close</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Output:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>. <span class="kw">clear</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>. <span class="kw">capture</span> <span class="fu">log</span> <span class="kw">close</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>. <span class="fu">log</span> <span class="kw">using</span> Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-9\share_reg.<span class="fu">log</span>,<span class="kw">replace</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>(<span class="kw">note</span>: file Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-9\share_reg.<span class="fu">log</span> <span class="kw">not</span> found)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------------------------------------------------------</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="bn">name</span>:  &lt;unnamed&gt;</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>       <span class="fu">log</span>:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-9\share_reg.<span class="fu">log</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span> <span class="dv">type</span>:  <span class="bn">text</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a> opened <span class="kw">on</span>:  27 Oct 2024, 17:14:23</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>. <span class="kw">use</span> Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-9\china_fdi,<span class="kw">clear</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>. <span class="kw">set</span> <span class="dv">matsize</span> 100</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>Current <span class="dv">memory</span> allocation</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                    current                                 <span class="dv">memory</span> usage</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    settable          <span class="ot">value</span>     description                 (1M = 1024k)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    --------------------------------------------------------------------</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">set</span> <span class="dv">maxvar</span>         5000     <span class="fu">max</span>. variables allowed           1.909M</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">set</span> <span class="dv">memory</span>           50M    <span class="fu">max</span>. <span class="kw">data</span> space                 50.000M</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">set</span> <span class="dv">matsize</span>         100     <span class="fu">max</span>. RHS vars <span class="kw">in</span> models          0.085M</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>                                                            -----------</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                                                                51.994M</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>. <span class="kw">reg</span> fiech3 state3 premsta3 tar_cm3 newprem fdi2_cm3 appcons3 pd1-pd30 yd1-yd18  <span class="kw">if</span> fiech3&gt;0, <span class="fu">r</span> </span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="kw">note</span>: pd25 omitted because <span class="kw">of</span> collinearity</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="kw">note</span>: pd28 omitted because <span class="kw">of</span> collinearity</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="kw">note</span>: yd1 omitted because <span class="kw">of</span> collinearity</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="kw">note</span>: yd2 omitted because <span class="kw">of</span> collinearity</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="kw">note</span>: yd3 omitted because <span class="kw">of</span> collinearity</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="kw">note</span>: yd4 omitted because <span class="kw">of</span> collinearity</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="kw">note</span>: yd5 omitted because <span class="kw">of</span> collinearity</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="kw">note</span>: yd6 omitted because <span class="kw">of</span> collinearity</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="kw">note</span>: yd8 omitted because <span class="kw">of</span> collinearity</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>Linear regression                                      Number <span class="kw">of</span> <span class="kw">obs</span> =     297</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>                                                       <span class="fu">F</span>( 45,   251) =   13.17</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>                                                       Prob &gt; <span class="fu">F</span>      =  0.0000</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>                                                       R-squared     =  0.8517</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>                                                       Root MSE      =  70.771</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------------</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>             |               Robust</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>      fiech3 |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>-------------+----------------------------------------------------------------</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>      state3 |  -.4120043   .1252756    -3.29   0.001    -.6587296   -.1652789</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    premsta3 |    .418439   .2349873     1.78   0.076    -.0443591    .8812372</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>     tar_cm3 |  -.1462319   2.698182    -0.05   0.957    -5.460194     5.16773</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>     newprem |  -118.4885   63.81774    -1.86   0.065     -244.175    7.197995</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    fdi2_cm3 |   3.67e-07   2.21e-07     1.66   0.099    -6.89e-08    8.03e-07</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>    appcons3 |   .1085887   .0181638     5.98   0.000     .0728158    .1443616</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>         pd1 |   138.6463   53.32884     2.60   0.010     33.61727    243.6753</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>         pd2 |   111.7079   53.14862     2.10   0.037     7.033765    216.3819</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>         pd3 |   47.80944   46.13068     1.04   0.301     -43.0431     138.662</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>         pd4 |   38.63599   36.39048     1.06   0.289    -33.03362    110.3056</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>         pd5 |   33.63291    33.2422     1.01   0.313    -31.83628     99.1021</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>         pd6 |   56.76019   96.64213     0.59   0.558    -133.5726     247.093</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>         pd7 |   63.22479   44.37549     1.42   0.155    -24.17098    150.6206</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>         pd8 |   91.16894    58.7561     1.55   0.122    -24.54885    206.8867</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>         pd9 |   334.7459   91.91022     3.64   0.000     153.7324    515.7594</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>        pd10 |   91.62152   56.68167     1.62   0.107    -20.01078    203.2538</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>        pd11 |  -23.90319   42.97933    -0.56   0.579    -108.5493    60.74289</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>        pd12 |   15.61683   44.60963     0.35   0.727    -72.24007    103.4737</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>        pd13 |   97.31858   42.69299     2.28   0.023     13.23643    181.4007</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>        pd14 |   32.84924   34.97525     0.94   0.349    -36.03311    101.7316</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>        pd15 |  -12.67496   71.00855    -0.18   0.858    -152.5235    127.1735</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>        pd16 |   43.48629   48.61576     0.89   0.372    -52.26052    139.2331</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>        pd17 |   78.74117   55.86131     1.41   0.160    -31.27545    188.7578</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>        pd18 |   42.05588   42.98484     0.98   0.329    -42.60106    126.7128</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>        pd19 |   5.776277   104.8443     0.06   0.956    -200.7105     212.263</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>        pd20 |   38.00421    36.7446     1.03   0.302    -34.36282    110.3712</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>        pd21 |    14.8177     32.051     0.46   0.644    -48.30546    77.94086</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>        pd22 |   76.34966   66.17087     1.15   0.250    -53.97124    206.6706</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>        pd23 |   33.08723   29.60536     1.12   0.265    -25.21934    91.39381</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>        pd24 |   44.62833   38.59018     1.16   0.249     -31.3735    120.6302</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>        pd25 |  (omitted)</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>        pd26 |   39.83218    37.3268     1.07   0.287    -33.68146    113.3458</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>        pd27 |   45.07108   33.09393     1.36   0.174     -20.1061    110.2483</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>        pd28 |  (omitted)</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>        pd29 |  -3.537009    27.8295    -0.13   0.899    -58.34611    51.27209</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>        pd30 |    42.1159   31.27092     1.35   0.179    -19.47094    103.7027</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>         yd1 |  (omitted)</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>         yd2 |  (omitted)</span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>         yd3 |  (omitted)</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>         yd4 |  (omitted)</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>         yd5 |  (omitted)</span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>         yd6 |  (omitted)</span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>         yd7 |  -7.813549   31.83694    -0.25   0.806    -70.51514    54.88804</span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>         yd8 |  (omitted)</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>         yd9 |    4.66118   19.13492     0.24   0.808    -33.02428    42.34664</span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>        yd10 |   8.009458   18.69165     0.43   0.669      -28.803    44.82192</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>        yd11 |   4.120545   19.32224     0.21   0.831    -33.93384    42.17493</span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>        yd12 |   15.40138   20.54087     0.75   0.454    -25.05304    55.85579</span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>        yd13 |   18.11733   19.94841     0.91   0.365    -21.17027    57.40493</span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>        yd14 |   21.38019   23.03616     0.93   0.354    -23.98861    66.74899</span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>        yd15 |    37.6667   27.87403     1.35   0.178    -17.23009    92.56349</span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>        yd16 |   29.59672   34.22505     0.86   0.388    -37.80815    97.00159</span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>        yd17 |   9.661191   37.11564     0.26   0.795    -63.43658    82.75896</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>        yd18 |   114.3398   43.81527     2.61   0.010     28.04735    200.6322</span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>       <span class="dt">_cons</span> |   8.138607   42.66315     0.19   0.849    -75.88476    92.16198</span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------------</span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>. <span class="kw">reg</span> fiech3 state3 premsta3 tar_cm3 newprem fdi2_cm3 appcons3 pd1-pd30 yd1-yd18 <span class="co">/*</span></span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a><span class="co">&gt;      */</span> (elecpro elecgdp elecpop elecurb elecrur elecwag elecwags elecwagu cmpr3 <span class="co">/*</span></span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a><span class="co">&gt;      */</span> cmprgdp  cmprpop cmprelec indewag indewags indewagu gdp pop urbaninc rurinc <span class="co">/*</span></span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a><span class="co">&gt;      */</span>  pd1-pd30 yd1-yd18)  <span class="kw">if</span> fiech3&gt;0, <span class="fu">r</span> </span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>Instrumental variables (2SLS) regression               Number <span class="kw">of</span> <span class="kw">obs</span> =     280</span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>                                                       <span class="fu">F</span>( 43,   236) =   11.69</span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>                                                       Prob &gt; <span class="fu">F</span>      =  0.0000</span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>                                                       R-squared     =  0.7437</span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>                                                       Root MSE      =   94.71</span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------------</span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>             |               Robust</span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>      fiech3 |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]</span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>-------------+----------------------------------------------------------------</span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>      state3 |  -1.301465   .4036078    -3.22   0.001    -2.096599   -.5063307</span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>    premsta3 |   2.188291   .8745997     2.50   0.013     .4652708    3.911311</span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a>     tar_cm3 |    -7.4778   3.316947    -2.25   0.025    -14.01241   -.9431926</span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a>     newprem |   -967.166   435.0548    -2.22   0.027    -1824.253    -110.079</span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a>    fdi2_cm3 |   3.73e-07   1.73e-07     2.15   0.032     3.18e-08    7.14e-07</span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a>    appcons3 |   .1501362   .0251856     5.96   0.000     .1005188    .1997536</span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>         pd1 |   22.49351   84.71518     0.27   0.791    -144.4011    189.3881</span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a>         pd2 |  (omitted)</span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>         pd3 |  -101.9567    68.5424    -1.49   0.138    -236.9898    33.07639</span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a>         pd4 |  -62.65556   118.8012    -0.53   0.598     -296.702    171.3908</span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>         pd5 |  -261.3773   128.8722    -2.03   0.044    -515.2641   -7.490483</span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>         pd6 |  (omitted)</span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>         pd7 |  -95.03245   83.30879    -1.14   0.255    -259.1563    69.09143</span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>         pd8 |  -32.86181   81.23209    -0.40   0.686    -192.8945    127.1708</span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>         pd9 |     324.31   65.47577     4.95   0.000     195.3183    453.3016</span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a>        pd10 |   24.40901   44.81474     0.54   0.586    -63.87903     112.697</span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>        pd11 |  -240.2662   82.48247    -2.91   0.004    -402.7622    -77.7702</span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>        pd12 |  -185.4254   106.2032    -1.75   0.082    -394.6528    23.80195</span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a>        pd13 |  -38.63878   118.8187    -0.33   0.745    -272.7195     195.442</span>
+<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>        pd14 |  -136.9162   106.3078    -1.29   0.199    -346.3496    72.51729</span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a>        pd15 |  (omitted)</span>
+<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a>        pd16 |  -75.15068   69.47177    -1.08   0.280    -212.0147    61.71335</span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>        pd17 |   14.33876   50.61352     0.28   0.777    -85.37326    114.0508</span>
+<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>        pd18 |   -116.985   87.18557    -1.34   0.181    -288.7464    54.77642</span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a>        pd19 |  -40.35602   124.3852    -0.32   0.746    -285.4032    204.6911</span>
+<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a>        pd20 |  -179.2321   101.3529    -1.77   0.078     -378.904    20.43983</span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>        pd21 |  -119.2624   149.9743    -0.80   0.427    -414.7219     176.197</span>
+<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a>        pd22 |   10.03015   64.99138     0.15   0.877    -118.0072    138.0675</span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>        pd23 |  -157.3637   121.3052    -1.30   0.196    -396.3431    81.61573</span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a>        pd24 |  -170.5148   103.4955    -1.65   0.101    -374.4078    33.37831</span>
+<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a>        pd25 |  (omitted)</span>
+<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a>        pd26 |  -136.5358   112.6071    -1.21   0.227    -358.3793    85.30762</span>
+<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a>        pd27 |  -130.0935   103.6251    -1.26   0.211    -334.2418    74.05478</span>
+<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>        pd28 |  -213.2504   156.1108    -1.37   0.173    -520.7991    94.29841</span>
+<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a>        pd29 |  -371.6727   159.8529    -2.33   0.021    -686.5936   -56.75185</span>
+<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a>        pd30 |  -131.4453   106.1748    -1.24   0.217    -340.6168    77.72623</span>
+<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a>         yd1 |  (omitted)</span>
+<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a>         yd2 |  (omitted)</span>
+<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a>         yd3 |  (omitted)</span>
+<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a>         yd4 |  (omitted)</span>
+<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a>         yd5 |  (omitted)</span>
+<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a>         yd6 |  (omitted)</span>
+<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a>         yd7 |  (omitted)</span>
+<span id="cb2-169"><a href="#cb2-169" aria-hidden="true" tabindex="-1"></a>         yd8 |  -23.25973   50.76326    -0.46   0.647    -123.2667    76.74728</span>
+<span id="cb2-170"><a href="#cb2-170" aria-hidden="true" tabindex="-1"></a>         yd9 |  -12.41766   50.90956    -0.24   0.808    -112.7129    87.87757</span>
+<span id="cb2-171"><a href="#cb2-171" aria-hidden="true" tabindex="-1"></a>        yd10 |   15.76796   48.88126     0.32   0.747    -80.53139    112.0673</span>
+<span id="cb2-172"><a href="#cb2-172" aria-hidden="true" tabindex="-1"></a>        yd11 |   43.42377   51.59704     0.84   0.401    -58.22585    145.0734</span>
+<span id="cb2-173"><a href="#cb2-173" aria-hidden="true" tabindex="-1"></a>        yd12 |    79.3707   56.02184     1.42   0.158    -30.99606    189.7375</span>
+<span id="cb2-174"><a href="#cb2-174" aria-hidden="true" tabindex="-1"></a>        yd13 |   77.22576   55.69696     1.39   0.167    -32.50098    186.9525</span>
+<span id="cb2-175"><a href="#cb2-175" aria-hidden="true" tabindex="-1"></a>        yd14 |   98.32196   60.62045     1.62   0.106    -21.10439    217.7483</span>
+<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a>        yd15 |    129.245   67.84135     1.91   0.058    -4.407003     262.897</span>
+<span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a>        yd16 |   134.9046   72.58903     1.86   0.064    -8.100661    277.9098</span>
+<span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a>        yd17 |   92.58514   67.73654     1.37   0.173    -40.86038    226.0307</span>
+<span id="cb2-179"><a href="#cb2-179" aria-hidden="true" tabindex="-1"></a>        yd18 |   218.5723   79.71104     2.74   0.007     61.53622    375.6084</span>
+<span id="cb2-180"><a href="#cb2-180" aria-hidden="true" tabindex="-1"></a>       <span class="dt">_cons</span> |   469.3039   197.0992     2.38   0.018     81.00532    857.6025</span>
+<span id="cb2-181"><a href="#cb2-181" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------------</span>
+<span id="cb2-182"><a href="#cb2-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-183"><a href="#cb2-183" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-184"><a href="#cb2-184" aria-hidden="true" tabindex="-1"></a>. <span class="kw">reg</span> fiech3 state3 premsta3 tar_cm3 newprem fdi2_cm3 appcons3 pd1-pd30 yd1-yd18 <span class="co">/*</span></span>
+<span id="cb2-185"><a href="#cb2-185" aria-hidden="true" tabindex="-1"></a><span class="co">&gt;      */</span> (elecpro elecgdp elecpop elecurb elecrur elecwag elecwags elecwagu cmpr3 <span class="co">/*</span></span>
+<span id="cb2-186"><a href="#cb2-186" aria-hidden="true" tabindex="-1"></a><span class="co">&gt;      */</span> cmprgdp  cmprpop cmprelec indewag indewags indewagu gdp pop urbaninc rurinc <span class="co">/*</span></span>
+<span id="cb2-187"><a href="#cb2-187" aria-hidden="true" tabindex="-1"></a><span class="co">&gt;      */</span>  pd1-pd30 yd1-yd18) [<span class="fu">w</span>=gdp]  <span class="kw">if</span> fiech3&gt;0, <span class="fu">r</span> </span>
+<span id="cb2-188"><a href="#cb2-188" aria-hidden="true" tabindex="-1"></a>(analytic weights assumed)</span>
+<span id="cb2-189"><a href="#cb2-189" aria-hidden="true" tabindex="-1"></a>(<span class="kw">sum</span> <span class="kw">of</span> wgt is   2.4017e+05)</span>
+<span id="cb2-190"><a href="#cb2-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-191"><a href="#cb2-191" aria-hidden="true" tabindex="-1"></a>Instrumental variables (2SLS) regression               Number <span class="kw">of</span> <span class="kw">obs</span> =     280</span>
+<span id="cb2-192"><a href="#cb2-192" aria-hidden="true" tabindex="-1"></a>                                                       <span class="fu">F</span>( 43,   236) =   26.43</span>
+<span id="cb2-193"><a href="#cb2-193" aria-hidden="true" tabindex="-1"></a>                                                       Prob &gt; <span class="fu">F</span>      =  0.0000</span>
+<span id="cb2-194"><a href="#cb2-194" aria-hidden="true" tabindex="-1"></a>                                                       R-squared     =  0.7550</span>
+<span id="cb2-195"><a href="#cb2-195" aria-hidden="true" tabindex="-1"></a>                                                       Root MSE      =  171.68</span>
+<span id="cb2-196"><a href="#cb2-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-197"><a href="#cb2-197" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------------</span>
+<span id="cb2-198"><a href="#cb2-198" aria-hidden="true" tabindex="-1"></a>             |               Robust</span>
+<span id="cb2-199"><a href="#cb2-199" aria-hidden="true" tabindex="-1"></a>      fiech3 |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]</span>
+<span id="cb2-200"><a href="#cb2-200" aria-hidden="true" tabindex="-1"></a>-------------+----------------------------------------------------------------</span>
+<span id="cb2-201"><a href="#cb2-201" aria-hidden="true" tabindex="-1"></a>      state3 |  -1.660521   .4807088    -3.45   0.001    -2.607549   -.7134923</span>
+<span id="cb2-202"><a href="#cb2-202" aria-hidden="true" tabindex="-1"></a>    premsta3 |   3.618218   1.160893     3.12   0.002     1.331182    5.905255</span>
+<span id="cb2-203"><a href="#cb2-203" aria-hidden="true" tabindex="-1"></a>     tar_cm3 |  -15.85201    5.11311    -3.10   0.002    -25.92518   -5.778843</span>
+<span id="cb2-204"><a href="#cb2-204" aria-hidden="true" tabindex="-1"></a>     newprem |  -3333.269    1085.09    -3.07   0.002     -5470.97   -1195.569</span>
+<span id="cb2-205"><a href="#cb2-205" aria-hidden="true" tabindex="-1"></a>    fdi2_cm3 |   5.17e-07   1.25e-07     4.12   0.000     2.70e-07    7.65e-07</span>
+<span id="cb2-206"><a href="#cb2-206" aria-hidden="true" tabindex="-1"></a>    appcons3 |   .1497793   .0216163     6.93   0.000     .1071937    .1923649</span>
+<span id="cb2-207"><a href="#cb2-207" aria-hidden="true" tabindex="-1"></a>         pd1 |   151.3819   205.4259     0.74   0.462     -253.321    556.0847</span>
+<span id="cb2-208"><a href="#cb2-208" aria-hidden="true" tabindex="-1"></a>         pd2 |  (omitted)</span>
+<span id="cb2-209"><a href="#cb2-209" aria-hidden="true" tabindex="-1"></a>         pd3 |  -136.5562   231.6549    -0.59   0.556    -592.9319    319.8195</span>
+<span id="cb2-210"><a href="#cb2-210" aria-hidden="true" tabindex="-1"></a>         pd4 |    131.699   236.2008     0.56   0.578    -333.6322    597.0303</span>
+<span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a>         pd5 |  -519.0087   313.4677    -1.66   0.099    -1136.561    98.54363</span>
+<span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a>         pd6 |  (omitted)</span>
+<span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a>         pd7 |  -94.63755   227.7186    -0.42   0.678    -543.2584    353.9833</span>
+<span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a>         pd8 |  -97.71278   248.7448    -0.39   0.695    -587.7566     392.331</span>
+<span id="cb2-215"><a href="#cb2-215" aria-hidden="true" tabindex="-1"></a>         pd9 |   504.7952   252.3469     2.00   0.047     7.654983    1001.935</span>
+<span id="cb2-216"><a href="#cb2-216" aria-hidden="true" tabindex="-1"></a>        pd10 |   11.20123   247.3212     0.05   0.964     -476.038    498.4405</span>
+<span id="cb2-217"><a href="#cb2-217" aria-hidden="true" tabindex="-1"></a>        pd11 |  -384.5489   224.5097    -1.71   0.088    -826.8481    57.75023</span>
+<span id="cb2-218"><a href="#cb2-218" aria-hidden="true" tabindex="-1"></a>        pd12 |  -170.7961   215.2741    -0.79   0.428    -594.9006    253.3083</span>
+<span id="cb2-219"><a href="#cb2-219" aria-hidden="true" tabindex="-1"></a>        pd13 |   234.0235   204.0305     1.15   0.253    -167.9302    635.9771</span>
+<span id="cb2-220"><a href="#cb2-220" aria-hidden="true" tabindex="-1"></a>        pd14 |  -4.280486   199.6937    -0.02   0.983    -397.6905    389.1295</span>
+<span id="cb2-221"><a href="#cb2-221" aria-hidden="true" tabindex="-1"></a>        pd15 |  -61.50421   250.3792    -0.25   0.806    -554.7679    431.7595</span>
+<span id="cb2-222"><a href="#cb2-222" aria-hidden="true" tabindex="-1"></a>        pd16 |  -48.59471   226.6831    -0.21   0.830    -495.1755    397.9861</span>
+<span id="cb2-223"><a href="#cb2-223" aria-hidden="true" tabindex="-1"></a>        pd17 |   3.428437   244.1047     0.01   0.989    -477.4742     484.331</span>
+<span id="cb2-224"><a href="#cb2-224" aria-hidden="true" tabindex="-1"></a>        pd18 |  -83.46781   215.5776    -0.39   0.699      -508.17    341.2344</span>
+<span id="cb2-225"><a href="#cb2-225" aria-hidden="true" tabindex="-1"></a>        pd19 |   335.7746   280.9931     1.19   0.233    -217.8006    889.3499</span>
+<span id="cb2-226"><a href="#cb2-226" aria-hidden="true" tabindex="-1"></a>        pd20 |  -237.5962   238.2537    -1.00   0.320    -706.9719    231.7795</span>
+<span id="cb2-227"><a href="#cb2-227" aria-hidden="true" tabindex="-1"></a>        pd21 |   254.9373   222.6991     1.14   0.253    -183.7948    693.6694</span>
+<span id="cb2-228"><a href="#cb2-228" aria-hidden="true" tabindex="-1"></a>        pd22 |   -172.099   259.6178    -0.66   0.508    -683.5633    339.3653</span>
+<span id="cb2-229"><a href="#cb2-229" aria-hidden="true" tabindex="-1"></a>        pd23 |  -4.580315   199.7805    -0.02   0.982    -398.1613    389.0006</span>
+<span id="cb2-230"><a href="#cb2-230" aria-hidden="true" tabindex="-1"></a>        pd24 |   -248.713   253.6054    -0.98   0.328    -748.3327    250.9066</span>
+<span id="cb2-231"><a href="#cb2-231" aria-hidden="true" tabindex="-1"></a>        pd25 |  (omitted)</span>
+<span id="cb2-232"><a href="#cb2-232" aria-hidden="true" tabindex="-1"></a>        pd26 |   89.16112   207.6892     0.43   0.668    -320.0004    498.3226</span>
+<span id="cb2-233"><a href="#cb2-233" aria-hidden="true" tabindex="-1"></a>        pd27 |   -212.042   251.1014    -0.84   0.399    -706.7285    282.6444</span>
+<span id="cb2-234"><a href="#cb2-234" aria-hidden="true" tabindex="-1"></a>        pd28 |  (omitted)</span>
+<span id="cb2-235"><a href="#cb2-235" aria-hidden="true" tabindex="-1"></a>        pd29 |  -622.8209   321.3912    -1.94   0.054    -1255.983    10.34126</span>
+<span id="cb2-236"><a href="#cb2-236" aria-hidden="true" tabindex="-1"></a>        pd30 |  -171.1686   225.7568    -0.76   0.449    -615.9247    273.5874</span>
+<span id="cb2-237"><a href="#cb2-237" aria-hidden="true" tabindex="-1"></a>         yd1 |  (omitted)</span>
+<span id="cb2-238"><a href="#cb2-238" aria-hidden="true" tabindex="-1"></a>         yd2 |  (omitted)</span>
+<span id="cb2-239"><a href="#cb2-239" aria-hidden="true" tabindex="-1"></a>         yd3 |  (omitted)</span>
+<span id="cb2-240"><a href="#cb2-240" aria-hidden="true" tabindex="-1"></a>         yd4 |  (omitted)</span>
+<span id="cb2-241"><a href="#cb2-241" aria-hidden="true" tabindex="-1"></a>         yd5 |  (omitted)</span>
+<span id="cb2-242"><a href="#cb2-242" aria-hidden="true" tabindex="-1"></a>         yd6 |  (omitted)</span>
+<span id="cb2-243"><a href="#cb2-243" aria-hidden="true" tabindex="-1"></a>         yd7 |   43.01289   141.6405     0.30   0.762    -236.0284    322.0542</span>
+<span id="cb2-244"><a href="#cb2-244" aria-hidden="true" tabindex="-1"></a>         yd8 |  (omitted)</span>
+<span id="cb2-245"><a href="#cb2-245" aria-hidden="true" tabindex="-1"></a>         yd9 |   20.60074   86.75487     0.24   0.813    -150.3122    191.5136</span>
+<span id="cb2-246"><a href="#cb2-246" aria-hidden="true" tabindex="-1"></a>        yd10 |   140.6733   92.57702     1.52   0.130    -41.70964    323.0562</span>
+<span id="cb2-247"><a href="#cb2-247" aria-hidden="true" tabindex="-1"></a>        yd11 |    249.315   113.0118     2.21   0.028      26.6742    471.9558</span>
+<span id="cb2-248"><a href="#cb2-248" aria-hidden="true" tabindex="-1"></a>        yd12 |   297.7457   121.7527     2.45   0.015     57.88479    537.6067</span>
+<span id="cb2-249"><a href="#cb2-249" aria-hidden="true" tabindex="-1"></a>        yd13 |   301.1773   125.5635     2.40   0.017     53.80884    548.5457</span>
+<span id="cb2-250"><a href="#cb2-250" aria-hidden="true" tabindex="-1"></a>        yd14 |   364.4928   141.5999     2.57   0.011      85.5315    643.4542</span>
+<span id="cb2-251"><a href="#cb2-251" aria-hidden="true" tabindex="-1"></a>        yd15 |   432.1373   159.4536     2.71   0.007      118.003    746.2716</span>
+<span id="cb2-252"><a href="#cb2-252" aria-hidden="true" tabindex="-1"></a>        yd16 |   462.5475   187.6808     2.46   0.014     92.80381    832.2912</span>
+<span id="cb2-253"><a href="#cb2-253" aria-hidden="true" tabindex="-1"></a>        yd17 |   408.6656   200.4563     2.04   0.043     13.75323     803.578</span>
+<span id="cb2-254"><a href="#cb2-254" aria-hidden="true" tabindex="-1"></a>        yd18 |   580.9932   201.3976     2.88   0.004     184.2265      977.76</span>
+<span id="cb2-255"><a href="#cb2-255" aria-hidden="true" tabindex="-1"></a>       <span class="dt">_cons</span> |   898.3402   356.9691     2.52   0.013     195.0871    1601.593</span>
+<span id="cb2-256"><a href="#cb2-256" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------------</span>
+<span id="cb2-257"><a href="#cb2-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-258"><a href="#cb2-258" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-259"><a href="#cb2-259" aria-hidden="true" tabindex="-1"></a>. <span class="fu">matrix</span> cv=<span class="fu">get</span>(<span class="kw">VCE</span>)</span>
+<span id="cb2-260"><a href="#cb2-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-261"><a href="#cb2-261" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-262"><a href="#cb2-262" aria-hidden="true" tabindex="-1"></a>. <span class="fu">matrix</span> cv1 = cv[1..3,1..3]</span>
+<span id="cb2-263"><a href="#cb2-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-264"><a href="#cb2-264" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-265"><a href="#cb2-265" aria-hidden="true" tabindex="-1"></a>. <span class="fu">matrix</span> <span class="ot">list</span> cv1</span>
+<span id="cb2-266"><a href="#cb2-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-267"><a href="#cb2-267" aria-hidden="true" tabindex="-1"></a>symmetric cv1[3,3]</span>
+<span id="cb2-268"><a href="#cb2-268" aria-hidden="true" tabindex="-1"></a>              state3    premsta3     tar_cm3</span>
+<span id="cb2-269"><a href="#cb2-269" aria-hidden="true" tabindex="-1"></a>  state3   .23108091</span>
+<span id="cb2-270"><a href="#cb2-270" aria-hidden="true" tabindex="-1"></a>premsta3   -.5216955   1.3476718</span>
+<span id="cb2-271"><a href="#cb2-271" aria-hidden="true" tabindex="-1"></a> tar_cm3    1.511459  -3.9109265   26.143895</span>
+<span id="cb2-272"><a href="#cb2-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-273"><a href="#cb2-273" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-274"><a href="#cb2-274" aria-hidden="true" tabindex="-1"></a>. <span class="kw">reg</span> fiech3 state3 premsta3 tar_cm3 newprem fdi2_cm3 appcons3 pd1-pd30 yd1-yd18 <span class="co">/*</span></span>
+<span id="cb2-275"><a href="#cb2-275" aria-hidden="true" tabindex="-1"></a><span class="co">&gt;      */</span> (elecpro elecgdp elecpop elecurb elecrur elecwag elecwags elecwagu cmpr3 <span class="co">/*</span></span>
+<span id="cb2-276"><a href="#cb2-276" aria-hidden="true" tabindex="-1"></a><span class="co">&gt;      */</span> cmprgdp  cmprpop cmprelec indewag indewags indewagu gdp pop urbaninc rurinc <span class="co">/*</span></span>
+<span id="cb2-277"><a href="#cb2-277" aria-hidden="true" tabindex="-1"></a><span class="co">&gt;      */</span>  pd1-pd30 yd1-yd18) [<span class="fu">w</span>=gdp]  <span class="kw">if</span> fiech3&gt;0 &amp; <span class="fu">year</span>&gt;=1988, <span class="fu">r</span> </span>
+<span id="cb2-278"><a href="#cb2-278" aria-hidden="true" tabindex="-1"></a>(analytic weights assumed)</span>
+<span id="cb2-279"><a href="#cb2-279" aria-hidden="true" tabindex="-1"></a>(<span class="kw">sum</span> <span class="kw">of</span> wgt is   2.1445e+05)</span>
+<span id="cb2-280"><a href="#cb2-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-281"><a href="#cb2-281" aria-hidden="true" tabindex="-1"></a>Instrumental variables (2SLS) regression               Number <span class="kw">of</span> <span class="kw">obs</span> =     210</span>
+<span id="cb2-282"><a href="#cb2-282" aria-hidden="true" tabindex="-1"></a>                                                       <span class="fu">F</span>( 39,   170) =   23.69</span>
+<span id="cb2-283"><a href="#cb2-283" aria-hidden="true" tabindex="-1"></a>                                                       Prob &gt; <span class="fu">F</span>      =  0.0000</span>
+<span id="cb2-284"><a href="#cb2-284" aria-hidden="true" tabindex="-1"></a>                                                       R-squared     =  0.8734</span>
+<span id="cb2-285"><a href="#cb2-285" aria-hidden="true" tabindex="-1"></a>                                                       Root MSE      =   130.7</span>
+<span id="cb2-286"><a href="#cb2-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-287"><a href="#cb2-287" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------------</span>
+<span id="cb2-288"><a href="#cb2-288" aria-hidden="true" tabindex="-1"></a>             |               Robust</span>
+<span id="cb2-289"><a href="#cb2-289" aria-hidden="true" tabindex="-1"></a>      fiech3 |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]</span>
+<span id="cb2-290"><a href="#cb2-290" aria-hidden="true" tabindex="-1"></a>-------------+----------------------------------------------------------------</span>
+<span id="cb2-291"><a href="#cb2-291" aria-hidden="true" tabindex="-1"></a>      state3 |  -1.320297    .497583    -2.65   0.009    -2.302534   -.3380597</span>
+<span id="cb2-292"><a href="#cb2-292" aria-hidden="true" tabindex="-1"></a>    premsta3 |   2.553575   1.187916     2.15   0.033     .2086084    4.898541</span>
+<span id="cb2-293"><a href="#cb2-293" aria-hidden="true" tabindex="-1"></a>     tar_cm3 |  -11.46246   6.712541    -1.71   0.090    -24.71313    1.788208</span>
+<span id="cb2-294"><a href="#cb2-294" aria-hidden="true" tabindex="-1"></a>     newprem |   -2519.84   1256.346    -2.01   0.046    -4999.888    -39.7934</span>
+<span id="cb2-295"><a href="#cb2-295" aria-hidden="true" tabindex="-1"></a>    fdi2_cm3 |   4.85e-07   1.50e-07     3.23   0.001     1.89e-07    7.81e-07</span>
+<span id="cb2-296"><a href="#cb2-296" aria-hidden="true" tabindex="-1"></a>    appcons3 |   .1486559    .024088     6.17   0.000     .1011058     .196206</span>
+<span id="cb2-297"><a href="#cb2-297" aria-hidden="true" tabindex="-1"></a>         pd1 |   163.2254   169.4229     0.96   0.337    -171.2181    497.6689</span>
+<span id="cb2-298"><a href="#cb2-298" aria-hidden="true" tabindex="-1"></a>         pd2 |  (omitted)</span>
+<span id="cb2-299"><a href="#cb2-299" aria-hidden="true" tabindex="-1"></a>         pd3 |  -34.73277   188.4823    -0.18   0.854    -406.7999    337.3344</span>
+<span id="cb2-300"><a href="#cb2-300" aria-hidden="true" tabindex="-1"></a>         pd4 |   51.19367    183.792     0.28   0.781    -311.6148    414.0022</span>
+<span id="cb2-301"><a href="#cb2-301" aria-hidden="true" tabindex="-1"></a>         pd5 |  -368.2653   282.3617    -1.30   0.194     -925.652    189.1214</span>
+<span id="cb2-302"><a href="#cb2-302" aria-hidden="true" tabindex="-1"></a>         pd6 |  (omitted)</span>
+<span id="cb2-303"><a href="#cb2-303" aria-hidden="true" tabindex="-1"></a>         pd7 |  -8.148863   187.4163    -0.04   0.965    -378.1118     361.814</span>
+<span id="cb2-304"><a href="#cb2-304" aria-hidden="true" tabindex="-1"></a>         pd8 |   42.97417   207.3155     0.21   0.836    -366.2702    452.2185</span>
+<span id="cb2-305"><a href="#cb2-305" aria-hidden="true" tabindex="-1"></a>         pd9 |   598.6921   241.8478     2.48   0.014     121.2806    1076.104</span>
+<span id="cb2-306"><a href="#cb2-306" aria-hidden="true" tabindex="-1"></a>        pd10 |   63.07135   209.5412     0.30   0.764    -350.5666    476.7093</span>
+<span id="cb2-307"><a href="#cb2-307" aria-hidden="true" tabindex="-1"></a>        pd11 |  -339.0711   190.8114    -1.78   0.077     -715.736    37.59373</span>
+<span id="cb2-308"><a href="#cb2-308" aria-hidden="true" tabindex="-1"></a>        pd12 |  -64.59059    172.208    -0.38   0.708    -404.5321    275.3509</span>
+<span id="cb2-309"><a href="#cb2-309" aria-hidden="true" tabindex="-1"></a>        pd13 |   196.2458   173.3039     1.13   0.259     -145.859    538.3505</span>
+<span id="cb2-310"><a href="#cb2-310" aria-hidden="true" tabindex="-1"></a>        pd14 |   33.28636   161.2055     0.21   0.837     -284.936    351.5087</span>
+<span id="cb2-311"><a href="#cb2-311" aria-hidden="true" tabindex="-1"></a>        pd15 |  -35.32299   218.3816    -0.16   0.872    -466.4118    395.7658</span>
+<span id="cb2-312"><a href="#cb2-312" aria-hidden="true" tabindex="-1"></a>        pd16 |   7.898497   190.3217     0.04   0.967    -367.7998    383.5968</span>
+<span id="cb2-313"><a href="#cb2-313" aria-hidden="true" tabindex="-1"></a>        pd17 |   58.21349    208.674     0.28   0.781    -353.7125    470.1395</span>
+<span id="cb2-314"><a href="#cb2-314" aria-hidden="true" tabindex="-1"></a>        pd18 |  -7.502736   175.9845    -0.04   0.966    -354.8991    339.8936</span>
+<span id="cb2-315"><a href="#cb2-315" aria-hidden="true" tabindex="-1"></a>        pd19 |   192.1812   346.1707     0.56   0.580    -491.1656     875.528</span>
+<span id="cb2-316"><a href="#cb2-316" aria-hidden="true" tabindex="-1"></a>        pd20 |  -160.9523   206.8624    -0.78   0.438    -569.3022    247.3976</span>
+<span id="cb2-317"><a href="#cb2-317" aria-hidden="true" tabindex="-1"></a>        pd21 |   192.3007   199.4306     0.96   0.336    -201.3787    585.9802</span>
+<span id="cb2-318"><a href="#cb2-318" aria-hidden="true" tabindex="-1"></a>        pd22 |    -48.786   215.9674    -0.23   0.822    -475.1092    377.5372</span>
+<span id="cb2-319"><a href="#cb2-319" aria-hidden="true" tabindex="-1"></a>        pd23 |   27.90071   159.6185     0.17   0.861    -287.1889    342.9903</span>
+<span id="cb2-320"><a href="#cb2-320" aria-hidden="true" tabindex="-1"></a>        pd24 |  -136.5801   218.0904    -0.63   0.532    -567.0941     293.934</span>
+<span id="cb2-321"><a href="#cb2-321" aria-hidden="true" tabindex="-1"></a>        pd25 |  (omitted)</span>
+<span id="cb2-322"><a href="#cb2-322" aria-hidden="true" tabindex="-1"></a>        pd26 |   164.0468   177.9983     0.92   0.358    -187.3247    515.4184</span>
+<span id="cb2-323"><a href="#cb2-323" aria-hidden="true" tabindex="-1"></a>        pd27 |  -238.2111   238.5003    -1.00   0.319    -709.0147    232.5925</span>
+<span id="cb2-324"><a href="#cb2-324" aria-hidden="true" tabindex="-1"></a>        pd28 |  (omitted)</span>
+<span id="cb2-325"><a href="#cb2-325" aria-hidden="true" tabindex="-1"></a>        pd29 |  -464.9702   303.1842    -1.53   0.127    -1063.461    133.5205</span>
+<span id="cb2-326"><a href="#cb2-326" aria-hidden="true" tabindex="-1"></a>        pd30 |  -152.6274   201.0469    -0.76   0.449    -549.4973    244.2425</span>
+<span id="cb2-327"><a href="#cb2-327" aria-hidden="true" tabindex="-1"></a>         yd1 |  (omitted)</span>
+<span id="cb2-328"><a href="#cb2-328" aria-hidden="true" tabindex="-1"></a>         yd2 |  (omitted)</span>
+<span id="cb2-329"><a href="#cb2-329" aria-hidden="true" tabindex="-1"></a>         yd3 |  (omitted)</span>
+<span id="cb2-330"><a href="#cb2-330" aria-hidden="true" tabindex="-1"></a>         yd4 |  (omitted)</span>
+<span id="cb2-331"><a href="#cb2-331" aria-hidden="true" tabindex="-1"></a>         yd5 |  (omitted)</span>
+<span id="cb2-332"><a href="#cb2-332" aria-hidden="true" tabindex="-1"></a>         yd6 |  (omitted)</span>
+<span id="cb2-333"><a href="#cb2-333" aria-hidden="true" tabindex="-1"></a>         yd7 |  (omitted)</span>
+<span id="cb2-334"><a href="#cb2-334" aria-hidden="true" tabindex="-1"></a>         yd8 |  (omitted)</span>
+<span id="cb2-335"><a href="#cb2-335" aria-hidden="true" tabindex="-1"></a>         yd9 |  (omitted)</span>
+<span id="cb2-336"><a href="#cb2-336" aria-hidden="true" tabindex="-1"></a>        yd10 |  (omitted)</span>
+<span id="cb2-337"><a href="#cb2-337" aria-hidden="true" tabindex="-1"></a>        yd11 |  (omitted)</span>
+<span id="cb2-338"><a href="#cb2-338" aria-hidden="true" tabindex="-1"></a>        yd12 |   42.70326   47.13385     0.91   0.366    -50.33976    135.7463</span>
+<span id="cb2-339"><a href="#cb2-339" aria-hidden="true" tabindex="-1"></a>        yd13 |   45.25918   45.69599     0.99   0.323    -44.94548    135.4638</span>
+<span id="cb2-340"><a href="#cb2-340" aria-hidden="true" tabindex="-1"></a>        yd14 |   97.22254   61.23666     1.59   0.114    -23.65965    218.1047</span>
+<span id="cb2-341"><a href="#cb2-341" aria-hidden="true" tabindex="-1"></a>        yd15 |   155.5728   85.44523     1.82   0.070    -13.09748    324.2432</span>
+<span id="cb2-342"><a href="#cb2-342" aria-hidden="true" tabindex="-1"></a>        yd16 |   186.4389   125.9879     1.48   0.141    -62.26333    435.1412</span>
+<span id="cb2-343"><a href="#cb2-343" aria-hidden="true" tabindex="-1"></a>        yd17 |   136.0366   144.7728     0.94   0.349    -149.7474    421.8206</span>
+<span id="cb2-344"><a href="#cb2-344" aria-hidden="true" tabindex="-1"></a>        yd18 |   315.0861   143.2271     2.20   0.029     32.35332    597.8188</span>
+<span id="cb2-345"><a href="#cb2-345" aria-hidden="true" tabindex="-1"></a>       <span class="dt">_cons</span> |   842.7119   438.2943     1.92   0.056    -22.48842    1707.912</span>
+<span id="cb2-346"><a href="#cb2-346" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------------</span>
+<span id="cb2-347"><a href="#cb2-347" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-348"><a href="#cb2-348" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-349"><a href="#cb2-349" aria-hidden="true" tabindex="-1"></a>. <span class="fu">matrix</span> cv=<span class="fu">get</span>(<span class="kw">VCE</span>)</span>
+<span id="cb2-350"><a href="#cb2-350" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-351"><a href="#cb2-351" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-352"><a href="#cb2-352" aria-hidden="true" tabindex="-1"></a>. <span class="fu">matrix</span> cv1 = cv[1..3,1..3]</span>
+<span id="cb2-353"><a href="#cb2-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-354"><a href="#cb2-354" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-355"><a href="#cb2-355" aria-hidden="true" tabindex="-1"></a>. <span class="fu">matrix</span> <span class="ot">list</span> cv1</span>
+<span id="cb2-356"><a href="#cb2-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-357"><a href="#cb2-357" aria-hidden="true" tabindex="-1"></a>symmetric cv1[3,3]</span>
+<span id="cb2-358"><a href="#cb2-358" aria-hidden="true" tabindex="-1"></a>              state3    premsta3     tar_cm3</span>
+<span id="cb2-359"><a href="#cb2-359" aria-hidden="true" tabindex="-1"></a>  state3   .24758885</span>
+<span id="cb2-360"><a href="#cb2-360" aria-hidden="true" tabindex="-1"></a>premsta3  -.55788145   1.4111448</span>
+<span id="cb2-361"><a href="#cb2-361" aria-hidden="true" tabindex="-1"></a> tar_cm3   1.8692088  -4.6693021   45.058204</span>
+<span id="cb2-362"><a href="#cb2-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-363"><a href="#cb2-363" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-364"><a href="#cb2-364" aria-hidden="true" tabindex="-1"></a>. <span class="kw">reg</span> fiech3 state3 premsta3 tar_cm3 newprem fdi2_cm3 appcons3 pd1-pd30 yd1-yd18 <span class="co">/*</span></span>
+<span id="cb2-365"><a href="#cb2-365" aria-hidden="true" tabindex="-1"></a><span class="co">&gt;      */</span> (elecpro elecgdp elecpop elecurb elecrur elecwag elecwags elecwagu cmpr3 <span class="co">/*</span></span>
+<span id="cb2-366"><a href="#cb2-366" aria-hidden="true" tabindex="-1"></a><span class="co">&gt;      */</span> cmprgdp  cmprpop cmprelec indewag indewags indewagu gdp pop urbaninc rurinc <span class="co">/*</span></span>
+<span id="cb2-367"><a href="#cb2-367" aria-hidden="true" tabindex="-1"></a><span class="co">&gt;      */</span>  pd1-pd30 yd1-yd18) [<span class="fu">w</span>=gdp]  <span class="kw">if</span> fiech3&gt;0 &amp; <span class="fu">year</span>&gt;=1990, <span class="fu">r</span> </span>
+<span id="cb2-368"><a href="#cb2-368" aria-hidden="true" tabindex="-1"></a>(analytic weights assumed)</span>
+<span id="cb2-369"><a href="#cb2-369" aria-hidden="true" tabindex="-1"></a>(<span class="kw">sum</span> <span class="kw">of</span> wgt is   1.8621e+05)</span>
+<span id="cb2-370"><a href="#cb2-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-371"><a href="#cb2-371" aria-hidden="true" tabindex="-1"></a>Instrumental variables (2SLS) regression               Number <span class="kw">of</span> <span class="kw">obs</span> =     158</span>
+<span id="cb2-372"><a href="#cb2-372" aria-hidden="true" tabindex="-1"></a>                                                       <span class="fu">F</span>( 37,   120) =   24.51</span>
+<span id="cb2-373"><a href="#cb2-373" aria-hidden="true" tabindex="-1"></a>                                                       Prob &gt; <span class="fu">F</span>      =  0.0000</span>
+<span id="cb2-374"><a href="#cb2-374" aria-hidden="true" tabindex="-1"></a>                                                       R-squared     =  0.9150</span>
+<span id="cb2-375"><a href="#cb2-375" aria-hidden="true" tabindex="-1"></a>                                                       Root MSE      =  115.63</span>
+<span id="cb2-376"><a href="#cb2-376" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-377"><a href="#cb2-377" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------------</span>
+<span id="cb2-378"><a href="#cb2-378" aria-hidden="true" tabindex="-1"></a>             |               Robust</span>
+<span id="cb2-379"><a href="#cb2-379" aria-hidden="true" tabindex="-1"></a>      fiech3 |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]</span>
+<span id="cb2-380"><a href="#cb2-380" aria-hidden="true" tabindex="-1"></a>-------------+----------------------------------------------------------------</span>
+<span id="cb2-381"><a href="#cb2-381" aria-hidden="true" tabindex="-1"></a>      state3 |  -1.037144    .485102    -2.14   0.035    -1.997612   -.0766754</span>
+<span id="cb2-382"><a href="#cb2-382" aria-hidden="true" tabindex="-1"></a>    premsta3 |   1.837028   1.160133     1.58   0.116    -.4599559    4.134011</span>
+<span id="cb2-383"><a href="#cb2-383" aria-hidden="true" tabindex="-1"></a>     tar_cm3 |  -9.974153   7.575814    -1.32   0.190    -24.97374    5.025432</span>
+<span id="cb2-384"><a href="#cb2-384" aria-hidden="true" tabindex="-1"></a>     newprem |  -2125.903   1396.838    -1.52   0.131    -4891.545    639.7383</span>
+<span id="cb2-385"><a href="#cb2-385" aria-hidden="true" tabindex="-1"></a>    fdi2_cm3 |   5.11e-07   1.60e-07     3.19   0.002     1.94e-07    8.29e-07</span>
+<span id="cb2-386"><a href="#cb2-386" aria-hidden="true" tabindex="-1"></a>    appcons3 |   .1446918   .0269515     5.37   0.000     .0913298    .1980538</span>
+<span id="cb2-387"><a href="#cb2-387" aria-hidden="true" tabindex="-1"></a>         pd1 |   175.8829   154.8554     1.14   0.258    -130.7201    482.4859</span>
+<span id="cb2-388"><a href="#cb2-388" aria-hidden="true" tabindex="-1"></a>         pd2 |  (omitted)</span>
+<span id="cb2-389"><a href="#cb2-389" aria-hidden="true" tabindex="-1"></a>         pd3 |  -23.40224   173.3892    -0.13   0.893    -366.7008    319.8963</span>
+<span id="cb2-390"><a href="#cb2-390" aria-hidden="true" tabindex="-1"></a>         pd4 |  -33.34945   158.2301    -0.21   0.833     -346.634    279.9351</span>
+<span id="cb2-391"><a href="#cb2-391" aria-hidden="true" tabindex="-1"></a>         pd5 |  -183.8552   209.1258    -0.88   0.381    -597.9097    230.1993</span>
+<span id="cb2-392"><a href="#cb2-392" aria-hidden="true" tabindex="-1"></a>         pd6 |  (omitted)</span>
+<span id="cb2-393"><a href="#cb2-393" aria-hidden="true" tabindex="-1"></a>         pd7 |   43.79854   168.3807     0.26   0.795    -289.5835    377.1806</span>
+<span id="cb2-394"><a href="#cb2-394" aria-hidden="true" tabindex="-1"></a>         pd8 |    99.2044   192.0972     0.52   0.607    -281.1347    479.5435</span>
+<span id="cb2-395"><a href="#cb2-395" aria-hidden="true" tabindex="-1"></a>         pd9 |    677.295   252.7652     2.68   0.008     176.8374    1177.752</span>
+<span id="cb2-396"><a href="#cb2-396" aria-hidden="true" tabindex="-1"></a>        pd10 |   61.92765   195.3322     0.32   0.752    -324.8165    448.6718</span>
+<span id="cb2-397"><a href="#cb2-397" aria-hidden="true" tabindex="-1"></a>        pd11 |  -330.9045   175.7311    -1.88   0.062    -678.8399    17.03093</span>
+<span id="cb2-398"><a href="#cb2-398" aria-hidden="true" tabindex="-1"></a>        pd12 |  -30.48932   156.9822    -0.19   0.846    -341.3031    280.3245</span>
+<span id="cb2-399"><a href="#cb2-399" aria-hidden="true" tabindex="-1"></a>        pd13 |   201.1421   166.0392     1.21   0.228     -127.604    529.8881</span>
+<span id="cb2-400"><a href="#cb2-400" aria-hidden="true" tabindex="-1"></a>        pd14 |   42.74646    144.145     0.30   0.767    -242.6506    328.1435</span>
+<span id="cb2-401"><a href="#cb2-401" aria-hidden="true" tabindex="-1"></a>        pd15 |  -82.50432    214.247    -0.39   0.701    -506.6984    341.6897</span>
+<span id="cb2-402"><a href="#cb2-402" aria-hidden="true" tabindex="-1"></a>        pd16 |   15.49172   176.6563     0.09   0.930    -334.2755    365.2589</span>
+<span id="cb2-403"><a href="#cb2-403" aria-hidden="true" tabindex="-1"></a>        pd17 |   42.55748   199.6531     0.21   0.832    -352.7417    437.8567</span>
+<span id="cb2-404"><a href="#cb2-404" aria-hidden="true" tabindex="-1"></a>        pd18 |   9.402431   160.6178     0.06   0.953    -308.6096    327.4145</span>
+<span id="cb2-405"><a href="#cb2-405" aria-hidden="true" tabindex="-1"></a>        pd19 |   167.9075   418.6528     0.40   0.689    -660.9959     996.811</span>
+<span id="cb2-406"><a href="#cb2-406" aria-hidden="true" tabindex="-1"></a>        pd20 |  -120.0367   187.6748    -0.64   0.524    -491.6197    251.5464</span>
+<span id="cb2-407"><a href="#cb2-407" aria-hidden="true" tabindex="-1"></a>        pd21 |   170.3136    193.863     0.88   0.381    -213.5217    554.1488</span>
+<span id="cb2-408"><a href="#cb2-408" aria-hidden="true" tabindex="-1"></a>        pd22 |  -24.40219   200.0268    -0.12   0.903    -420.4413    371.6369</span>
+<span id="cb2-409"><a href="#cb2-409" aria-hidden="true" tabindex="-1"></a>        pd23 |      59.87   143.5248     0.42   0.677     -224.299     344.039</span>
+<span id="cb2-410"><a href="#cb2-410" aria-hidden="true" tabindex="-1"></a>        pd24 |  -82.74678   202.1043    -0.41   0.683    -482.8992    317.4057</span>
+<span id="cb2-411"><a href="#cb2-411" aria-hidden="true" tabindex="-1"></a>        pd25 |  (omitted)</span>
+<span id="cb2-412"><a href="#cb2-412" aria-hidden="true" tabindex="-1"></a>        pd26 |   180.1916   173.7741     1.04   0.302    -163.8691    524.2523</span>
+<span id="cb2-413"><a href="#cb2-413" aria-hidden="true" tabindex="-1"></a>        pd27 |  -231.2034   255.1446    -0.91   0.367    -736.3719    273.9651</span>
+<span id="cb2-414"><a href="#cb2-414" aria-hidden="true" tabindex="-1"></a>        pd28 |  (omitted)</span>
+<span id="cb2-415"><a href="#cb2-415" aria-hidden="true" tabindex="-1"></a>        pd29 |  -404.6779   325.7161    -1.24   0.217    -1049.573    240.2173</span>
+<span id="cb2-416"><a href="#cb2-416" aria-hidden="true" tabindex="-1"></a>        pd30 |  -173.7454   217.6256    -0.80   0.426    -604.6289    257.1381</span>
+<span id="cb2-417"><a href="#cb2-417" aria-hidden="true" tabindex="-1"></a>         yd1 |  (omitted)</span>
+<span id="cb2-418"><a href="#cb2-418" aria-hidden="true" tabindex="-1"></a>         yd2 |  (omitted)</span>
+<span id="cb2-419"><a href="#cb2-419" aria-hidden="true" tabindex="-1"></a>         yd3 |  (omitted)</span>
+<span id="cb2-420"><a href="#cb2-420" aria-hidden="true" tabindex="-1"></a>         yd4 |  (omitted)</span>
+<span id="cb2-421"><a href="#cb2-421" aria-hidden="true" tabindex="-1"></a>         yd5 |  (omitted)</span>
+<span id="cb2-422"><a href="#cb2-422" aria-hidden="true" tabindex="-1"></a>         yd6 |  (omitted)</span>
+<span id="cb2-423"><a href="#cb2-423" aria-hidden="true" tabindex="-1"></a>         yd7 |  (omitted)</span>
+<span id="cb2-424"><a href="#cb2-424" aria-hidden="true" tabindex="-1"></a>         yd8 |  (omitted)</span>
+<span id="cb2-425"><a href="#cb2-425" aria-hidden="true" tabindex="-1"></a>         yd9 |  (omitted)</span>
+<span id="cb2-426"><a href="#cb2-426" aria-hidden="true" tabindex="-1"></a>        yd10 |  (omitted)</span>
+<span id="cb2-427"><a href="#cb2-427" aria-hidden="true" tabindex="-1"></a>        yd11 |  (omitted)</span>
+<span id="cb2-428"><a href="#cb2-428" aria-hidden="true" tabindex="-1"></a>        yd12 |  (omitted)</span>
+<span id="cb2-429"><a href="#cb2-429" aria-hidden="true" tabindex="-1"></a>        yd13 |  -99.68378   152.6417    -0.65   0.515    -401.9037    202.5361</span>
+<span id="cb2-430"><a href="#cb2-430" aria-hidden="true" tabindex="-1"></a>        yd14 |  -51.76248   127.3657    -0.41   0.685    -303.9377    200.4127</span>
+<span id="cb2-431"><a href="#cb2-431" aria-hidden="true" tabindex="-1"></a>        yd15 |   1.204476   98.69447     0.01   0.990    -194.2037    196.6127</span>
+<span id="cb2-432"><a href="#cb2-432" aria-hidden="true" tabindex="-1"></a>        yd16 |   35.94405   57.09284     0.63   0.530    -77.09581    148.9839</span>
+<span id="cb2-433"><a href="#cb2-433" aria-hidden="true" tabindex="-1"></a>        yd17 |  (omitted)</span>
+<span id="cb2-434"><a href="#cb2-434" aria-hidden="true" tabindex="-1"></a>        yd18 |   171.8328   55.21844     3.11   0.002     62.50408    281.1614</span>
+<span id="cb2-435"><a href="#cb2-435" aria-hidden="true" tabindex="-1"></a>       <span class="dt">_cons</span> |   826.6987   609.2366     1.36   0.177    -379.5473    2032.945</span>
+<span id="cb2-436"><a href="#cb2-436" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------------</span>
+<span id="cb2-437"><a href="#cb2-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-438"><a href="#cb2-438" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-439"><a href="#cb2-439" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-440"><a href="#cb2-440" aria-hidden="true" tabindex="-1"></a>. <span class="fu">matrix</span> cv=<span class="fu">get</span>(<span class="kw">VCE</span>)</span>
+<span id="cb2-441"><a href="#cb2-441" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-442"><a href="#cb2-442" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-443"><a href="#cb2-443" aria-hidden="true" tabindex="-1"></a>. <span class="fu">matrix</span> cv1 = cv[1..3,1..3]</span>
+<span id="cb2-444"><a href="#cb2-444" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-445"><a href="#cb2-445" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-446"><a href="#cb2-446" aria-hidden="true" tabindex="-1"></a>. <span class="fu">matrix</span> <span class="ot">list</span> cv1</span>
+<span id="cb2-447"><a href="#cb2-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-448"><a href="#cb2-448" aria-hidden="true" tabindex="-1"></a>symmetric cv1[3,3]</span>
+<span id="cb2-449"><a href="#cb2-449" aria-hidden="true" tabindex="-1"></a>              state3    premsta3     tar_cm3</span>
+<span id="cb2-450"><a href="#cb2-450" aria-hidden="true" tabindex="-1"></a>  state3   .23532398</span>
+<span id="cb2-451"><a href="#cb2-451" aria-hidden="true" tabindex="-1"></a>premsta3  -.52880818   1.3459097</span>
+<span id="cb2-452"><a href="#cb2-452" aria-hidden="true" tabindex="-1"></a> tar_cm3   1.8540186  -4.6583376   57.392959</span>
+<span id="cb2-453"><a href="#cb2-453" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-454"><a href="#cb2-454" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-455"><a href="#cb2-455" aria-hidden="true" tabindex="-1"></a>. <span class="fu">log</span> <span class="kw">close</span></span>
+<span id="cb2-456"><a href="#cb2-456" aria-hidden="true" tabindex="-1"></a>      <span class="bn">name</span>:  &lt;unnamed&gt;</span>
+<span id="cb2-457"><a href="#cb2-457" aria-hidden="true" tabindex="-1"></a>       <span class="fu">log</span>:  Z:\home\pacha\github\advanced-international-trade\first-edition\Chapter-9\share_reg.<span class="fu">log</span></span>
+<span id="cb2-458"><a href="#cb2-458" aria-hidden="true" tabindex="-1"></a>  <span class="fu">log</span> <span class="dv">type</span>:  <span class="bn">text</span></span>
+<span id="cb2-459"><a href="#cb2-459" aria-hidden="true" tabindex="-1"></a> closed <span class="kw">on</span>:  27 Oct 2024, 17:14:31</span>
+<span id="cb2-460"><a href="#cb2-460" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------------------------------------------------------</span>
+<span id="cb2-461"><a href="#cb2-461" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-462"><a href="#cb2-462" aria-hidden="true" tabindex="-1"></a>. </span>
+<span id="cb2-463"><a href="#cb2-463" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span> <span class="kw">of</span> <span class="kw">do</span>-file</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="my-code" class="level3">
+<h3 class="anchored" data-anchor-id="my-code">My code</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Packages ----</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(archive)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ivreg) <span class="co"># for 2SLS regression</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract ----</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>fzip <span class="ot">&lt;-</span> <span class="st">"first-edition/Chapter-9.zip"</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>dout <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">.zip$"</span>, <span class="st">""</span>, fzip)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(dout)) {</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">archive_extract</span>(fzip, <span class="at">dir =</span> dout)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Read and transform ----</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>fout <span class="ot">&lt;-</span> <span class="fu">paste0</span>(dout, <span class="st">"/china_fdi.rds"</span>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(fout)) {</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  china_fdi <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="fu">paste0</span>(dout, <span class="st">"/china_fdi.dta"</span>))</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(china_fdi, fout)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  china_fdi <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(fout)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pd_vars <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"pd"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">sep =</span> <span class="st">""</span>, <span class="at">collapse =</span> <span class="st">" + "</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>yd_vars <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"yd"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">18</span>, <span class="at">sep =</span> <span class="st">""</span>, <span class="at">collapse =</span> <span class="st">" + "</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>formula_str <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"fiech3 ~ state3 + premsta3 + tar_cm3 + newprem + fdi2_cm3 + appcons3 +"</span>, pd_vars, <span class="st">"+"</span>, yd_vars)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.formula</span>(formula_str), <span class="at">data =</span> <span class="fu">filter</span>(china_fdi, fiech3 <span class="sc">&gt;</span> <span class="dv">0</span>))</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 55 × 5
+   term        estimate     std.error statistic  p.value
+   &lt;chr&gt;          &lt;dbl&gt;         &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+ 1 (Intercept)  1.65e+2 41.6              3.96  9.89e- 5
+ 2 state3      -4.12e-1  0.0794          -5.19  4.33e- 7
+ 3 premsta3     4.18e-1  0.138            3.04  2.65e- 3
+ 4 tar_cm3     -1.46e-1  1.18            -0.124 9.02e- 1
+ 5 newprem     -1.18e+2 65.2             -1.82  7.02e- 2
+ 6 fdi2_cm3     3.67e-7  0.0000000750     4.89  1.80e- 6
+ 7 appcons3     1.09e-1  0.00842         12.9   1.60e-29
+ 8 pd1          9.65e+1 32.7              2.95  3.47e- 3
+ 9 pd2          6.96e+1 32.7              2.13  3.41e- 2
+10 pd3          5.69e+0 31.9              0.178 8.58e- 1
+# ℹ 45 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>formula_str <span class="ot">&lt;-</span> <span class="fu">paste</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"fiech3 ~ state3 + premsta3 + tar_cm3 + newprem + fdi2_cm3 + appcons3 +"</span>, pd_vars, <span class="st">"+"</span>, yd_vars,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"| elecpro + elecgdp + elecpop + elecurb + elecrur + elecwag + elecwags + elecwagu + cmpr3 +"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"cmprgdp + cmprpop + cmprelec + indewag + indewags + indewagu + gdp + pop + urbaninc + rurinc +"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  pd_vars, <span class="st">"+"</span>, yd_vars</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">ivreg</span>(<span class="fu">as.formula</span>(formula_str), <span class="at">data =</span> <span class="fu">filter</span>(china_fdi, fiech3 <span class="sc">&gt;</span> <span class="dv">0</span>))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># tidy(fit2)</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co"># fails with</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Error in solve.default(vcov.hyp) :</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   system is computationally singular: reciprocal condition number = 9.20049e-21</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="exercise-2" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
+<p>Open the excel file <code>standard_errors.xls</code> to see how the results in Table 9.2 are computed. What formula is used for <span class="math inline">\(\alpha\)</span>, and for its variance and standard error? Justify these formulas.</p>
+<p>Hint: Consider the easier case of taking the difference between <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. Then:</p>
+<p><span class="math display">\[
+var(\alpha - \beta) = E[(\alpha - \beta) - (\bar{\alpha} - \bar{beta})]^2 = E f(\alpha,\beta),
+\]</span></p>
+<p>where <span class="math inline">\(f(\alpha,\beta)\)</span> is the quadratic function indicated. To compute this expected value, we take a second-order Taylor series expansion:</p>
+<p><span class="math display">\[
+f(\alpha,\beta) \approx f(\bar{\alpha},\bar{\beta}) +
+  f_{\alpha}(\bar{\alpha},\bar{\beta})(\alpha - \bar{\alpha}) +
+  f_{\beta}(\bar{\alpha},\bar{\beta})(\beta - \bar{\beta}) +
+  \frac{1}{2} f_{\alpha\alpha}(\bar{\alpha},\bar{\beta})(\alpha - \bar{\alpha})^2 +
+  \frac{1}{2} f_{\beta\beta}(\bar{\alpha},\bar{\beta})(\beta - \bar{\beta})^2 +
+  f_{\alpha\beta}(\bar{\alpha},\bar{\beta})(\alpha - \bar{\alpha})(\beta - \bar{\beta}).
+\]</span></p>
+<p>It follows that,</p>
+<p><span class="math display">\[
+Ef(\alpha,\beta) \approx \frac{1}{2} f_{\alpha\alpha}(\bar{\alpha},\bar{\beta}) \sigma_{\alpha}^2 +
+  \frac{1}{2} f_{\beta\beta}(\bar{\alpha},\bar{\beta}) \sigma_{\beta}^2 +
+  f_{\alpha\beta}(\bar{\alpha},\bar{\beta}) text{cov}(\alpha,\beta).
+\]</span></p>
+<p>So computing the derivatives of the quadratic function <span class="math inline">\(f(\alpha,\beta)\)</span>, we obtain,</p>
+<p><span class="math display">\[
+\text{var}(\alpha - \beta) = E[(\alpha - \beta) - (\bar{\alpha} - \bar{\beta})]^2 \approx \sigma_{\alpha}^2 + \sigma_{\beta}^2- 2\text{cov}(\alpha,\beta).
+\]</span></p>
+<p>Now given the formula for <span class="math inline">\(\alpha\)</span>, use the same approach to justify its variance.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./chapter8.html" class="pagination-link" aria-label="Chapter 8. Import Quotas and Export Subsidies">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Chapter 8. Import Quotas and Export Subsidies</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
