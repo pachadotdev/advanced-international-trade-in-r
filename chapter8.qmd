@@ -3,7 +3,7 @@
 
 ## Empirical exercise
 
-This exercise is to reproduce regression results Feenstra (1988a). To complete the exercise, the files "car_7990.dta, truck_7990.dta" should be stored in `Chapter-8`.  
+This exercise is to reproduce regression results Feenstra (1988a). To complete the exercise, the files "car_7990.dta" and "truck_7990.dta" should be stored in `Chapter-8`.  
 
 ## Documentation
 
@@ -3506,7 +3506,7 @@ kable(table83)
 
 ## Exercise 5
 
-Pooling car and truck data, run `system_nocom.do` and `system_wcon.do` to reproduce columns (1) – (4) in Table 8.5, with constraints specified in equation (8.22).
+Pooling car and truck data, run `system_nocom.do` and `system_wcon.do` to reproduce columns (1) - (4) in Table 8.5, with constraints specified in equation (8.22).
 
 ### Feenstra's code
 

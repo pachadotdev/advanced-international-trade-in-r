@@ -21,9 +21,9 @@ There are five data sets in excel format: `cars.csv`, `trucks.csv`, `cycon.csv`,
 | lag0     | First order polynomial lag on betas              |
 | lag1     | Second order polynomial lag on betas             |
 | lag2     | Third order polynomial lag on betas              |
-| y        | Import price transformed, y = iprice – income    |
-| x1       | US price transformed, usprice – income           |
-| x2       | German price transformed, gprice – income        |
+| y        | Import price transformed, y = iprice - income    |
+| x1       | US price transformed, usprice - income           |
+| x2       | German price transformed, gprice - income        |
 | z0       | First order polynomial lag transformed           |
 | z1       | Second order polynomial lag transformed          |
 | z2       | Third order polynomial lag transformed           |
@@ -942,7 +942,7 @@ Output:
 end of do-file
 ```
 
-### Trucks
+#### Trucks
 
 ```stata
 clear

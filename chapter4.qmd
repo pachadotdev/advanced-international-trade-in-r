@@ -9,28 +9,28 @@ Here are some variable definitions in data file `data_Chp4` to help you in the r
 
 #### NBER productivity dataset (Bartelsman, Becker, Gray):
 
-| Variable | Description |
-|----------|-------------|
+| Variable | Description                                                |
+|----------|------------------------------------------------------------|
 | sic      | Standard Industrial Classification (4-digit manufacturing) |
-| year     | Year ranges from 58 to 97 |
-| emp      | Total employment in 1000s |
-| pay      | Total payroll in $1,000,000 |
-| prode    | Production workers in 1000s |
-| prodh    | Production worker hours in 1,000,000 |
-| prodw    | Production worker wages in $1,000,000 |
-| vship    | Total value of shipments in $1,000,000 |
-| material | Total cost of materials in $1,000,000 |
-| vadd     | Total value added in $1,000,000 |
-| invest   | Total capital expenditure in $1,000,000 |
-| invent   | End-of-year inventories in $1,000,000 |
-| energy   | Cost of electric & fuels in $1,000,000 |
-| cap      | Total real capital stock in $1,000,000 |
-| equip    | Real capital: equipment in $1,000,000 |
-| plant    | Real capital: structures in $1,000,000 |
-| piship   | Deflator for VSHIP 1987=1.000 |
-| pimat    | Deflator for MATCOST 1987=1.000 |
-| piinv    | Deflator for INVEST 1987=1.000 |
-| pien     | Deflator for ENERGY 1987=1.000 |
+| year     | Year ranges from 58 to 97                                  |
+| emp      | Total employment in 1000s                                  |
+| pay      | Total payroll in $1,000,000                                |
+| prode    | Production workers in 1000s                                |
+| prodh    | Production worker hours in 1,000,000                       |
+| prodw    | Production worker wages in $1,000,000                      |
+| vship    | Total value of shipments in $1,000,000                     |
+| material | Total cost of materials in $1,000,000                      |
+| vadd     | Total value added in $1,000,000                            |
+| invest   | Total capital expenditure in $1,000,000                    |
+| invent   | End-of-year inventories in $1,000,000                      |
+| energy   | Cost of electric & fuels in $1,000,000                     |
+| cap      | Total real capital stock in $1,000,000                     |
+| equip    | Real capital: equipment in $1,000,000                      |
+| plant    | Real capital: structures in $1,000,000                     |
+| piship   | Deflator for VSHIP 1987=1.000                              |
+| pimat    | Deflator for MATCOST 1987=1.000                            |
+| piinv    | Deflator for INVEST 1987=1.000                             |
+| pien     | Deflator for ENERGY 1987=1.000                             |
 
 #### Other variables created by Feenstra and Hanson:
 
@@ -38,44 +38,44 @@ The prefix "a" generally denotes an average of that variable over two periods.
 
 The prefix "d" indicates annual average change in that variable x 100.
 
-| Variable | Description |
-|----------|-------------|
-| sic72    | 4 digit SIC code |
-| sic2     | 2 digit SIC code |
-| ptfp     | primary TFP |
-| err      | error as defined in (4.26) of Chapter 4, or (3) in Feenstra and Hanson (1999) |
-| simat1a  | Share of imported materials (broad outsourcing) |
-| simat1b  | share of imported materials from inside 2-digit industry (narrow outsourcing) |
-| diffout  | = simat1a – simat1b = share of imported materials from outside 2-digit industry |
-| imat     | imported materials |
-| amsh     | average material share |
-| aosh     | average energy share |
-| adlhw    | annual change in log production wage |
-| adlnw    | annual chage in log non-production wage |
-| adlpk    | annual change in log capital price |
-| amesh    | aosh + amsh |
-| apsh     | average production share |
-| ansh     | average non-production share |
-| aksh     | average capital share |
-| nwsh     | nonproduction share of the total wages |
-| dlpvad    | change in log value-added                                                                            |
-| dlpmx     | change in log material price                                                                         |
-| dlpe      | change in log energy price                                                                           |
-| dlp       | change in log price                                                                                  |
-| dlky      | change in log capital stock to real shipments ratio                                                  |
-| dly       | change in log real shipments                                                                         |
-| mvshipsh  | industry share of total manufacturing shipments, averaged over the first and last period             |
-| dsimat1b  | change in outsourcing (narrow); that is, change in imported inputs from the same 2-digit industry divided by total materials purchases |
-| dsimat1a  | change in outsourcing (broad); that is, imported inputs divided by total material purchases           |
-| dofsh     | change in office equipment/total capital (capital=pstk x ex post rental price)                       |
-| dofsh1    | change in office equipment/total capital (capital=pstk x ex ante rental price)                       |
-| dhtsh     | change in High-tech capital/total capital (capital=pstk x ex post rental price)                       |
-| dhtsh1    | change in High-tech capital/total capital (capital=pstk x ex ante rental price)                       |
-| ci        | computer investment/total investment                                                                 |
+| Variable  | Description                                                                                          |
+|-----------|------------------------------------------------------------------------------------------------------|
+| sic72     | 4 digit SIC code                                                                                     |
+| sic2      | 2 digit SIC code                                                                                     |
+| ptfp      | Primary TFP                                                                                          |
+| err       | Error as defined in (4.26) of Chapter 4, or (3) in Feenstra and Hanson (1999)                        |
+| simat1a   | Share of imported materials (broad outsourcing)                                                      |
+| simat1b   | Share of imported materials from inside 2-digit industry (narrow outsourcing)                        |
+| diffout   | = simat1a - simat1b = Share of imported materials from outside 2-digit industry                      |
+| imat      | Imported materials                                                                                   |
+| amsh      | Average material share                                                                               |
+| aosh      | Average energy share                                                                                 |
+| adlhw     | Annual change in log production wage                                                                 |
+| adlnw     | Annual change in log non-production wage                                                             |
+| adlpk     | Annual change in log capital price                                                                   |
+| amesh     | aosh + amsh                                                                                          |
+| apsh      | Average production share                                                                             |
+| ansh      | Average non-production share                                                                         |
+| aksh      | Average capital share                                                                                |
+| nwsh      | Non-production share of the total wages                                                              |
+| dlpvad    | Change in log value-added                                                                            |
+| dlpmx     | Change in log material price                                                                         |
+| dlpe      | Change in log energy price                                                                           |
+| dlp       | Change in log price                                                                                  |
+| dlky      | Change in log capital stock to real shipments ratio                                                  |
+| dly       | Change in log real shipments                                                                         |
+| mvshipsh  | Industry share of total manufacturing shipments, averaged over the first and last period             |
+| dsimat1b  | Change in outsourcing (narrow); change in imported inputs from the same 2-digit industry divided by total materials purchases |
+| dsimat1a  | Change in outsourcing (broad); imported inputs divided by total material purchases                   |
+| dofsh     | Change in office equipment/total capital (capital=pstk x ex post rental price)                       |
+| dofsh1    | Change in office equipment/total capital (capital=pstk x ex ante rental price)                       |
+| dhtsh     | Change in High-tech capital/total capital (capital=pstk x ex post rental price)                      |
+| dhtsh1    | Change in High-tech capital/total capital (capital=pstk x ex ante rental price)                      |
+| ci        | Computer investment/total investment                                                                 |
 
 ## Exercise 1
 
-Download the NBER productivity dataset at http://www.nber.org/nberces/nbprod96.htm, compute the relative wage and relative employment for 1958 – 1996, and reconstruct Figure 4.1 and 4.2.
+Download the NBER productivity dataset at http://www.nber.org/nberces/nbprod96.htm, compute the relative wage and relative employment for 1958 - 1996, and reconstruct Figure 4.1 and 4.2.
 
 Note: Given this data, you need to first compute the wage rates in production and nonproduction sectors using the following formula ($i$ denotes the industry):
 

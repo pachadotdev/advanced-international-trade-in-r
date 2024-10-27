@@ -11,71 +11,71 @@ US-Canada data for Anderson and van Wincoop (2002)
 
 There are a total of 63 US-Canada regions (states, District of Columbia, provinces and territories). They are listed below. The regressions, however, are based on the same 40 states and provinces as in McCallum (these are indicated with a star below). 
 
-| Code   | State/Province |
-|--------|----------------|
-| 1      | Alabama*       |
-| 2      | Alaska         |
-| 3      | Arizona*       |
-| 4      | Arkansas       |
-| 5      | California*    |
-| 6      | Colorado       |
-| 7      | Connecticut    |
-| 8      | Delaware       |
-| 9      | Florida*       |
-| 10     | Georgia*       |
-| 11     | Hawaii         |
-| 12     | Idaho*         |
-| 13     | Illinois*      |
-| 14     | Indiana*       |
-| 15     | Iowa           |
-| 16     | Kansas         |
-| 17     | Kentucky*      |
-| 18     | Louisiana*     |
-| 19     | Maine*         |
-| 20     | Maryland*      |
-| 21     | Massachusetts* |
-| 22     | Michigan*      |
-| 23     | Minnesota*     |
-| 24     | Mississippi    |
-| 25     | Missouri*      |
-| 26     | Montana*       |
-| 27     | Nebraska       |
-| 28     | Nevada         |
-| 29     | New Hampshire* |
-| 30     | New Jersey*    |
-| 31     | New Mexico     |
-| 32     | New York*      |
-| 33     | North Carolina*|
-| 34     | North Dakota*  |
-| 35     | Ohio*          |
-| 36     | Oklahoma       |
-| 37     | Oregon         |
-| 38     | Pennsylvania*  |
-| 39     | Rhode Island   |
-| 40     | South Carolina |
-| 41     | South Dakota   |
-| 42     | Tennessee*     |
-| 43     | Texas*         |
-| 44     | Utah           |
-| 45     | Vermont*       |
-| 46     | Virginia*      |
-| 47     | Washington*    |
-| 48     | West Virginia  |
-| 49     | Wisconsin*     |
-| 50     | Wyoming        |
-| 51     | Dist. of Col.  |
-| 52     | Alberta*       |
-| 53     | British Columbia* |
-| 54     | Manitoba*      |
-| 55     | New Brunswick* |
-| 56     | Newfoundland*  |
-| 57     | NW Territories |
-| 58     | Nova Scotia*   |
-| 59     | Ontario*       |
-| 60     | Prince Edward Island* |
-| 61     | Quebec*        |
-| 62     | Saskatchewan*  |
-| 63     | Yukon Territory|
+| Code | State/Province         |
+|------|------------------------|
+| 1    | Alabama*               |
+| 2    | Alaska                 |
+| 3    | Arizona*               |
+| 4    | Arkansas               |
+| 5    | California*            |
+| 6    | Colorado               |
+| 7    | Connecticut            |
+| 8    | Delaware               |
+| 9    | Florida*               |
+| 10   | Georgia*               |
+| 11   | Hawaii                 |
+| 12   | Idaho*                 |
+| 13   | Illinois*              |
+| 14   | Indiana*               |
+| 15   | Iowa                   |
+| 16   | Kansas                 |
+| 17   | Kentucky*              |
+| 18   | Louisiana*             |
+| 19   | Maine*                 |
+| 20   | Maryland*              |
+| 21   | Massachusetts*         |
+| 22   | Michigan*              |
+| 23   | Minnesota*             |
+| 24   | Mississippi            |
+| 25   | Missouri*              |
+| 26   | Montana*               |
+| 27   | Nebraska               |
+| 28   | Nevada                 |
+| 29   | New Hampshire*         |
+| 30   | New Jersey*            |
+| 31   | New Mexico             |
+| 32   | New York*              |
+| 33   | North Carolina*        |
+| 34   | North Dakota*          |
+| 35   | Ohio*                  |
+| 36   | Oklahoma               |
+| 37   | Oregon                 |
+| 38   | Pennsylvania*          |
+| 39   | Rhode Island           |
+| 40   | South Carolina         |
+| 41   | South Dakota           |
+| 42   | Tennessee*             |
+| 43   | Texas*                 |
+| 44   | Utah                   |
+| 45   | Vermont*               |
+| 46   | Virginia*              |
+| 47   | Washington*            |
+| 48   | West Virginia          |
+| 49   | Wisconsin*             |
+| 50   | Wyoming                |
+| 51   | Dist. of Col.          |
+| 52   | Alberta*               |
+| 53   | British Columbia*      |
+| 54   | Manitoba*              |
+| 55   | New Brunswick*         |
+| 56   | Newfoundland*          |
+| 57   | NW Territories         |
+| 58   | Nova Scotia*           |
+| 59   | Ontario*               |
+| 60   | Prince Edward Island*  |
+| 61   | Quebec*                |
+| 62   | Saskatchewan*          |
+| 63   | Yukon Territory        |
 
 Data files:
 
