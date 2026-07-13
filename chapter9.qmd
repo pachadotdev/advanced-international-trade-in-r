@@ -637,11 +637,9 @@ end of do-file
 
 library(archive)
 library(haven)
-library(dplyr)
-library(broom)
+library(data.table)
 library(ivreg) # for 2SLS regression
 library(sandwich) # for robust standard errors
-library(purrr)
 library(knitr)
 
 # Extract ----
@@ -658,7 +656,7 @@ if (!dir.exists(dout)) {
 fout <- paste0(dout, "/china_fdi.rds")
 
 if (!file.exists(fout)) {
-  china_fdi <- read_dta(paste0(dout, "/china_fdi.dta"))
+  china_fdi <- as.data.table(read_dta(paste0(dout, "/china_fdi.dta")))
 
   saveRDS(china_fdi, fout)
 } else {
@@ -674,9 +672,11 @@ yd_vars <- paste("yd", 1:18, sep = "", collapse = " + ")
 
 formula_str <- paste("fiech3 ~",  rhs_vars, "+", pd_vars, "+", yd_vars)
 
-fit1 <- lm(formula_str, data = filter(china_fdi, fiech3 > 0))
+fit1 <- lm(formula_str, data = china_fdi[fiech3 > 0])
 
-tidy(fit1)
+coef_dt <- as.data.table(summary(fit1)$coefficients, keep.rownames = "term")
+setnames(coef_dt, c("term", "estimate", "std.error", "statistic", "p.value"))
+coef_dt
 ```
 
 ```{r ch9_ex1_3}
@@ -694,9 +694,9 @@ formula_str <- paste(
   "|", instruments, "+", pd_vars, "+", yd_vars
 )
 
-china_fdi_8495 <- filter(china_fdi, fiech3 > 0)
-china_fdi_8895 <- filter(china_fdi, fiech3 > 0 & year >= 1988)
-china_fdi_9095 <- filter(china_fdi, fiech3 > 0 & year >= 1990)
+china_fdi_8495 <- china_fdi[fiech3 > 0]
+china_fdi_8895 <- china_fdi[fiech3 > 0 & year >= 1988]
+china_fdi_9095 <- china_fdi[fiech3 > 0 & year >= 1990]
 
 fit_8495 <- ivreg(formula_str,
   data = china_fdi_8495,
@@ -724,19 +724,18 @@ iv_summary <- function(model) {
   se <- sqrt(diag(vcov(model)))
   t_stats <- coeffs / se
   p_values <- 2 * pt(abs(t_stats), df = model$df.residual, lower.tail = FALSE)
-  
-  results <- tibble(
+
+  results <- data.table(
     variable = names(coeffs),
     coefficient = coeffs,
     std_error = se,
     t_value = t_stats,
     p_value = p_values
   )
-  
+
   key_vars <- c("state3", "premsta3", "tar_cm3", "newprem", "fdi2_cm3", "appcons3")
 
-  results %>%
-    filter(variable %in% key_vars)
+  results[variable %in% key_vars]
 }
 
 iv_summary(fit_8495)
@@ -847,7 +846,7 @@ iv_summary_delta <- function(model, period) {
 
   se_beta_minus_alpha <- sqrt(var_beta_minus_alpha)
 
-  tibble(
+  data.table(
     period = period,
     variable = c("tar_cm3", "premsta3", "state3"),
     coefficients = c(gamma1, gamma2, gamma3),
@@ -868,6 +867,6 @@ options(knitr.kable.NA = "")
 periods <- c("1984-1995", "1988-1995", "1990-1995")
 models <- list(fit_8495, fit_8895, fit_9095)
 
-map2_df(models, periods, iv_summary_delta) %>%
-  kable(na = "", digits = 3)
+result <- rbindlist(Map(iv_summary_delta, models, periods))
+kable(result, na = "", digits = 3)
 ```
