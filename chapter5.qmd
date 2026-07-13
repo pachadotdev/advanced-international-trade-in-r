@@ -409,9 +409,7 @@ end of do-file
 # Packages ----
 
 library(archive)
-library(readr)
-library(janitor)
-library(dplyr)
+library(data.table)
 
 # Extract ----
 
@@ -433,39 +431,34 @@ if (!file.exists(fout)) {
 
   # instead of reading the DTA files, I will read the CSV files and transform
 
-  dist <- read_csv(paste0(dout, "/dist.csv")) %>%
-    clean_names() %>%
-    arrange(c_e, c_i)
+  dist <- fread(paste0(dout, "/dist.csv"))
+  setnames(dist, tolower(names(dist)))
+  setorder(dist, c_e, c_i)
 
-  trade_93 <- read_csv(paste0(dout, "/trade_93.csv")) %>%
-    clean_names() %>%
-    arrange(c_e, c_i)
+  trade_93 <- fread(paste0(dout, "/trade_93.csv"))
+  setnames(trade_93, tolower(names(trade_93)))
+  setorder(trade_93, c_e, c_i)
 
-  trade_93 <- trade_93 %>%
-    left_join(dist, by = c("c_e", "c_i"))
-
+  trade_93 <- merge(trade_93, dist, by = c("c_e", "c_i"))
   rm(dist)
 
-  gdp_ce_93 <- read_csv(paste0(dout, "/gdp_ce_93.csv")) %>%
-    clean_names() %>%
-    mutate(gdp_ce = gdp_ce * 0.775134) %>%
-    arrange(c_e)
+  gdp_ce_93 <- fread(paste0(dout, "/gdp_ce_93.csv"))
+  setnames(gdp_ce_93, tolower(names(gdp_ce_93)))
+  gdp_ce_93[, gdp_ce := gdp_ce * 0.775134]
+  setorder(gdp_ce_93, c_e)
 
-  gdp_ci_93 <- read_csv(paste0(dout, "/gdp_ci_93.csv")) %>%
-    clean_names() %>%
-    mutate(gdp_ci = gdp_ci * 0.775134) %>%
-    arrange(c_i)
+  gdp_ci_93 <- fread(paste0(dout, "/gdp_ci_93.csv"))
+  setnames(gdp_ci_93, tolower(names(gdp_ci_93)))
+  gdp_ci_93[, gdp_ci := gdp_ci * 0.775134]
+  setorder(gdp_ci_93, c_i)
 
-  trade_93 <- trade_93 %>%
-    left_join(gdp_ce_93, by = "c_e") %>%
-    left_join(gdp_ci_93, by = "c_i") %>%
-    filter(vx != 0, dist != 0) %>%
-    mutate(
-      lnvx = log(vx),
-      lndist = log(dist),
-      lngdp_ce = log(gdp_ce),
-      lngdp_ci = log(gdp_ci)
-    )
+  trade_93 <- merge(trade_93, gdp_ce_93, by = "c_e")
+  trade_93 <- merge(trade_93, gdp_ci_93, by = "c_i")
+  trade_93 <- trade_93[vx != 0 & dist != 0]
+  trade_93[, lnvx := log(vx)]
+  trade_93[, lndist := log(dist)]
+  trade_93[, lngdp_ce := log(gdp_ce)]
+  trade_93[, lngdp_ci := log(gdp_ci)]
 
   saveRDS(trade_93, fout)
 } else {
@@ -474,9 +467,8 @@ if (!file.exists(fout)) {
 
 # Estimate Gravity Equation from the Canadian Perspective ----
 
-trade_93_2 <- trade_93 %>%
-  mutate(d_ca = ifelse(l_ex == 2 & l_im == 2, 1, 0)) %>%
-  filter(l_ex != 1 | l_im != 1)
+trade_93_2 <- trade_93[l_ex != 1 | l_im != 1]
+trade_93_2[, d_ca := ifelse(l_ex == 2 & l_im == 2, 1, 0)]
 
 fit_ca <- lm(lnvx ~ lngdp_ce + lngdp_ci + lndist + d_ca, data = trade_93_2)
 
@@ -484,9 +476,8 @@ summary(fit_ca)
 
 # Estimate Gravity Equation from the U.S. Perspective ----
 
-trade_93_3 <- trade_93 %>%
-  mutate(d_us = ifelse(l_ex == 1 & l_im == 1, 1, 0)) %>%
-  filter(l_ex != 2 | l_im != 2)
+trade_93_3 <- trade_93[l_ex != 2 | l_im != 2]
+trade_93_3[, d_us := ifelse(l_ex == 1 & l_im == 1, 1, 0)]
 
 fit_us <- lm(lnvx ~ lngdp_ce + lngdp_ci + lndist + d_us, data = trade_93_3)
 
@@ -494,11 +485,9 @@ summary(fit_us)
 
 # Estimate Gravity Equation by Pooling All Data ----
 
-trade_93_4 <- trade_93 %>%
-  mutate(
-    d_ca = ifelse(l_ex == 2 & l_im == 2, 1, 0),
-    d_us = ifelse(l_ex == 1 & l_im == 1, 1, 0)
-  )
+trade_93_4 <- copy(trade_93)
+trade_93_4[, d_ca := ifelse(l_ex == 2 & l_im == 2, 1, 0)]
+trade_93_4[, d_us := ifelse(l_ex == 1 & l_im == 1, 1, 0)]
 
 fit_all <- lm(
   lnvx ~ lngdp_ce + lngdp_ci + lndist + d_ca + d_us,
@@ -847,37 +836,24 @@ end of do-file
 ```{r ch2_ex2}
 trade_93 <- readRDS(paste0(dout, "/trade_93.rds"))
 
-trade_93 %>%
-  group_by(c_e) %>%
-  summarise(freq = n()) %>%
-  ungroup() %>%
-  mutate(
-    percent = freq / sum(freq) * 100,
-    cum = cumsum(percent)
-  )
+tab_c_e <- trade_93[, .(freq = .N), by = c_e]
+tab_c_e[, percent := freq / sum(freq) * 100]
+tab_c_e[, cum := cumsum(percent)]
+tab_c_e
 
-trade_93 %>%
-  group_by(c_i) %>%
-  summarise(freq = n()) %>%
-  ungroup() %>%
-  mutate(
-    percent = freq / sum(freq) * 100,
-    cum = cumsum(percent)
-  )
+tab_c_i <- trade_93[, .(freq = .N), by = c_i]
+tab_c_i[, percent := freq / sum(freq) * 100]
+tab_c_i[, cum := cumsum(percent)]
+tab_c_i
 
-trade_93 <- trade_93 %>%
-  mutate(
-    d_border = case_when(
-      l_ex == 1 & l_im == 1 ~ 0,
-      l_ex == 2 & l_im == 2 ~ 0,
-      TRUE ~ 1
-    ),
-    lnvx = log(vx),
-    lndist = log(dist),
-    lngdp_ce = log(gdp_ce),
-    lngdp_ci = log(gdp_ci),
-    lnn_vx = lnvx - lngdp_ce - lngdp_ci
-  )
+trade_93[, d_border := fifelse(
+  (l_ex == 1 & l_im == 1) | (l_ex == 2 & l_im == 2), 0L, 1L
+)]
+trade_93[, lnvx := log(vx)]
+trade_93[, lndist := log(dist)]
+trade_93[, lngdp_ce := log(gdp_ce)]
+trade_93[, lngdp_ci := log(gdp_ci)]
+trade_93[, lnn_vx := lnvx - lngdp_ce - lngdp_ci]
 
 # some of the FEs are dropped in Stata
 # the slopes are identical, which is what matters
