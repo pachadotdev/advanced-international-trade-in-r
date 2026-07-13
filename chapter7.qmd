@@ -1159,9 +1159,7 @@ end of do-file
 # Packages ----
 
 library(archive)
-library(readr)
-library(dplyr)
-library(broom)
+library(data.table)
 
 # Extract ----
 
@@ -1178,14 +1176,11 @@ fout <- paste0(dout, "/feenstra_93.rds")
 
 if (!file.exists(fout)) {
   feenstra_93 <- list(
-    cars = read_csv(paste0(dout, "/cars.csv")),
-    cycon = read_csv(paste0(dout, "/cycon.csv")) %>%
-      filter(time > 16 & time < 45),
-    cypool = read_csv(paste0(dout, "/cypool.csv")),
-    cyship = read_csv(paste0(dout, "/cyship.csv")) %>%
-      filter(time > 16),
-    trucks = read_csv(paste0(dout, "/trucks.csv")) %>%
-      filter(time > 12)
+    cars = fread(paste0(dout, "/cars.csv")),
+    cycon = fread(paste0(dout, "/cycon.csv"))[time > 16 & time < 45],
+    cypool = fread(paste0(dout, "/cypool.csv")),
+    cyship = fread(paste0(dout, "/cyship.csv"))[time > 16],
+    trucks = fread(paste0(dout, "/trucks.csv"))[time > 12]
   )
 
   saveRDS(feenstra_93, fout)
@@ -1202,22 +1197,11 @@ mod1 <- lm(
   data = feenstra_93$cars
 )
 
-mod1_tidy <- tidy(mod1)
-
-# i = 0
-
-mod1_tidy %>%
-  filter(term == "lag0")
-
-# i = 1
-# use the delta method to calculate the standard errors
-# define auxiliary variables and functions
+mod1_coef <- as.data.table(summary(mod1)$coefficients, keep.rownames = "term")
+setnames(mod1_coef, c("term", "estimate", "std.error", "statistic", "p.value"))
 
 mod1_vcov <- vcov(mod1)
-
 mod1_summ <- summary(mod1)
-
-w <- c(1, 1, 1)
 
 std_error <- function(w, X, vars) {
   as.numeric(sqrt(w %*% X[vars, vars] %*% w))
@@ -1227,71 +1211,50 @@ p_value <- function(statistic, summary) {
   as.numeric(2 * pt(-abs(statistic), df = summary$df[2]))
 }
 
-mod1_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(w = w) %>%
-  summarise(
-    estimate = sum(estimate * w),
-    std.error = std_error(w, mod1_vcov, c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, mod1_summ)
-  )
+# i = 0
+
+mod1_coef[term == "lag0"]
+
+# i = 1
+
+w <- c(1, 1, 1)
+lag_est <- coef(mod1)[c("lag0", "lag1", "lag2")]
+estimate <- sum(lag_est * w)
+se <- std_error(w, mod1_vcov, c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
 
 # i = 2
 
 w <- c(1, 2, 4)
-
-mod1_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 2, 4)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, mod1_vcov, c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, mod1_summ)
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, mod1_vcov, c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
 
 # i = 3
 
 w <- c(1, 3, 9)
-
-mod1_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 3, 9)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, mod1_vcov, c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, mod1_summ)
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, mod1_vcov, c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
 
 # i = 4
 
 w <- c(1, 4, 16)
-
-mod1_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 4, 16)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, mod1_vcov, c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, mod1_summ)
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, mod1_vcov, c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
 
 # summation of betai's
 
 w <- c(5, 10, 30)
-
-mod1_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = w) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, mod1_vcov, c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, mod1_summ)
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, mod1_vcov, c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
 
 ## Cycon ----
 
@@ -1301,82 +1264,53 @@ mod2 <- lm(
   data = feenstra_93$cycon
 )
 
-mod2_tidy <- tidy(mod2)
+mod2_coef <- as.data.table(summary(mod2)$coefficients, keep.rownames = "term")
+setnames(mod2_coef, c("term", "estimate", "std.error", "statistic", "p.value"))
 
 # i = 0
 
-mod2_tidy %>%
-  filter(term == "lag0")
+mod2_coef[term == "lag0"]
 
 # i = 1
 
 w <- c(1, 1, 1)
-
-mod2_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(w = w) %>%
-  summarise(
-    estimate = sum(estimate * w),
-    std.error = std_error(w, vcov(mod2), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod2))
-  )
+lag_est <- coef(mod2)[c("lag0", "lag1", "lag2")]
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod2), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
 
 # i = 2
 
 w <- c(1, 2, 4)
-
-mod2_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 2, 4)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod2), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod2))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod2), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
 
 # i = 3
 
 w <- c(1, 3, 9)
-
-mod2_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 3, 9)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod2), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod2))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod2), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
 
 # i = 4
 
 w <- c(1, 4, 16)
-
-mod2_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 4, 16)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod2), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod2))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod2), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
 
 # summation of betai's
 
 w <- c(5, 10, 30)
-
-mod2_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = w) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod2), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod2))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod2), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
 
 ## Cypool ----
 
@@ -1386,82 +1320,53 @@ mod3 <- lm(
   data = feenstra_93$cypool
 )
 
-mod3_tidy <- tidy(mod3)
+mod3_coef <- as.data.table(summary(mod3)$coefficients, keep.rownames = "term")
+setnames(mod3_coef, c("term", "estimate", "std.error", "statistic", "p.value"))
 
 # i = 0
 
-mod3_tidy %>%
-  filter(term == "lag0")
+mod3_coef[term == "lag0"]
 
 # i = 1
 
 w <- c(1, 1, 1)
-
-mod3_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(w = w) %>%
-  summarise(
-    estimate = sum(estimate * w),
-    std.error = std_error(w, vcov(mod3), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod3))
-  )
+lag_est <- coef(mod3)[c("lag0", "lag1", "lag2")]
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod3), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
 
 # i = 2
 
 w <- c(1, 2, 4)
-
-mod3_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 2, 4)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod3), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod3))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod3), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
 
 # i = 3
 
 w <- c(1, 3, 9)
-
-mod3_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 3, 9)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod3), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod3))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod3), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
 
 # i = 4
 
 w <- c(1, 4, 16)
-
-mod3_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 4, 16)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod3), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod3))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod3), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
 
 # summation of betai's
 
 w <- c(5, 10, 30)
-
-mod3_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = w) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod3), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod3))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod3), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
 
 ## Cyship ----
 
@@ -1471,82 +1376,53 @@ mod4 <- lm(
   data = feenstra_93$cyship
 )
 
-mod4_tidy <- tidy(mod4)
+mod4_coef <- as.data.table(summary(mod4)$coefficients, keep.rownames = "term")
+setnames(mod4_coef, c("term", "estimate", "std.error", "statistic", "p.value"))
 
 # i = 0
 
-mod4_tidy %>%
-  filter(term == "lag0")
+mod4_coef[term == "lag0"]
 
 # i = 1
 
 w <- c(1, 1, 1)
-
-mod4_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(w = w) %>%
-  summarise(
-    estimate = sum(estimate * w),
-    std.error = std_error(w, vcov(mod4), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod4))
-  )
+lag_est <- coef(mod4)[c("lag0", "lag1", "lag2")]
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod4), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
 
 # i = 2
 
 w <- c(1, 2, 4)
-
-mod4_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 2, 4)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod4), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod4))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod4), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
 
 # i = 3
 
 w <- c(1, 3, 9)
-
-mod4_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 3, 9)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod4), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod4))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod4), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
 
 # i = 4
 
 w <- c(1, 4, 16)
-
-mod4_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 4, 16)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod4), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod4))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod4), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
 
 # summation of betai's
 
 w <- c(5, 10, 30)
-
-mod4_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = w) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod4), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod4))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod4), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
 
 ## Trucks ----
 
@@ -1555,82 +1431,53 @@ mod5 <- lm(
   data = feenstra_93$trucks
 )
 
-mod5_tidy <- tidy(mod5)
+mod5_coef <- as.data.table(summary(mod5)$coefficients, keep.rownames = "term")
+setnames(mod5_coef, c("term", "estimate", "std.error", "statistic", "p.value"))
 
 # i = 0
 
-mod5_tidy %>%
-  filter(term == "lag0")
+mod5_coef[term == "lag0"]
 
 # i = 1
 
 w <- c(1, 1, 1)
-
-mod5_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(w = w) %>%
-  summarise(
-    estimate = sum(estimate * w),
-    std.error = std_error(w, vcov(mod5), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod5))
-  )
+lag_est <- coef(mod5)[c("lag0", "lag1", "lag2")]
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod5), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
 
 # i = 2
 
 w <- c(1, 2, 4)
-
-mod5_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 2, 4)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod5), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod5))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod5), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
 
 # i = 3
 
 w <- c(1, 3, 9)
-
-mod5_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 3, 9)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod5), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod5))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod5), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
 
 # i = 4
 
 w <- c(1, 4, 16)
-
-mod5_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = c(1, 4, 16)) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod5), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod5))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod5), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
 
 # summation of betai's
 
 w <- c(5, 10, 30)
-
-mod5_tidy %>%
-  filter(term %in% c("lag0", "lag1", "lag2")) %>%
-  mutate(weight = w) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod5), c("lag0", "lag1", "lag2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod5))
-  )
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod5), c("lag0", "lag1", "lag2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
 ```
 
 ## Exercise 2
@@ -1653,21 +1500,14 @@ mod1h <- lm(
   data = feenstra_93$cars
 )
 
-mod1h_tidy <- tidy(mod1h)
-
 # summation of betai's
 
 w <- c(5, 10, 30)
-
-mod1h_tidy %>%
-  filter(term %in% c("z0", "z1", "z2")) %>%
-  mutate(weight = w) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod1h), c("z0", "z1", "z2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod1h))
-  )
+lag_est <- coef(mod1h)[c("z0", "z1", "z2")]
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod1h), c("z0", "z1", "z2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod1h)))
 
 ## Cycon ----
 
@@ -1678,21 +1518,14 @@ mod2h <- lm(
   data = feenstra_93$cycon
 )
 
-mod2h_tidy <- tidy(mod2h)
-
 # summation of betai's
 
 w <- c(5, 10, 30)
-
-mod2h_tidy %>%
-  filter(term %in% c("z0", "z1", "z2")) %>%
-  mutate(weight = w) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod2h), c("z0", "z1", "z2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod2h))
-  )
+lag_est <- coef(mod2h)[c("z0", "z1", "z2")]
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod2h), c("z0", "z1", "z2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2h)))
 
 ## Cypool ----
 
@@ -1703,21 +1536,14 @@ mod3h <- lm(
   data = feenstra_93$cypool
 )
 
-mod3h_tidy <- tidy(mod3h)
-
 # summation of betai's
 
 w <- c(5, 10, 30)
-
-mod3h_tidy %>%
-  filter(term %in% c("z0", "z1", "z2")) %>%
-  mutate(weight = w) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod3h), c("z0", "z1", "z2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod3h))
-  )
+lag_est <- coef(mod3h)[c("z0", "z1", "z2")]
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod3h), c("z0", "z1", "z2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3h)))
 
 ## Cyship ----
 
@@ -1728,21 +1554,14 @@ mod4h <- lm(
   data = feenstra_93$cyship
 )
 
-mod4h_tidy <- tidy(mod4h)
-
 # summation of betai's
 
 w <- c(5, 10, 30)
-
-mod4h_tidy %>%
-  filter(term %in% c("z0", "z1", "z2")) %>%
-  mutate(weight = w) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod4h), c("z0", "z1", "z2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod4h))
-  )
+lag_est <- coef(mod4h)[c("z0", "z1", "z2")]
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod4h), c("z0", "z1", "z2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4h)))
 
 ## Trucks ----
 
@@ -1753,19 +1572,12 @@ mod5h <- lm(
   data = feenstra_93$trucks
 )
 
-mod5h_tidy <- tidy(mod5h)
-
 # summation of betai's
 
 w <- c(5, 10, 30)
-
-mod5h_tidy %>%
-  filter(term %in% c("z0", "z1", "z2")) %>%
-  mutate(weight = w) %>%
-  summarise(
-    estimate = sum(estimate * weight),
-    std.error = std_error(weight, vcov(mod5h), c("z0", "z1", "z2")),
-    statistic = estimate / std.error,
-    p.value = p_value(statistic, summary(mod5h))
-  )
+lag_est <- coef(mod5h)[c("z0", "z1", "z2")]
+estimate <- sum(lag_est * w)
+se <- std_error(w, vcov(mod5h), c("z0", "z1", "z2"))
+stat <- estimate / se
+data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5h)))
 ```
