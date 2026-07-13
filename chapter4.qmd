@@ -90,9 +90,7 @@ Note: Given this data, you need to first compute the wage rates in production an
 ```{r ch4_ex1}
 # Packages ----
 
-library(readr)
-library(janitor)
-library(dplyr)
+library(data.table)
 library(ggplot2)
 
 # Download and read ----
@@ -110,14 +108,14 @@ if (!file.exists(finp)) {
 fout <- gsub("txt", "rds", finp)
 
 if (!file.exists(fout)) {
-  bbg96_87 <- read_csv(finp) %>%
-    clean_names() %>%
-    mutate(year = year + 1900) %>%
-    filter(year >= 1958, year <= 1996)
+  bbg96_87 <- fread(finp)
+  setnames(bbg96_87, tolower(names(bbg96_87)))
+  bbg96_87[, year := year + 1900]
+  bbg96_87 <- bbg96_87[year >= 1958 & year <= 1996]
 
   saveRDS(bbg96_87, fout)
 } else {
-  bbg96_87 <- readRDS(fout)
+  bbg96_87 <- as.data.table(readRDS(fout))
 }
 
 # Compute the wage rates in production and nonproduction sectors ----
@@ -138,23 +136,19 @@ if (!file.exists(fout)) {
 # pwwr: Production worker wage rate
 # npwwr: Non production worker wage rate
 
-wage_rates <- bbg96_87 %>%
-  group_by(year) %>%
-  summarise(
-    pwwr = sum(prodw) / sum(prode),
-    npwwr = (sum(pay) - sum(prodw)) / (sum(emp) - sum(prode))
-  ) %>%
-  mutate(npwwr_pwwr = npwwr / pwwr)
+wage_rates <- bbg96_87[, .(
+  pwwr = sum(prodw) / sum(prode),
+  npwwr = (sum(pay) - sum(prodw)) / (sum(emp) - sum(prode))
+), by = year]
+wage_rates[, npwwr_pwwr := npwwr / pwwr]
 
 # Compute the relative nonproduction/production employment ----
 
-employment_rates <- bbg96_87 %>%
-  group_by(year) %>%
-  summarise(
-    pemp = sum(prode),
-    npemp = sum(emp) - pemp
-  ) %>%
-  mutate(npemp_pemp = npemp / pemp)
+employment_rates <- bbg96_87[, .(
+  pemp = sum(prode),
+  npemp = sum(emp) - sum(prode)
+), by = year]
+employment_rates[, npemp_pemp := npemp / pemp]
 
 # Figure 4.1: Relative wage of nonproduction / production workers ----
 
@@ -563,8 +557,8 @@ end of do-file
 # Packages ----
 
 library(archive)
+library(data.table)
 library(haven)
-library(dplyr)
 library(lmtest)
 library(sandwich)
 
@@ -585,46 +579,39 @@ if (!file.exists(fout)) {
   datachp4 <- read_dta(paste0(dout, "/data_Chp4.dta"))
   saveRDS(datachp4, fout)
 } else {
-  datachp4 <- readRDS(fout) %>%
-    filter(!year %in% c(1972, 1987)) %>%
-    filter(!sic72 %in% c(2067, 2794, 3483)) %>%
-    group_by(year) %>%
-    mutate(wagebill = sum(pay)) %>%
-    ungroup() %>%
-    mutate(share = pay / wagebill) %>%
-    arrange(sic72, year) %>%
-    group_by(sic72) %>%
-    mutate(
-      lagshare = lag(share),
-      ashare = (share + lagshare) / 2,
-      lagnwsh = lag(nwsh),
-      chanwsh = (nwsh - lagnwsh) * 100 / 11
-    ) %>%
-    ungroup() %>%
-    mutate(
-      wchanwsh = chanwsh * ashare,
-      wdlky = dlky * ashare,
-      wdly = dly * ashare,
-      wdsimat1a = dsimat1a * ashare,
-      wdsimat1b = dsimat1a * ashare,
-      diffout = dsimat1a - dsimat1b,
-      wdiffout = (dsimat1a - dsimat1b) * ashare,
-      wcosh_exp = dofsh * ashare,
-      htsh_exp = dhtsh - dofsh,
-      whtsh_exp = (dhtsh - dofsh) * ashare,
-      wcosh_exa = dofsh1 * ashare,
-      htsh_exa = dhtsh1 - dofsh1,
-      whtsh_exa = (dhtsh1 - dofsh1) * ashare,
-      wcosh = ci * ashare,
-      whtsh = dhtsh * ashare
-    )
+  datachp4 <- as.data.table(readRDS(fout))
+  datachp4 <- datachp4[!year %in% c(1972, 1987)]
+  datachp4 <- datachp4[!sic72 %in% c(2067, 2794, 3483)]
+  datachp4[, wagebill := sum(pay), by = year]
+  datachp4[, share := pay / wagebill]
+  setorder(datachp4, sic72, year)
+  datachp4[, lagshare := shift(share), by = sic72]
+  datachp4[, ashare := (share + lagshare) / 2]
+  datachp4[, lagnwsh := shift(nwsh), by = sic72]
+  datachp4[, chanwsh := (nwsh - lagnwsh) * 100 / 11]
+  datachp4[, wchanwsh := chanwsh * ashare]
+  datachp4[, wdlky := dlky * ashare]
+  datachp4[, wdly := dly * ashare]
+  datachp4[, wdsimat1a := dsimat1a * ashare]
+  datachp4[, wdsimat1b := dsimat1a * ashare]
+  datachp4[, diffout := dsimat1a - dsimat1b]
+  datachp4[, wdiffout := (dsimat1a - dsimat1b) * ashare]
+  datachp4[, wcosh_exp := dofsh * ashare]
+  datachp4[, htsh_exp := dhtsh - dofsh]
+  datachp4[, whtsh_exp := (dhtsh - dofsh) * ashare]
+  datachp4[, wcosh_exa := dofsh1 * ashare]
+  datachp4[, htsh_exa := dhtsh1 - dofsh1]
+  datachp4[, whtsh_exa := (dhtsh1 - dofsh1) * ashare]
+  datachp4[, wcosh := ci * ashare]
+  datachp4[, whtsh := dhtsh * ashare]
 }
 
 # Check with the first column of Table 4.4 ----
 
-datachp4 %>%
-  select(wchanwsh:whtsh) %>%
-  summarise(across(everything(), sum, na.rm = T))
+sum_cols <- names(datachp4)[
+  which(names(datachp4) == "wchanwsh"):which(names(datachp4) == "whtsh")
+]
+datachp4[, lapply(.SD, sum, na.rm = TRUE), .SDcols = sum_cols]
 
 # Reproduce the rest of the columns in Table 4.4 ----
 
@@ -657,9 +644,7 @@ coeftest(reg3, vcov = vcovCL(reg3, cluster = datachp4$sic2))
 
 # To distinguish narrow and other outsourcing
 
-datachp4 %>%
-  select(wchanwsh:whtsh) %>%
-  summarise(across(everything(), sum, na.rm = T))
+datachp4[, lapply(.SD, sum, na.rm = TRUE), .SDcols = sum_cols]
 
 # Reproduce the rest of the columns in Table III ----
 
@@ -1340,25 +1325,22 @@ end of do-file
 ```{r ch4_ex3a}
 # Read and transform ----
 
-datachp4 <- readRDS(fout) %>%
-  filter(year == 1990) %>%
-  filter(!sic72 %in% c(2067, 2794, 3483)) %>%
-  mutate(
-    etfp = ptfp - err,
-    adj1 = 1 / (1 - amesh),
-    etfp1 = adj1 * etfp,
-    dlpvad1 = adj1 * dlpvad,
-    apsh1 = adj1 * apsh,
-    ansh1 = adj1 * ansh,
-    aksh1 = adj1 * aksh,
-    mshxpr = amsh * dlpmx,
-    eshxpr = aosh * dlpe
-  )
+datachp4 <- as.data.table(readRDS(fout))
+datachp4 <- datachp4[year == 1990]
+datachp4 <- datachp4[!sic72 %in% c(2067, 2794, 3483)]
+datachp4[, etfp := ptfp - err]
+datachp4[, adj1 := 1 / (1 - amesh)]
+datachp4[, etfp1 := adj1 * etfp]
+datachp4[, dlpvad1 := adj1 * dlpvad]
+datachp4[, apsh1 := adj1 * apsh]
+datachp4[, ansh1 := adj1 * ansh]
+datachp4[, aksh1 := adj1 * aksh]
+datachp4[, mshxpr := amsh * dlpmx]
+datachp4[, eshxpr := aosh * dlpe]
 
 # Reproduce Table 4.5 ----
 
-datachp4 <- datachp4 %>%
-  mutate(dlp34 = dlp - mshxpr - eshxpr)
+datachp4[, dlp34 := dlp - mshxpr - eshxpr]
 
 reg1 <- lm(
   dlp34 ~ ptfp + apsh + ansh + aksh,
@@ -1372,8 +1354,7 @@ coeftest(reg1, vcov = vcovHC(reg1, type = "HC1"))
 # there is no equivalent to the Stata command "preserve" in R
 # therefore, I make a copy of the data and drop the observations
 
-datachp4_2 <- datachp4 %>%
-  filter(sic72 != 3573)
+datachp4_2 <- datachp4[sic72 != 3573]
 
 reg2 <- lm(
   dlp34 ~ ptfp + apsh + ansh + aksh,
@@ -1413,37 +1394,28 @@ coeftest(reg5, vcov = vcovHC(reg5, type = "HC1"))
 #### Part B
 
 ```{r ch4_ex3b}
-# Packages ----
-
-library(tidyr)
-
 # Read and transform ----
 
-datachp4 <- readRDS(fout) %>%
-  filter(year == 1990) %>%
-  filter(!sic72 %in% c(2067, 2794, 3483)) %>%
-  mutate(
-    etfp = ptfp - err,
-    adj1 = 1 / (1 - amesh),
-    etfp1 = adj1 * etfp,
-    dlpvad1 = adj1 * dlpvad,
-    apsh1 = adj1 * apsh,
-    ansh1 = adj1 * ansh,
-    aksh1 = adj1 * aksh,
-    t4dlpvad = (dlpvad + etfp) * adj1
-  )
+datachp4 <- as.data.table(readRDS(fout))
+datachp4 <- datachp4[year == 1990]
+datachp4 <- datachp4[!sic72 %in% c(2067, 2794, 3483)]
+datachp4[, etfp := ptfp - err]
+datachp4[, adj1 := 1 / (1 - amesh)]
+datachp4[, etfp1 := adj1 * etfp]
+datachp4[, dlpvad1 := adj1 * dlpvad]
+datachp4[, apsh1 := adj1 * apsh]
+datachp4[, ansh1 := adj1 * ansh]
+datachp4[, aksh1 := adj1 * aksh]
+datachp4[, t4dlpvad := (dlpvad + etfp) * adj1]
 
 # Reproduce the first column of Table IV ----
 
 # generating difference measure of outsourcing
-
-datachp4_2 <- datachp4 %>%
-  mutate(dsimatd1 = dsimat1a - dsimat1b)
+datachp4_2 <- copy(datachp4)
+datachp4_2[, dsimatd1 := dsimat1a - dsimat1b]
 
 # generating difference measure of high tech share
-
-datachp4_2 <- datachp4_2 %>%
-  mutate(dhtdsh = dhtsh - dofsh)
+datachp4_2[, dhtdsh := dhtsh - dofsh]
 
 # check whether we are using the right variable as described in table II
 
@@ -1454,58 +1426,19 @@ weighted.sd <- function(x, w) {
   sqrt(sum(w * (x - weighted.mean(x, w))^2) / sum(w))
 }
 
-datachp4_2_1 <- datachp4_2 %>%
-  select(dsimatd1, dhtdsh, dofsh) %>%
-  summarise(
-    across(
-      everything(),
-      list(nobs = length, min = min, max = max)
-    )
-  ) %>%
-  pivot_longer(
-    cols = everything(),
-    names_to = "variable",
-    values_to = "value"
-  ) %>%
-  separate_wider_delim(variable, "_", names = c("var", "stat")) %>%
-  pivot_wider(
-    names_from = stat,
-    values_from = value
-  )
-
-datachp4_2_2 <- datachp4_2 %>%
-  mutate(across(c(dsimatd1, dhtdsh, dofsh), ~ . * mvshipsh)) %>%
-  select(dsimatd1, dhtdsh, dofsh) %>%
-  summarise(across(everything(), list(wsum = sum))) %>%
-  pivot_longer(
-    cols = everything(),
-    names_to = "variable",
-    values_to = "value"
-  ) %>%
-  separate_wider_delim(variable, "_", names = c("var", "stat")) %>%
-  pivot_wider(
-    names_from = stat,
-    values_from = value
-  ) %>%
-  rename(weighted_sum = wsum)
-
-datachp4_2_3 <- datachp4_2 %>%
-  select(dsimatd1, dhtdsh, dofsh, mvshipsh) %>%
-  pivot_longer(
-    cols = c(dsimatd1, dhtdsh, dofsh),
-    names_to = "var",
-    values_to = "val"
-  ) %>%
-  group_by(var) %>%
-  summarise(weighted_sd = weighted.sd(val, mvshipsh))
-
-datachp4_2_4 <- datachp4_2 %>%
-  summarise(sum_weights = sum(mvshipsh))
-
-datachp4_2_1 %>%
-  left_join(datachp4_2_2) %>%
-  left_join(datachp4_2_3) %>%
-  bind_cols(datachp4_2_4)
+long <- melt(datachp4_2, id.vars = "mvshipsh",
+             measure.vars = c("dsimatd1", "dhtdsh", "dofsh"),
+             variable.name = "var", value.name = "val")
+stats_table <- long[, .(
+  nobs = .N,
+  wsum = sum(val * mvshipsh),
+  weighted_sd = weighted.sd(val, mvshipsh),
+  min = min(val),
+  max = max(val)
+), by = var]
+sum_weights <- sum(datachp4_2$mvshipsh)
+stats_table
+sum_weights
 
 reg1 <- lm(
   t4dlpvad ~ dsimat1b + dsimatd1 + dofsh + dhtdsh,
@@ -1517,36 +1450,24 @@ coeftest(reg1, vcov = vcovCL(reg1, cluster = datachp4_2$sic2))
 
 # Reproduce Table V using the coefficients in column(1) of Table IV ----
 
-datachp4_2 <- datachp4_2 %>%
-  mutate(
-    wt = sqrt(mvshipsh),
-    apsh5 = apsh1 * wt,
-    ansh5 = ansh1 * wt,
-    aksh5 = aksh1 * wt,
-    narrout = dsimat1b * wt * coef(reg1)["dsimat1b"],
-    diffout = dsimatd1 * wt * coef(reg1)["dsimatd1"],
-    comsh = dofsh * wt * coef(reg1)["dofsh"],
-    difcom = dhtdsh * wt * coef(reg1)["dhtdsh"]
-  )
+datachp4_2[, wt := sqrt(mvshipsh)]
+datachp4_2[, apsh5 := apsh1 * wt]
+datachp4_2[, ansh5 := ansh1 * wt]
+datachp4_2[, aksh5 := aksh1 * wt]
+datachp4_2[, narrout := dsimat1b * wt * coef(reg1)["dsimat1b"]]
+datachp4_2[, diffout := dsimatd1 * wt * coef(reg1)["dsimatd1"]]
+datachp4_2[, comsh := dofsh * wt * coef(reg1)["dofsh"]]
+datachp4_2[, difcom := dhtdsh * wt * coef(reg1)["dhtdsh"]]
 
-datachp4_2 %>%
-  select(narrout:difcom) %>%
-  summarise(
-    across(
-      everything(),
-      list(nobs = length, mean = mean, sd = sd, min = min, max = max)
-    )
-  ) %>%
-  pivot_longer(
-    cols = everything(),
-    names_to = "variable",
-    values_to = "value"
-  ) %>%
-  separate_wider_delim(variable, "_", names = c("var", "stat")) %>%
-  pivot_wider(
-    names_from = stat,
-    values_from = value
-  )
+long2 <- melt(datachp4_2, measure.vars = c("narrout", "diffout", "comsh", "difcom"),
+              variable.name = "var", value.name = "val")
+long2[, .(
+  nobs = .N,
+  mean = mean(val),
+  sd = sd(val),
+  min = min(val),
+  max = max(val)
+), by = var]
 
 reg2 <- lm(
   narrout ~ apsh5 + ansh5 + aksh5 + 0,
@@ -1579,68 +1500,26 @@ summary(reg5)
 # Reproduce column (2) of Table IV ----
 
 ## generating difference measure of outsourcing
-
-datachp4 <- datachp4 %>%
-  mutate(dsimatd1 = dsimat1a - dsimat1b)
+datachp4[, dsimatd1 := dsimat1a - dsimat1b]
 
 ## generate difference measure of high tech share with ex ante rental price
-
-datachp4 <- datachp4 %>%
-  mutate(dhtdsh1 = dhtsh1 - dofsh1)
+datachp4[, dhtdsh1 := dhtsh1 - dofsh1]
 
 ## check whether we are using the right variable as described in table II
 
-datachp4 %>%
-  select(dsimatd1, dhtdsh1, dofsh1) %>%
-  summarise(
-    across(
-      everything(),
-      list(nobs = length, min = min, max = max)
-    )
-  ) %>%
-  pivot_longer(
-    cols = everything(),
-    names_to = "variable",
-    values_to = "value"
-  ) %>%
-  separate_wider_delim(variable, "_", names = c("var", "stat")) %>%
-  pivot_wider(
-    names_from = stat,
-    values_from = value
-  ) %>%
-  left_join(
-    datachp4 %>%
-      select(dsimatd1, dhtdsh1, dofsh1, mvshipsh) %>%
-      mutate(across(c(dsimatd1, dhtdsh1, dofsh1), ~ . * mvshipsh)) %>%
-      select(-mvshipsh) %>%
-      summarise(across(everything(), list(wsum = sum))) %>%
-      pivot_longer(
-        cols = everything(),
-        names_to = "variable",
-        values_to = "value"
-      ) %>%
-      separate_wider_delim(variable, "_", names = c("var", "stat")) %>%
-      pivot_wider(
-        names_from = stat,
-        values_from = value
-      ) %>%
-      rename(weighted_sum = wsum)
-  ) %>%
-  left_join(
-    datachp4 %>%
-      select(dsimatd1, dhtdsh1, dofsh1, mvshipsh) %>%
-      pivot_longer(
-        cols = c(dsimatd1, dhtdsh1, dofsh1),
-        names_to = "var",
-        values_to = "val"
-      ) %>%
-      group_by(var) %>%
-      summarise(weighted_sd = weighted.sd(val, mvshipsh))
-  ) %>%
-  bind_cols(
-    datachp4 %>%
-      summarise(sum_weights = sum(mvshipsh))
-  )
+long3 <- melt(datachp4, id.vars = "mvshipsh",
+              measure.vars = c("dsimatd1", "dhtdsh1", "dofsh1"),
+              variable.name = "var", value.name = "val")
+stats_table2 <- long3[, .(
+  nobs = .N,
+  wsum = sum(val * mvshipsh),
+  weighted_sd = weighted.sd(val, mvshipsh),
+  min = min(val),
+  max = max(val)
+), by = var]
+sum_weights <- sum(datachp4$mvshipsh)
+stats_table2
+sum_weights
 
 # regress t4dlpvad dsimat1b dsimatd1 dofsh1 dhtdsh1 [aw=mvshipsh], cluster(sic2)
 
@@ -1655,9 +1534,7 @@ coeftest(reg2, vcov = vcovCL(reg2, cluster = datachp4$sic2))
 # Reproduce column (3) of Table IV ----
 
 ## generating difference measure of high tech share
-
-datachp4 <- datachp4 %>%
-  mutate(dhtdsh = dhtsh - dofsh)
+datachp4[, dhtdsh := dhtsh - dofsh]
 
 reg3 <- lm(
   t4dlpvad ~ dsimat1b + dsimatd1 + ci + dhtsh,
