@@ -296,10 +296,7 @@ end of do-file
 # Packages ----
 
 library(archive)
-library(readr)
-library(dplyr)
-library(tidyr)
-library(purrr)
+library(data.table)
 library(knitr)
 
 # Extract ----
@@ -317,17 +314,11 @@ fout <- paste0(dout, "/trefler.rds")
 fout2 <- paste0(dout, "/trefler_desc.rds")
 
 if (!file.exists(fout)) {
-  trefler <- read_csv("first-edition/Chapter-2/hov_pub.csv", col_names = F) %>%
-    rename(
-      country = X1,
-      factor = X2,
-      at = X3,
-      v = X4,
-      y = X5,
-      b = X6,
-      ypc = X7,
-      pop = X8
-    )
+  trefler <- fread(
+    "first-edition/Chapter-2/hov_pub.csv",
+    header = FALSE,
+    col.names = c("country", "factor", "at", "v", "y", "b", "ypc", "pop")
+  )
 
   # Transform ----
 
@@ -336,7 +327,7 @@ if (!file.exists(fout)) {
   # https://www.stata.com/manuals/degen.pdf
 
   # Create an auxiliary table for delta values
-  delta_values <- tibble(
+  delta_values <- data.table(
     country = c(
       "Bangladesh", "Pakistan", "Indonesia", "Sri Lanka", "Thailand",
       "Colombia", "Panama", "Yugoslavia", "Portugal", "Uruguay", "Greece",
@@ -352,31 +343,22 @@ if (!file.exists(fout)) {
     )
   )
 
-  trefler <- trefler %>%
-    mutate(ypc_max = max(ypc)) %>%
-    mutate(
-      ratio = case_when(
-        country != "Italy" ~ ypc / ypc_max,
-        country == "Italy" ~ (ypc / ypc_max) + 0.0001
-      )
-    ) %>%
-    select(-ypc_max) %>%
-    arrange(ratio) %>%
-    group_by(ratio) %>%
-    mutate(indexc = cur_group_id()) %>%
-    group_by(factor) %>%
-    mutate(indexf = cur_group_id()) %>%
-    ungroup() %>%
-    left_join(delta_values)
+  trefler[, ypc_max := max(ypc)]
+  trefler[country != "Italy", ratio := ypc / ypc_max]
+  trefler[country == "Italy", ratio := ypc / ypc_max + 0.0001]
+  trefler[, ypc_max := NULL]
+  setorder(trefler, ratio)
+  trefler[, indexc := .GRP, by = ratio]
+  trefler[, indexf := .GRP, by = factor]
+  trefler <- merge(trefler, delta_values, by = "country", all.x = TRUE)
 
   # Labels ----
 
   # Create a separate table with the variables description
 
-  trefler_desc <- tibble(
+  trefler_desc <- data.table(
     variable = c(
-      "country", "factor", "at", "v", "y", "b", "ypc", "indexc",
-      "indexf"
+      "country", "factor", "at", "v", "y", "b", "ypc", "indexc", "indexf"
     ),
     description = c(
       "Name of the country", "Name of the factor",
@@ -914,161 +896,110 @@ end of do-file
 ```{r ch2_ex1_1}
 # Transform ----
 
-trefler <- readRDS(fout) %>%
-  # Number of country in the dataset
-  mutate(
-    c = max(indexc),
-    f = max(indexf)
-  ) %>%
-  # Calculate the world level of Yw, Bw and Vw
-  mutate(
-    yww = sum(y),
-    yw = yww / f,
-    bww = sum(b),
-    bw = bww / f
-  ) %>%
-  group_by(indexf) %>%
-  mutate(
-    vfw = sum(v)
-  ) %>%
-  ungroup() %>%
-  # Calculate country share Sc
-  mutate(
-    sc = (y - b) / (yw - bw)
-  ) %>%
-  # Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
-  mutate(
-    efc = at - (v - sc * vfw)
-  ) %>%
-  # Construct the average epsilon for a given factor
-  group_by(indexf) %>%
-  mutate(ave = sum(efc) / c) %>%
-  # Construct sigma^2 and the weight
-  mutate(
-    sigma2f = sum((efc - ave)^2) / (c - 1),
-    sigmaf = sqrt(sigma2f),
-    weight = sigmaf * sqrt(sc)
-  ) %>%
-  ungroup() %>%
-  # Using the weight, convert all the data
-  mutate(
-    trat = at / (sigmaf * sqrt(sc)),
-    athat2 = (v - (sc * vfw)) / weight
-  ) %>%
-  arrange(country)
+trefler <- readRDS(fout)
+
+# Number of country in the dataset
+trefler[, c := max(indexc)]
+trefler[, f := max(indexf)]
+
+# Calculate the world level of Yw, Bw and Vw
+trefler[, yww := sum(y)]
+trefler[, yw := yww / f]
+trefler[, bww := sum(b)]
+trefler[, bw := bww / f]
+trefler[, vfw := sum(v), by = indexf]
+
+# Calculate country share Sc
+trefler[, sc := (y - b) / (yw - bw)]
+
+# Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
+trefler[, efc := at - (v - sc * vfw)]
+
+# Construct the average epsilon for a given factor
+trefler[, ave := sum(efc) / c, by = indexf]
+
+# Construct sigma^2 and the weight
+trefler[, sigma2f := sum((efc - ave)^2) / (c - 1), by = indexf]
+trefler[, sigmaf := sqrt(sigma2f)]
+trefler[, weight := sigmaf * sqrt(sc)]
+
+# Using the weight, convert all the data
+trefler[, trat := at / (sigmaf * sqrt(sc))]
+trefler[, athat2 := (v - sc * vfw) / weight]
+
+setorder(trefler, country)
 
 # Correlation, should be .28
-trefler %>%
-  select(trat, athat2) %>%
-  cor()
+cor(trefler[, .(trat, athat2)])
 
 # Sign Test ----
 
-trefler %>%
-  group_by(country, indexc) %>%
-  summarize(
-    p = sum(trat * athat2 > 0) / n()
-  )
+trefler[, .(p = sum(trat * athat2 > 0) / .N), by = .(country, indexc)]
 
-trefler %>%
-  summarize(
-    p = sum(trat * athat2 > 0) / n()
-  )
+trefler[, .(p = sum(trat * athat2 > 0) / .N)]
 
 # Missing Trade ----
 
 # Checking for the missing trade, should be .032
 
-trefler %>%
-  summarize(
-    varat = var(trat),
-    varhat2 = var(athat2)
-  ) %>%
-  mutate(
-    varat_varhat2 = varat / varhat2
-  )
+mt <- trefler[, .(varat = var(trat), varhat2 = var(athat2))]
+mt[, varat_varhat2 := varat / varhat2]
+mt
 
 # Rank Tests ----
 
-trefler_wide <- trefler %>%
-  select(country, indexc, indexf, trat, athat2) %>%
-  arrange(indexc, indexf) %>%
-  pivot_wider(
-    names_from = indexf,
-    values_from = c(trat, athat2)
+setorder(trefler, indexc, indexf)
+trefler_wide <- dcast(
+  trefler[, .(country, indexc, indexf, trat, athat2)],
+  country + indexc ~ indexf,
+  value.var = c("trat", "athat2")
+)
+
+ranks <- CJ(x = 1:8, y = 1:9)[x < y]
+
+rank_list <- vector("list", nrow(ranks))
+for (k in seq_len(nrow(ranks))) {
+  x <- ranks$x[k]
+  y <- ranks$y[k]
+  rank_list[[k]] <- data.table(
+    country = trefler_wide$country,
+    indexc = trefler_wide$indexc,
+    value = (trefler_wide[[paste0("trat_", x)]] - trefler_wide[[paste0("trat_", y)]]) *
+              (trefler_wide[[paste0("athat2_", x)]] - trefler_wide[[paste0("athat2_", y)]]) > 0
   )
+}
 
-# This would be too long
-# trefler_wide <- trefler_wide %>%
-#   mutate(
-#     rank12 = (trat_1 - trat_2) * (athat2_1 - athat2_2) > 0,
-#     rank13 = (trat_1 - trat_3) * (athat2_1 - athat2_3) > 0,
-#     ...
-#     rank89 = (trat_8 - trat_9) * (athat2_8 - athat2_9) > 0,
-#   )
-
-# create all relevant trat_1 - trat_2, trat_1 - trat_3, etc.
-
-ranks <- expand_grid(
-  x = 1:8,
-  y = 1:9
-) %>%
-  filter(x < y)
-
-# The syntax here is based on internal R developer functions, but these
-# allow to create columns with minimal lines of code and avoids more complicated
-# bracket syntax
-trefler_rank <- map2_df(
-  pull(ranks, x),
-  pull(ranks, y),
-  function(x, y) {
-    trefler_wide %>%
-      mutate(
-        name = paste0("rank", x, y),
-        value = (!!sym(paste0("trat_", x)) - !!sym(paste0("trat_", y))) *
-          (!!sym(paste0("athat2_", x)) - !!sym(paste0("athat2_", y))) > 0
-      ) %>%
-      select(country, indexc, name, value)
-  }
-) %>%
-  group_by(country, indexc) %>%
-  summarise(r1 = sum(value)) %>%
-  mutate(r2 = r1 / 36)
+trefler_rank <- rbindlist(rank_list)
+trefler_rank <- trefler_rank[, .(r1 = sum(value)), by = .(country, indexc)]
+trefler_rank[, r2 := r1 / 36]
 
 trefler_rank
 
-trefler_rank %>%
-  pull(r2) %>%
-  mean()
+mean(trefler_rank$r2)
 ```
 
 ### Extra step: formatting the table
 
 ```{r ch2_ex1_2}
-trefler %>%
-  group_by(country, indexc) %>%
-  summarize(
-    p = sum(trat * athat2 > 0) / n()
-  ) %>%
-  arrange(indexc) %>% # same order as in the book
-  select(country, sign_hov = p) %>%
-  left_join(
-    trefler_rank %>%
-      select(country, rank_hov = r2)
-  ) %>%
-  bind_rows(
-    trefler %>%
-      summarize(
-        p = sum(trat * athat2 > 0) / n()
-      ) %>%
-      mutate(
-        country = "All countries",
-        rank_hov = mean(pull(trefler_rank, r2))
-      ) %>%
-      select(country, sign_hov = p, rank_hov)
-  ) %>%
-  mutate_if(is.numeric, round, 2) %>% # same no of decimals as in the book
-  kable()
+sign_test <- trefler[, .(sign_hov = sum(trat * athat2 > 0) / .N), by = .(country, indexc)]
+setorder(sign_test, indexc)
+
+result <- merge(
+  sign_test[, .(country, sign_hov)],
+  trefler_rank[, .(country, rank_hov = r2)],
+  by = "country"
+)
+
+all_row <- data.table(
+  country = "All countries",
+  sign_hov = trefler[, sum(trat * athat2 > 0) / .N],
+  rank_hov = mean(trefler_rank$r2)
+)
+
+result <- rbindlist(list(result, all_row))
+result[, sign_hov := round(sign_hov, 2)]
+result[, rank_hov := round(rank_hov, 2)]
+kable(result)
 ```
 
 ## Exercise 2
@@ -1577,147 +1508,109 @@ end of do-file
 ```{r ch2_ex2_1}
 # Transform ----
 
-trefler <- readRDS(fout) %>%
-  # Number of country in the dataset
-  mutate(
-    c = max(indexc),
-    f = max(indexf)
-  ) %>%
-  # Calculate the world level of Yw, Bw and Vw
-  mutate(
-    yww = sum(y),
-    yw = yww / f,
-    bww = sum(b),
-    bw = bww / f
-  ) %>%
-  group_by(indexf) %>%
-  mutate(
-    vfw = sum(v),
-    vw = sum(delta * v)
-  ) %>%
-  ungroup() %>%
-  # Calculate country share Sc
-  mutate(
-    sc = (y - b) / (yw - bw)
-  ) %>%
-  # Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
-  mutate(
-    efc = delta * at - (delta * v - sc * vw)
-  ) %>%
-  # Construct the average epsilon for a given factor
-  group_by(indexf) %>%
-  mutate(ave = sum(efc) / c) %>%
-  # Construct sigma^2 and the weight
-  mutate(
-    sigma2f = sum((efc - ave)^2) / (c - 1),
-    sigmaf = sqrt(sigma2f),
-    weight = sigmaf * sqrt(sc)
-  ) %>%
-  ungroup() %>%
-  # Using the weight, convert all the data
-  mutate(
-    trat = delta * at / weight,
-    athat2 = (delta * v - (sc * vw)) / weight
-  )
+trefler <- readRDS(fout)
+
+# Number of country in the dataset
+trefler[, c := max(indexc)]
+trefler[, f := max(indexf)]
+
+# Calculate the world level of Yw, Bw and Vw
+trefler[, yww := sum(y)]
+trefler[, yw := yww / f]
+trefler[, bww := sum(b)]
+trefler[, bw := bww / f]
+trefler[, vfw := sum(v), by = indexf]
+trefler[, vw := sum(delta * v), by = indexf]
+
+# Calculate country share Sc
+trefler[, sc := (y - b) / (yw - bw)]
+
+# Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
+trefler[, efc := delta * at - (delta * v - sc * vw)]
+
+# Construct the average epsilon for a given factor
+trefler[, ave := sum(efc) / c, by = indexf]
+
+# Construct sigma^2 and the weight
+trefler[, sigma2f := sum((efc - ave)^2) / (c - 1), by = indexf]
+trefler[, sigmaf := sqrt(sigma2f)]
+trefler[, weight := sigmaf * sqrt(sc)]
+
+# Using the weight, convert all the data
+trefler[, trat := delta * at / weight]
+trefler[, athat2 := (delta * v - sc * vw) / weight]
 
 # Correlation should be .41
-trefler %>%
-  select(trat, athat2) %>%
-  cor()
+cor(trefler[, .(trat, athat2)])
 
 # Sign Test ----
 
-trefler %>%
-  group_by(country, indexc) %>%
-  summarize(
-    p = sum(trat * athat2 > 0) / n()
-  )
+trefler[, .(p = sum(trat * athat2 > 0) / .N), by = .(country, indexc)]
 
-trefler %>%
-  summarize(
-    p = sum(trat * athat2 > 0) / n()
-  )
+trefler[, .(p = sum(trat * athat2 > 0) / .N)]
 
 # Missing Trade ----
 
 # Checking for the missing trade, should be .07
 
-trefler %>%
-  summarize(
-    varat = var(trat),
-    varhat2 = var(athat2)
-  ) %>%
-  mutate(
-    varat_varhat2 = varat / varhat2
-  )
+mt <- trefler[, .(varat = var(trat), varhat2 = var(athat2))]
+mt[, varat_varhat2 := varat / varhat2]
+mt
 
 # Rank Tests ----
 
-trefler_wide <- trefler %>%
-  select(country, indexc, indexf, trat, athat2) %>%
-  arrange(indexc, indexf) %>%
-  pivot_wider(
-    names_from = indexf,
-    values_from = c(trat, athat2)
+setorder(trefler, indexc, indexf)
+trefler_wide <- dcast(
+  trefler[, .(country, indexc, indexf, trat, athat2)],
+  country + indexc ~ indexf,
+  value.var = c("trat", "athat2")
+)
+
+ranks <- CJ(x = 1:8, y = 1:9)[x < y]
+
+rank_list <- vector("list", nrow(ranks))
+for (k in seq_len(nrow(ranks))) {
+  x <- ranks$x[k]
+  y <- ranks$y[k]
+  rank_list[[k]] <- data.table(
+    country = trefler_wide$country,
+    indexc = trefler_wide$indexc,
+    value = (trefler_wide[[paste0("trat_", x)]] - trefler_wide[[paste0("trat_", y)]]) *
+              (trefler_wide[[paste0("athat2_", x)]] - trefler_wide[[paste0("athat2_", y)]]) > 0
   )
+}
 
-ranks <- expand_grid(
-  x = 1:8,
-  y = 1:9
-) %>%
-  filter(x < y)
-
-trefler_rank <- map2_df(
-  pull(ranks, x),
-  pull(ranks, y),
-  function(x, y) {
-    trefler_wide %>%
-      mutate(
-        name = paste0("rank", x, y),
-        value = (!!sym(paste0("trat_", x)) - !!sym(paste0("trat_", y))) *
-          (!!sym(paste0("athat2_", x)) - !!sym(paste0("athat2_", y))) > 0
-      ) %>%
-      select(country, indexc, name, value)
-  }
-) %>%
-  group_by(country, indexc) %>%
-  summarise(r1 = sum(value)) %>%
-  mutate(r2 = r1 / 36)
+trefler_rank <- rbindlist(rank_list)
+trefler_rank <- trefler_rank[, .(r1 = sum(value)), by = .(country, indexc)]
+trefler_rank[, r2 := r1 / 36]
 
 trefler_rank
 
-trefler_rank %>%
-  pull(r2) %>%
-  mean()
+mean(trefler_rank$r2)
 ```
 
 ### Extra step: formatting the table
 
 ```{r ch2_ex2_2}
-trefler %>%
-  group_by(country, indexc) %>%
-  summarize(
-    p = sum(trat * athat2 > 0) / n()
-  ) %>%
-  arrange(indexc) %>% # same order as in the book
-  select(country, sign_hov = p) %>%
-  left_join(
-    trefler_rank %>%
-      select(country, rank_hov = r2)
-  ) %>%
-  bind_rows(
-    trefler %>%
-      summarize(
-        p = sum(trat * athat2 > 0) / n()
-      ) %>%
-      mutate(
-        country = "All countries",
-        rank_hov = mean(pull(trefler_rank, r2))
-      ) %>%
-      select(country, sign_hov = p, rank_hov)
-  ) %>%
-  mutate_if(is.numeric, round, 2) %>% # same no of decimals as in the book
-  kable()
+sign_test <- trefler[, .(sign_hov = sum(trat * athat2 > 0) / .N), by = .(country, indexc)]
+setorder(sign_test, indexc)
+
+result <- merge(
+  sign_test[, .(country, sign_hov)],
+  trefler_rank[, .(country, rank_hov = r2)],
+  by = "country"
+)
+
+all_row <- data.table(
+  country = "All countries",
+  sign_hov = trefler[, sum(trat * athat2 > 0) / .N],
+  rank_hov = mean(trefler_rank$r2)
+)
+
+result <- rbindlist(list(result, all_row))
+result[, sign_hov := round(sign_hov, 2)]
+result[, rank_hov := round(rank_hov, 2)]
+kable(result)
 ```
 
 ### Notes
@@ -2936,124 +2829,75 @@ end of do-file
 ### My code
 
 ```{r ch2_ex3}
-trefler <- readRDS(fout) %>%
-  # Number of country in the dataset
-  mutate(
-    c = max(indexc),
-    f = max(indexf)
-  ) %>%
-  # Calculate the world level of Yw, Bw and Vw
-  mutate(
-    yww = sum(y),
-    yw = yww / f,
-    bww = sum(b),
-    bw = bww / f
-  ) %>%
-  group_by(indexf) %>%
-  mutate(
-    vfw = sum(v),
-    vw = sum(delta * v)
-  ) %>%
-  ungroup() %>%
-  # Calculate country share Sc
-  mutate(
-    sc = (y - b) / (yw - bw)
-  ) %>%
-  # Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
-  mutate(
-    efc = delta * at - (delta * v - sc * vw)
-  ) %>%
-  # Construct the average epsilon for a given factor
-  group_by(indexf) %>%
-  mutate(ave = sum(efc) / c) %>%
-  # Construct sigma^2 and the weight
-  mutate(
-    sigma2f = sum((efc - ave)^2) / (c - 1),
-    sigmaf = sqrt(sigma2f),
-    weight = sigmaf * sqrt(sc)
-  ) %>%
-  ungroup() %>%
-  # Using the weight, convert all the data
-  mutate(
-    trat = delta * at / weight,
-    athat2 = (delta * v - (sc * vw)) / weight
-  )
+trefler <- readRDS(fout)
 
-# No need to save changes and restore
-trefler2 <- trefler %>%
-  # Construct Aggregate Labor Endowment
-  filter(indexf %in% 7:9) %>%
-  mutate(
-    en = case_when(
-      indexf == 7 ~ 2,
-      indexf == 8 ~ 3,
-      indexf == 9 ~ 4
-    )
-  ) %>%
-  select(country, factor, indexf, at, v, en, indexc, sc)
+# Number of country in the dataset
+trefler[, c := max(indexc)]
+trefler[, f := max(indexf)]
 
-trefler3 <- trefler %>%
-  filter(!(indexf %in% 7:9)) %>%
-  group_by(country) %>%
-  # No need to create v_l and at_l to then rename and then collapse
-  summarise(
-    v = sum(v),
-    at = sum(at),
-    sc = mean(sc),
-    indexc = mean(indexc)
-  ) %>%
-  mutate(
-    en = 1,
-    factor = "Labor"
-  )
+# Calculate the world level of Yw, Bw and Vw
+trefler[, yww := sum(y)]
+trefler[, yw := yww / f]
+trefler[, bww := sum(b)]
+trefler[, bw := bww / f]
+trefler[, vfw := sum(v), by = indexf]
+trefler[, vw := sum(delta * v), by = indexf]
 
-trefler3 <- trefler2 %>%
-  select(-indexf) %>%
-  bind_rows(trefler3) %>%
-  arrange(indexc, en)
+# Calculate country share Sc
+trefler[, sc := (y - b) / (yw - bw)]
+
+# Calculate epsilon(fc) and sigma^2(f) according to eq.2 in Trefler (1995)
+trefler[, efc := delta * at - (delta * v - sc * vw)]
+
+# Construct the average epsilon for a given factor
+trefler[, ave := sum(efc) / c, by = indexf]
+
+# Construct sigma^2 and the weight
+trefler[, sigma2f := sum((efc - ave)^2) / (c - 1), by = indexf]
+trefler[, sigmaf := sqrt(sigma2f)]
+trefler[, weight := sigmaf * sqrt(sc)]
+
+# Using the weight, convert all the data
+trefler[, trat := delta * at / weight]
+trefler[, athat2 := (delta * v - sc * vw) / weight]
+
+# Construct Aggregate Labor Endowment
+trefler2 <- trefler[indexf %in% 7:9]
+trefler2[, en := fcase(indexf == 7, 2L, indexf == 8, 3L, indexf == 9, 4L)]
+trefler2 <- trefler2[, .(country, factor, at, v, en, indexc, sc)]
+
+trefler3_labor <- trefler[!(indexf %in% 7:9),
+  .(v = sum(v), at = sum(at), sc = mean(sc), indexc = mean(indexc)),
+  by = country
+]
+trefler3_labor[, en := 1L]
+trefler3_labor[, factor := "Labor"]
+
+trefler3 <- rbindlist(list(trefler2, trefler3_labor), fill = TRUE)
+setorder(trefler3, indexc, en)
 
 # Compute Pi: factor productivity
-# No need to save intermediate outputs, we proceed with iteration
-trefler4 <- map_df(
-  trefler3 %>%
-    distinct(en) %>%
-    pull(),
-  function(x) {
-    d <- trefler3 %>%
-      filter(en == x) %>%
-      mutate(p0 = 1, p1 = 1)
-
-    iter <- 50
-
-    for (i in seq_len(iter)) {
-      d <- d %>%
-        mutate(
-          p0 = p1,
-          vp = p0 * v,
-          vpw = sum(vp),
-          p1 = ifelse(country == "USA", 1, (at + sc * vpw) / v)
-        ) %>%
-        select(-vp, -vpw)
-    }
-
-    # Tidy alternative to the for loop
-    # d <- accumulate(seq_len(iter), .init = d, ~ .x %>%
-    #   mutate(
-    #     p0 = p1,
-    #     p1 = ifelse(country == "USA", 1, (at + sc * sum(p1 * v)) / v)
-    #   )) %>%
-    #   .[[iter + 1]]
-
-    d %>%
-      select(country, indexc, en, p1)
+pi_list <- vector("list", 4)
+for (i in 1:4) {
+  d <- trefler3[en == i]
+  d[, p0 := 1]
+  d[, p1 := 1]
+  for (j in seq_len(50)) {
+    d[, p0 := p1]
+    d[, vpw := sum(p0 * v)]
+    d[, p1 := (at + sc * vpw) / v]
+    d[country == "USA", p1 := 1]
+    d[, vpw := NULL]
   }
-)
+  pi_list[[i]] <- d[, .(country, indexc, en, p1)]
+}
+
+trefler4 <- rbindlist(pi_list)
 ```
 
 ### Extra step: formatting the tables
 
 ```{r ch2_ex3_2}
-trefler4 %>%
-  arrange(country, en) %>%
-  kable()
+setorder(trefler4, country, en)
+kable(trefler4)
 ```
