@@ -115,7 +115,7 @@ if (!file.exists(fout)) {
 
   saveRDS(bbg96_87, fout)
 } else {
-  bbg96_87 <- as.data.table(readRDS(fout))
+  bbg96_87 <- readRDS(fout)
 }
 
 # Compute the wage rates in production and nonproduction sectors ----
@@ -579,7 +579,7 @@ if (!file.exists(fout)) {
   datachp4 <- read_dta(paste0(dout, "/data_Chp4.dta"))
   saveRDS(datachp4, fout)
 } else {
-  datachp4 <- as.data.table(readRDS(fout))
+  datachp4 <- readRDS(fout)
   datachp4 <- datachp4[!year %in% c(1972, 1987)]
   datachp4 <- datachp4[!sic72 %in% c(2067, 2794, 3483)]
   datachp4[, wagebill := sum(pay), by = year]
@@ -1325,7 +1325,7 @@ end of do-file
 ```{r ch4_ex3a}
 # Read and transform ----
 
-datachp4 <- as.data.table(readRDS(fout))
+datachp4 <- readRDS(fout)
 datachp4 <- datachp4[year == 1990]
 datachp4 <- datachp4[!sic72 %in% c(2067, 2794, 3483)]
 datachp4[, etfp := ptfp - err]
@@ -1396,7 +1396,7 @@ coeftest(reg5, vcov = vcovHC(reg5, type = "HC1"))
 ```{r ch4_ex3b}
 # Read and transform ----
 
-datachp4 <- as.data.table(readRDS(fout))
+datachp4 <- readRDS(fout)
 datachp4 <- datachp4[year == 1990]
 datachp4 <- datachp4[!sic72 %in% c(2067, 2794, 3483)]
 datachp4[, etfp := ptfp - err]
