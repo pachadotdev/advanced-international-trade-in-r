@@ -119,11 +119,7 @@ if (!file.exists(fout)) {
 
 # Compute the wage rates in production and nonproduction sectors ----
 
-# \begin{align}
-#   \text{Production worker wage rate} &= \frac{\sum_i \text{production worker wage bill}_i}{\sum_i \text{production workers}_i} \\
-#   \text{Non production worker wage rate} &= \frac{\sum_i \text{non production worker wage bill}_i}{\sum_i \text{non production workers}_i} \\
-#   &= \frac{\sum_i (\text{total pay roll}_i - \text{production worker wage bill}_i)}{\sum_i (\text{total employment}_i - \text{production workers}_i)}
-# \end{align}
+# Apply the latex formula just before the R chunk
 
 # from the NBER website
 # prodw Production worker wages in $1,000,000
@@ -148,21 +144,14 @@ employment_rates <- bbg96_87[, .(
   npemp = sum(emp) - sum(prode)
 ), by = year]
 employment_rates[, npemp_pemp := npemp / pemp]
-
+  
 # Figure 4.1: Relative wage of nonproduction / production workers ----
 
 tinyplot(
   npwwr_pwwr ~ year,
   data = wage_rates,
   type = "b",
-  pch = 19,# Figure 4.1: Relative wage of nonproduction / production workers ----
-
-tinyplot(
-  npwwr_pwwr ~ year,
-  data = wage_rates,
-  type = "b",
   pch = 19,
-  cex = 1.5,
   main = "Relative wage of nonproduction / production workers, U.S. Manufacturing",
   xlab = "Year",
   ylab = "Relative wage"
@@ -175,25 +164,6 @@ tinyplot(
   data = employment_rates,
   type = "b",
   pch = 19,
-  cex = 1.5,
-  main = "Relative employment of nonproduction / production workers, U.S. Manufacturing",
-  xlab = "Year",
-  ylab = "Relative employment"
-)
-  cex = 1.5,
-  main = "Relative wage of nonproduction / production workers, U.S. Manufacturing",
-  xlab = "Year",
-  ylab = "Relative wage"
-)
-
-# Figure 4.2: Relative employment of nonproduction / production workers ----
-
-tinyplot(
-  npemp_pemp ~ year,
-  data = employment_rates,
-  type = "b",
-  pch = 19,
-  cex = 1.5,
   main = "Relative employment of nonproduction / production workers, U.S. Manufacturing",
   xlab = "Year",
   ylab = "Relative employment"
