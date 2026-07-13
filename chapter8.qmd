@@ -1,4 +1,3 @@
-
 # Chapter 8. Import Quotas and Export Subsidies
 
 ## Empirical exercise
@@ -9,8 +8,8 @@ This exercise is to reproduce regression results Feenstra (1988a). To complete t
 
 Data Description for Feenstra (1988a):
 
-1. `car.dta`: This STATA file contains car’s various characteristics, such as weight (wght), width (wdth), height (hght), horse power (hs), four-wheel (four), transmission (tran), power steering (ps) and air condition (ac) for 1979-1990. It also includes each model’s sales (quan) and price.
-2. `truck.dta`: This STATA file contains truck’s various characteristics, such as weight (wght), width (wdth), height (hght), horse power (hs), four-wheel (four), transmission (tran), power steering (ps) and air condition (ac) for 1979-1990. It also includes each model’s sale (quan) and price, though sales are missing after 1985.
+1. `car.dta`: This STATA file contains car's various characteristics, such as weight (wght), width (wdth), height (hght), horse power (hs), four-wheel (four), transmission (tran), power steering (ps) and air condition (ac) for 1979-1990. It also includes each model's sales (quan) and price.
+2. `truck.dta`: This STATA file contains truck's various characteristics, such as weight (wght), width (wdth), height (hght), horse power (hs), four-wheel (four), transmission (tran), power steering (ps) and air condition (ac) for 1979-1990. It also includes each model's sale (quan) and price, though sales are missing after 1985.
 
 ## Exercise 1
 
@@ -477,9 +476,7 @@ end of do-file
 
 library(archive)
 library(haven)
-library(dplyr)
-library(tidyr)
-library(broom)
+library(data.table)
 library(knitr)
 
 # Extract ----
@@ -497,8 +494,8 @@ fout <- paste0(dout, "/feenstra_88.rds")
 
 if (!file.exists(fout)) {
   feenstra_88 <- list(
-    car_7990 = read_dta(paste0(dout, "/car_7990.dta")),
-    truck_7990 = read_dta(paste0(dout, "/truck_7990.dta"))
+    car_7990 = as.data.table(read_dta(paste0(dout, "/car_7990.dta"))),
+    truck_7990 = as.data.table(read_dta(paste0(dout, "/truck_7990.dta")))
   )
 
   saveRDS(feenstra_88, fout)
@@ -506,105 +503,64 @@ if (!file.exists(fout)) {
   feenstra_88 <- readRDS(fout)
 }
 
-car_7990 <- feenstra_88$car_7990 %>%
-  select(year, model, type, price, quan) %>%
-  arrange(year, model)
+car_7990 <- feenstra_88$car_7990[, .(year, model, type, price, quan)]
+setorder(car_7990, year, model)
 
-car_80 <- car_7990 %>%
-  filter(year == 80) %>%
-  select(model, type, price, quan) %>%
-  rename(price_80 = price, quan_80 = quan)
+car_80 <- car_7990[year == 80, .(model, type, price_80 = price, quan_80 = quan)]
 
-car_7990 <- car_7990 %>%
-  inner_join(car_80) %>%
-  group_by(year) %>%
-  mutate(
-    value_80 = sum(price_80 * quan_80),
-    value_cp = sum(price * quan_80)
-  ) %>%
-  ungroup() %>%
-  mutate(lasp = value_cp / value_80)
+car_7990 <- merge(car_7990, car_80, by = c("model", "type"))
 
-car_7990 <- car_7990 %>%
-  group_by(year) %>%
-  mutate(
-    value_c = sum(price * quan),
-    value_cq = sum(price_80 * quan)
-  ) %>%
-  ungroup() %>%
-  mutate(pasp = value_c / value_cq)
+car_7990[, value_80 := sum(price_80 * quan_80), by = year]
+car_7990[, value_cp := sum(price * quan_80), by = year]
+car_7990[, lasp := value_cp / value_80]
 
-car_7990 %>%
-  mutate(pindex = sqrt(lasp * pasp)) %>%
-  group_by(year) %>%
-  summarise(pindex = mean(pindex))
+car_7990[, value_c := sum(price * quan), by = year]
+car_7990[, value_cq := sum(price_80 * quan), by = year]
+car_7990[, pasp := value_c / value_cq]
+
+car_7990[, pindex := sqrt(lasp * pasp)]
+car_7990[, .(pindex = mean(pindex)), by = year]
 ```
 
 #### pindex_t.do
 
 ```{r ch8_ex1b}
-truck_7990 <- feenstra_88$truck_7990 %>%
-  select(year, model, type, price, quan) %>%
-  arrange(year, model)
+truck_7990 <- feenstra_88$truck_7990[, .(year, model, type, price, quan)]
+setorder(truck_7990, year, model)
 
-truck_80 <- truck_7990 %>%
-  filter(year == 80) %>%
-  select(model, type, price, quan) %>%
-  rename(price_80 = price, quan_80 = quan)
+truck_80 <- truck_7990[year == 80, .(model, type, price_80 = price, quan_80 = quan)]
 
-truck_7990 <- truck_7990 %>%
-  inner_join(truck_80) %>%
-  group_by(year) %>%
-  mutate(
-    value_80 = sum(price_80 * quan_80),
-    value_cp = sum(price * quan_80)
-  ) %>%
-  ungroup() %>%
-  mutate(lasp = value_cp / value_80)
+truck_7990 <- merge(truck_7990, truck_80, by = c("model", "type"))
 
-truck_7990 <- truck_7990 %>%
-  group_by(year) %>%
-  mutate(
-    value_c = sum(price * quan),
-    value_cq = sum(price_80 * quan)
-  ) %>%
-  ungroup() %>%
-  mutate(pasp = value_c / value_cq)
+truck_7990[, value_80 := sum(price_80 * quan_80), by = year]
+truck_7990[, value_cp := sum(price * quan_80), by = year]
+truck_7990[, lasp := value_cp / value_80]
 
-truck_7990 %>%
-  mutate(pindex = sqrt(lasp * pasp)) %>%
-  group_by(year) %>%
-  summarise(pindex = mean(pindex))
+truck_7990[, value_c := sum(price * quan), by = year]
+truck_7990[, value_cq := sum(price_80 * quan), by = year]
+truck_7990[, pasp := value_c / value_cq]
+
+truck_7990[, pindex := sqrt(lasp * pasp)]
+truck_7990[, .(pindex = mean(pindex)), by = year]
 ```
 
 #### unit_value.do
 
 ```{r ch8_ex1c}
-car_7990 <- feenstra_88$car_7990 %>%
-  mutate(value = price * quan) %>%
-  group_by(year) %>%
-  mutate(
-    aquan = mean(quan),
-    avalue = mean(value),
-    uvalue = avalue / aquan
-  )
+car_7990 <- copy(feenstra_88$car_7990)
+car_7990[, value := price * quan]
+car_7990[, aquan := mean(quan), by = year]
+car_7990[, avalue := mean(value), by = year]
+car_7990[, uvalue := avalue / aquan]
 
-truck_7990 <- feenstra_88$truck_7990 %>%
-  mutate(value = price * quan) %>%
-  group_by(year) %>%
-  mutate(
-    aquan = mean(quan),
-    avalue = mean(value),
-    uvalue = avalue / aquan
-  )
+truck_7990 <- copy(feenstra_88$truck_7990)
+truck_7990[, value := price * quan]
+truck_7990[, aquan := mean(quan), by = year]
+truck_7990[, avalue := mean(value), by = year]
+truck_7990[, uvalue := avalue / aquan]
 
-car_7990 %>%
-  group_by(year) %>%
-  summarise(uvalue = mean(uvalue))
-
-truck_7990 %>%
-  group_by(year) %>%
-  summarise(uvalue = mean(uvalue))
+car_7990[, .(uvalue = mean(uvalue)), by = year]
+truck_7990[, .(uvalue = mean(uvalue)), by = year]
 ```
 
 ## Exercise 2
@@ -1153,34 +1109,24 @@ end of do-file
 ```{r ch8_ex2a}
 library(minpack.lm) # for nlsLM()
 
-car_7990 <- feenstra_88$car_7990 %>%
-  filter(year < 86) %>%
-  mutate(yd = factor(year)) %>%
-  group_by(yd) %>%
-  mutate(id = row_number()) %>%
-  ungroup()
+car_7990 <- feenstra_88$car_7990[year < 86]
+car_7990[, yd := factor(year)]
+car_7990[, id := seq_len(.N), by = yd]
 
-car_7990 %>%
-  group_by(yd) %>%
-  summarise(freq = n()) %>%
-  ungroup() %>%
-  mutate(
-    percent = freq / sum(freq) * 100,
-    cum = cumsum(percent)
-  )
+tab <- car_7990[, .(freq = .N), by = yd]
+tab[, percent := freq / sum(freq) * 100]
+tab[, cum := cumsum(percent)]
+tab
 
 # expand the yd variable to 0/1 columns
 # in R, you cannot multiply a factor/categorical variable
 
-car_7990 <- car_7990 %>%
-  mutate(yd_ind = as.integer(yd)) %>%
-  mutate(yd_ind = as.factor(yd_ind - min(yd_ind) + 1))
+car_7990[, yd_ind := as.factor(as.integer(yd) - min(as.integer(yd)) + 1)]
 
 car_7990_dummy <- model.matrix(~ yd_ind - 1, data = car_7990)
 colnames(car_7990_dummy) <- gsub("_ind", "", colnames(car_7990_dummy))
-
-car_7990 <- car_7990 %>%
-  bind_cols(as.data.frame(car_7990_dummy))
+car_7990_dummy <- as.data.table(car_7990_dummy)
+car_7990[, names(car_7990_dummy) := car_7990_dummy]
 
 # fit the non-linear specification with initial values
 # nls() fails, so I use nlsLM() that implements the Levenberg-Marquardt
@@ -1208,20 +1154,17 @@ summary(fit)
 
 fit_coef <- coef(fit)
 
-car_7990 <- car_7990 %>%
-  mutate(
-    winv = 1 / exp(fit_coef["b2"] * yd2 + fit_coef["b3"] * yd3 +
-      fit_coef["b4"] * yd4 + fit_coef["b5"] * yd5 + fit_coef["b6"] * yd6 +
-      fit_coef["b7"] * yd7 + fit_coef["c1"] * wght + fit_coef["c2"] * wdth +
-      fit_coef["c3"] * hght + fit_coef["c4"] * hp + fit_coef["c5"] * tran +
-      fit_coef["c6"] * ps + fit_coef["c7"] * ac + fit_coef["c8"]),
-    nprice = price * winv,
-    nyd3 = yd3 * winv,
-    nyd4 = yd4 * winv,
-    nyd5 = yd5 * winv,
-    nyd6 = yd6 * winv,
-    nyd7 = yd7 * winv
-  )
+car_7990[, winv := 1 / exp(fit_coef["b2"] * yd2 + fit_coef["b3"] * yd3 +
+    fit_coef["b4"] * yd4 + fit_coef["b5"] * yd5 + fit_coef["b6"] * yd6 +
+    fit_coef["b7"] * yd7 + fit_coef["c1"] * wght + fit_coef["c2"] * wdth +
+    fit_coef["c3"] * hght + fit_coef["c4"] * hp + fit_coef["c5"] * tran +
+    fit_coef["c6"] * ps + fit_coef["c7"] * ac + fit_coef["c8"])]
+car_7990[, nprice := price * winv]
+car_7990[, nyd3 := yd3 * winv]
+car_7990[, nyd4 := yd4 * winv]
+car_7990[, nyd5 := yd5 * winv]
+car_7990[, nyd6 := yd6 * winv]
+car_7990[, nyd7 := yd7 * winv]
 
 fit2 <- nlsLM(
   nprice ~ a3 * nyd3 + a4 * nyd4 + a5 * nyd5 + a6 * nyd6 + a7 * nyd7 +
@@ -1242,25 +1185,16 @@ summary(fit2)
 #### truck_reg.do
 
 ```{r ch8_ex2b}
-truck_7990 <- feenstra_88$truck_7990 %>%
-  filter(year < 86) %>%
-  mutate(
-    lnprice = log(price),
-    yd = factor(year)
-  ) %>%
-  group_by(yd) %>%
-  mutate(id = row_number()) %>%
-  ungroup() %>%
-  rename(wght = weight)
+truck_7990 <- feenstra_88$truck_7990[year < 86]
+setnames(truck_7990, "weight", "wght")
+truck_7990[, lnprice := log(price)]
+truck_7990[, yd := factor(year)]
+truck_7990[, id := seq_len(.N), by = yd]
 
-truck_7990 %>%
-  group_by(yd) %>%
-  summarise(freq = n()) %>%
-  ungroup() %>%
-  mutate(
-    percent = freq / sum(freq) * 100,
-    cum = cumsum(percent)
-  )
+tab <- truck_7990[, .(freq = .N), by = yd]
+tab[, percent := freq / sum(freq) * 100]
+tab[, cum := cumsum(percent)]
+tab
 
 # I will use b8 instead of c1 to avoid extra tidying later
 initial_values <- list(
@@ -1268,16 +1202,13 @@ initial_values <- list(
   b1 = 1, b2 = 1, b3 = 1, b4 = 1, b5 = 1, b6 = 1, b7 = 1, b8 = 1
 )
 
-truck_7990 <- truck_7990 %>%
-  mutate(yd_ind = as.integer(yd)) %>%
-  mutate(yd_ind = as.factor(yd_ind - min(yd_ind) + 1))
+truck_7990[, yd_ind := as.factor(as.integer(yd) - min(as.integer(yd)) + 1)]
 
 truck_7990_dummy <- model.matrix(~ yd_ind - 1, data = truck_7990)
 
 colnames(truck_7990_dummy) <- gsub("_ind", "", colnames(truck_7990_dummy))
-
-truck_7990 <- truck_7990 %>%
-  bind_cols(as.data.frame(truck_7990_dummy))
+truck_7990_dummy <- as.data.table(truck_7990_dummy)
+truck_7990[, names(truck_7990_dummy) := truck_7990_dummy]
 
 fit3 <- nlsLM(
   lnprice ~ exp(a2 * yd2 + a3 * yd3 + a4 * yd4 + a5 * yd5 + a6 * yd6 +
@@ -1291,15 +1222,12 @@ summary(fit3)
 
 fit_coef <- coef(fit3)
 
-truck_7990 <- truck_7990 %>%
-  mutate(
-    winv = 1 / exp(fit_coef["a2"] * yd2 + fit_coef["a3"] * yd3 +
-      fit_coef["a4"] * yd4 + fit_coef["a5"] * yd5 + fit_coef["a6"] * yd6 +
-      fit_coef["a7"] * yd7 + fit_coef["b1"] * wght + fit_coef["b2"] * wdth +
-      fit_coef["b3"] * hght + fit_coef["b4"] * hp + fit_coef["b5"] * tran +
-      fit_coef["b6"] * ps + fit_coef["b7"] * four + fit_coef["b8"]),
-    nprice = price * winv
-  )
+truck_7990[, winv := 1 / exp(fit_coef["a2"] * yd2 + fit_coef["a3"] * yd3 +
+    fit_coef["a4"] * yd4 + fit_coef["a5"] * yd5 + fit_coef["a6"] * yd6 +
+    fit_coef["a7"] * yd7 + fit_coef["b1"] * wght + fit_coef["b2"] * wdth +
+    fit_coef["b3"] * hght + fit_coef["b4"] * hp + fit_coef["b5"] * tran +
+    fit_coef["b6"] * ps + fit_coef["b7"] * four + fit_coef["b8"])]
+truck_7990[, nprice := price * winv]
 
 fit4 <- nlsLM(
   nprice ~ winv * exp(a2 * yd2 + a3 * yd3 + a4 * yd4 + a5 * yd5 + a6 * yd6 +
@@ -1318,30 +1246,18 @@ summary(fit4)
 ```{r ch8_ex2c}
 # function to avoid repeating the same code four times
 reshape_estimates <- function(fit, vehicle, term_prefix, term_mappings) {
-  tidy(fit) %>%
-    filter(term %in% paste0(term_prefix, 1:8)) %>%
-    mutate(
-      term = case_when(
-        term == paste0(term_prefix, "1") ~ term_mappings[1],
-        term == paste0(term_prefix, "2") ~ term_mappings[2],
-        term == paste0(term_prefix, "3") ~ term_mappings[3],
-        term == paste0(term_prefix, "4") ~ term_mappings[4],
-        term == paste0(term_prefix, "5") ~ term_mappings[5],
-        term == paste0(term_prefix, "6") ~ term_mappings[6],
-        term == paste0(term_prefix, "7") ~ term_mappings[7],
-        term == paste0(term_prefix, "8") ~ term_mappings[8]
-      )
-    ) %>%
-    select(term, estimate, std.error) %>%
-    pivot_longer(
-      cols = c(estimate, std.error), names_to = "stat",
-      values_to = "value"
-    ) %>%
-    mutate(
-      stat = if_else(stat == "estimate", "Estimate", "Std. Error"),
-      value = round(value, 3)
-    ) %>%
-    rename(!!sym(vehicle) := value)
+  coef_dt <- as.data.table(summary(fit)$coefficients, keep.rownames = "term")
+  setnames(coef_dt, c("term", "estimate", "std.error", "statistic", "p.value"))
+  coef_dt <- coef_dt[term %in% paste0(term_prefix, 1:8), .(term, estimate, std.error)]
+  for (i in seq_along(term_mappings)) {
+    coef_dt[term == paste0(term_prefix, i), term := term_mappings[i]]
+  }
+  coef_dt <- melt(coef_dt, id.vars = "term", measure.vars = c("estimate", "std.error"),
+                  variable.name = "stat", value.name = vehicle)
+  coef_dt[stat == "estimate", stat := "Estimate"]
+  coef_dt[stat == "std.error", stat := "Std. Error"]
+  coef_dt[, (vehicle) := round(get(vehicle), 3)]
+  coef_dt
 }
 
 car_vars <- c(
@@ -1357,15 +1273,17 @@ truck_vars <- c(
 ordered_vars <- unique(c(car_vars, truck_vars))
 ordered_vars <- c("Constant", ordered_vars[ordered_vars != "Constant"])
 
-table_84_1 <- reshape_estimates(fit2, "Car", "c", car_vars) %>%
-  full_join(reshape_estimates(fit4, "Truck", "b", truck_vars)) %>%
-  # mutate term to factor + keep Constant at the beginning
-  mutate(
-    term = factor(term, levels = ordered_vars)
-  ) %>%
-  arrange(term)
+table_84_1 <- merge(
+  reshape_estimates(fit2, "Car", "c", car_vars),
+  reshape_estimates(fit4, "Truck", "b", truck_vars),
+  by = c("term", "stat"),
+  all = TRUE
+)
+# keep Constant at the beginning
+table_84_1[, term := factor(term, levels = ordered_vars)]
+setorder(table_84_1, term)
 
-colnames(table_84_1) <- c("Variable", "Statistic", "Car", "Truck")
+setnames(table_84_1, c("Variable", "Statistic", "Car", "Truck"))
 
 kable(table_84_1)
 ```
@@ -1998,79 +1916,51 @@ end of do-file
 ### My code
 
 ```{r ch8_ex3}
-car_7990 <- feenstra_88$car_7990 %>%
-  filter(year < 86) %>%
-  mutate(ve = 1) %>%
-  rename(
-    wdth_c = wdth, hght_c = hght, wght_c = wght, hp_c = hp, four_c = four,
-    tran_c = tran, ps_c = ps, ac_c = ac
-  )
+car_7990 <- feenstra_88$car_7990[year < 86]
+car_7990[, ve := 1]
+setnames(car_7990, c("wdth", "hght", "wght", "hp", "four", "tran", "ps", "ac"),
+         c("wdth_c", "hght_c", "wght_c", "hp_c", "four_c", "tran_c", "ps_c", "ac_c"))
 
-truck_7990 <- feenstra_88$truck_7990 %>%
-  filter(year < 86) %>%
-  mutate(ve = 2) %>%
-  rename(
-    wdth_t = wdth, hght_t = hght, wght_t = weight, hp_t = hp, four_t = four,
-    tran_t = tran, ps_t = ps, ac_t = ac
-  )
+truck_7990 <- feenstra_88$truck_7990[year < 86]
+truck_7990[, ve := 2]
+setnames(truck_7990, c("wdth", "hght", "weight", "hp", "four", "tran", "ps", "ac"),
+         c("wdth_t", "hght_t", "wght_t", "hp_t", "four_t", "tran_t", "ps_t", "ac_t"))
 
-truck_7990 <- truck_7990 %>%
-  bind_rows(car_7990) %>%
-  mutate(
-    wdth_c = ifelse(is.na(wdth_c), 0, wdth_c),
-    hght_c = ifelse(is.na(hght_c), 0, hght_c),
-    wght_c = ifelse(is.na(wght_c), 0, wght_c),
-    hp_c = ifelse(is.na(hp_c), 0, hp_c),
-    four_c = ifelse(is.na(four_c), 0, four_c),
-    tran_c = ifelse(is.na(tran_c), 0, tran_c),
-    ps_c = ifelse(is.na(ps_c), 0, ps_c),
-    ac_c = ifelse(is.na(ac_c), 0, ac_c),
-    wdth_t = ifelse(is.na(wdth_t), 0, wdth_t),
-    hght_t = ifelse(is.na(hght_t), 0, hght_t),
-    wght_t = ifelse(is.na(wght_t), 0, wght_t),
-    hp_t = ifelse(is.na(hp_t), 0, hp_t),
-    four_t = ifelse(is.na(four_t), 0, four_t),
-    tran_t = ifelse(is.na(tran_t), 0, tran_t),
-    ps_t = ifelse(is.na(ps_t), 0, ps_t),
-    ac_t = ifelse(is.na(ac_t), 0, ac_t)
-  )
+truck_7990 <- rbindlist(list(truck_7990, car_7990), fill = TRUE)
 
-truck_7990 %>%
-  group_by(year) %>%
-  summarise(freq = n()) %>%
-  ungroup() %>%
-  mutate(
-    percent = freq / sum(freq) * 100,
-    cum = cumsum(percent)
-  )
+na_cols <- c("wdth_c", "hght_c", "wght_c", "hp_c", "four_c", "tran_c", "ps_c", "ac_c",
+             "wdth_t", "hght_t", "wght_t", "hp_t", "four_t", "tran_t", "ps_t", "ac_t")
+for (col in na_cols) {
+  truck_7990[is.na(get(col)), (col) := 0]
+}
+
+tab <- truck_7990[, .(freq = .N), by = year]
+tab[, percent := freq / sum(freq) * 100]
+tab[, cum := cumsum(percent)]
+tab
 
 # expand the yd variable
 
-truck_7990 <- truck_7990 %>%
-  mutate(yd = as.factor(year - min(year) + 1))
+truck_7990[, yd := as.factor(year - min(year) + 1)]
 
 truck_7990_dummy <- model.matrix(~ yd - 1, data = truck_7990)
-
-truck_7990 <- truck_7990 %>%
-  bind_cols(as.data.frame(truck_7990_dummy))
+truck_7990_dummy <- as.data.table(truck_7990_dummy)
+truck_7990[, names(truck_7990_dummy) := truck_7990_dummy]
 
 # generate the cyd and tyd variables
 
-truck_7990 <- truck_7990 %>%
-  mutate(
-    cyd2 = ifelse(type == "JT", 0, yd2),
-    cyd3 = ifelse(type == "JT", 0, yd3),
-    cyd4 = ifelse(type == "JT", 0, yd4),
-    cyd5 = ifelse(type == "JT", 0, yd5),
-    cyd6 = ifelse(type == "JT", 0, yd6),
-    cyd7 = ifelse(type == "JT", 0, yd7),
-    tyd2 = ifelse(type != "JT", 0, yd2),
-    tyd3 = ifelse(type != "JT", 0, yd3),
-    tyd4 = ifelse(type != "JT", 0, yd4),
-    tyd5 = ifelse(type != "JT", 0, yd5),
-    tyd6 = ifelse(type != "JT", 0, yd6),
-    tyd7 = ifelse(type != "JT", 0, yd7)
-  )
+truck_7990[, cyd2 := fifelse(type == "JT", 0, yd2)]
+truck_7990[, cyd3 := fifelse(type == "JT", 0, yd3)]
+truck_7990[, cyd4 := fifelse(type == "JT", 0, yd4)]
+truck_7990[, cyd5 := fifelse(type == "JT", 0, yd5)]
+truck_7990[, cyd6 := fifelse(type == "JT", 0, yd6)]
+truck_7990[, cyd7 := fifelse(type == "JT", 0, yd7)]
+truck_7990[, tyd2 := fifelse(type != "JT", 0, yd2)]
+truck_7990[, tyd3 := fifelse(type != "JT", 0, yd3)]
+truck_7990[, tyd4 := fifelse(type != "JT", 0, yd4)]
+truck_7990[, tyd5 := fifelse(type != "JT", 0, yd5)]
+truck_7990[, tyd6 := fifelse(type != "JT", 0, yd6)]
+truck_7990[, tyd7 := fifelse(type != "JT", 0, yd7)]
 
 # fit the models
 
@@ -2098,27 +1988,22 @@ fit <- nlsLM(
 
 summary(fit)
 
-truck_7990 <- truck_7990 %>%
-  mutate(
-    winv = case_when(
-      ve == 1 ~ 1 / exp(coef(fit)["b2"] * cyd2 + coef(fit)["b3"] * cyd3 +
-        coef(fit)["b4"] * cyd4 + coef(fit)["b5"] * cyd5 +
-        coef(fit)["b6"] * cyd6 + coef(fit)["b7"] * cyd7 +
-        coef(fit)["c1"] * wght_c + coef(fit)["c2"] * wdth_c +
-        coef(fit)["c3"] * hght_c + coef(fit)["c4"] * hp_c +
-        coef(fit)["c5"] * tran_c + coef(fit)["c6"] * ps_c +
-        coef(fit)["c7"] * ac_c + coef(fit)["c8"]),
-      ve == 2 ~ 1 / exp((coef(fit)["b2"] + 0.16) * tyd2 +
-        (coef(fit)["b3"] + 0.16) * tyd3 + (coef(fit)["b4"] + 0.16) * tyd4 +
-        (coef(fit)["b5"] + 0.16) * tyd5 + (coef(fit)["b6"] + 0.16) * tyd6 +
-        coef(fit)["c9"] * tyd7 + coef(fit)["d1"] * wght_t +
-        coef(fit)["d2"] * wdth_t + coef(fit)["d3"] * hght_t +
-        coef(fit)["d4"] * hp_t + coef(fit)["d5"] * tran_t +
-        coef(fit)["d6"] * ps_t + coef(fit)["d7"] * four_t +
-        coef(fit)["d8"])
-    ),
-    nprice = price * winv
-  )
+truck_7990[ve == 1, winv := 1 / exp(coef(fit)["b2"] * cyd2 + coef(fit)["b3"] * cyd3 +
+    coef(fit)["b4"] * cyd4 + coef(fit)["b5"] * cyd5 +
+    coef(fit)["b6"] * cyd6 + coef(fit)["b7"] * cyd7 +
+    coef(fit)["c1"] * wght_c + coef(fit)["c2"] * wdth_c +
+    coef(fit)["c3"] * hght_c + coef(fit)["c4"] * hp_c +
+    coef(fit)["c5"] * tran_c + coef(fit)["c6"] * ps_c +
+    coef(fit)["c7"] * ac_c + coef(fit)["c8"])]
+truck_7990[ve == 2, winv := 1 / exp((coef(fit)["b2"] + 0.16) * tyd2 +
+    (coef(fit)["b3"] + 0.16) * tyd3 + (coef(fit)["b4"] + 0.16) * tyd4 +
+    (coef(fit)["b5"] + 0.16) * tyd5 + (coef(fit)["b6"] + 0.16) * tyd6 +
+    coef(fit)["c9"] * tyd7 + coef(fit)["d1"] * wght_t +
+    coef(fit)["d2"] * wdth_t + coef(fit)["d3"] * hght_t +
+    coef(fit)["d4"] * hp_t + coef(fit)["d5"] * tran_t +
+    coef(fit)["d6"] * ps_t + coef(fit)["d7"] * four_t +
+    coef(fit)["d8"])]
+truck_7990[, nprice := price * winv]
 
 fit2 <- nlsLM(
   nprice ~ winv * (a3 * cyd3 + a4 * cyd4 + a5 * cyd5 + a6 * cyd6 + a7 * cyd7) +
@@ -2139,46 +2024,51 @@ summary(fit2)
 ### Extra step: formatting the tables
 
 ```{r ch8_ex3_table}
-table_84_2 <- tidy(fit2) %>%
-  select(term, estimate, std.error) %>%
-  mutate(
-    vehicle = substr(term, 1, 1),
-    vehicle = case_when(
-      vehicle == "c" ~ "car",
-      vehicle == "d" ~ "truck",
-      TRUE ~ "Exclude"
-    )
-  ) %>%
-  filter(vehicle != "Exclude") %>%
-  mutate(
-    term = case_when(
-      term == "c1" | term == "d1" ~ "Weight (tons)",
-      term == "c2" | term == "d2" ~ "Width (feet)",
-      term == "c3" | term == "d3" ~ "Height (feet)",
-      term == "c4" | term == "d4" ~ "Horsepower (100)",
-      term == "c5" | term == "d5" ~ "Transmission (5-speed or auto)",
-      term == "c6" | term == "d6" ~ "Power steering",
-      term == "c7"                ~ "Air conditioning",
-      term == "d7"                ~ "Four-wheel drive",
-      term == "c8" | term == "d8" ~ "Constant",
-      TRUE ~ "Exclude"
-    )
-  ) %>%
-  filter(term != "Exclude") %>%
-  pivot_longer(cols = c(estimate, std.error), names_to = "stat") %>%
-  pivot_wider(names_from = "vehicle", values_from = "value") %>%
-  mutate_if(is.numeric, ~ round(., 3)) %>%
-  mutate(
-    term = factor(term, levels = c(
-      "Constant", "Weight (tons)", "Width (feet)", "Height (feet)",
-      "Horsepower (100)", "Transmission (5-speed or auto)", "Power steering",
-      "Air conditioning", "Four-wheel drive"
-    )),
-    stat = if_else(stat == "estimate", "Estimate", "Std. Error")
-  ) %>%
-  arrange(term)
+coef_dt <- as.data.table(summary(fit2)$coefficients, keep.rownames = "term")
+setnames(coef_dt, c("term", "estimate", "std.error", "statistic", "p.value"))
 
-colnames(table_84_2) <- c("Variable", "Statistic", "Car", "Truck")
+coef_dt <- coef_dt[, .(term, estimate, std.error)]
+
+coef_dt[, vehicle := fcase(
+  substr(term, 1, 1) == "c", "car",
+  substr(term, 1, 1) == "d", "truck",
+  default = "Exclude"
+)]
+coef_dt <- coef_dt[vehicle != "Exclude"]
+
+coef_dt[, term := fcase(
+  term %in% c("c1", "d1"), "Weight (tons)",
+  term %in% c("c2", "d2"), "Width (feet)",
+  term %in% c("c3", "d3"), "Height (feet)",
+  term %in% c("c4", "d4"), "Horsepower (100)",
+  term %in% c("c5", "d5"), "Transmission (5-speed or auto)",
+  term %in% c("c6", "d6"), "Power steering",
+  term == "c7",            "Air conditioning",
+  term == "d7",            "Four-wheel drive",
+  term %in% c("c8", "d8"), "Constant",
+  default = "Exclude"
+)]
+coef_dt <- coef_dt[term != "Exclude"]
+
+table_84_2 <- melt(coef_dt, id.vars = c("term", "vehicle"),
+                   measure.vars = c("estimate", "std.error"),
+                   variable.name = "stat", value.name = "value")
+table_84_2 <- dcast(table_84_2, term + stat ~ vehicle, value.var = "value")
+
+num_cols <- names(table_84_2)[sapply(table_84_2, is.numeric)]
+table_84_2[, (num_cols) := lapply(.SD, round, 3), .SDcols = num_cols]
+
+term_levels <- c(
+  "Constant", "Weight (tons)", "Width (feet)", "Height (feet)",
+  "Horsepower (100)", "Transmission (5-speed or auto)", "Power steering",
+  "Air conditioning", "Four-wheel drive"
+)
+table_84_2[, term := factor(term, levels = term_levels)]
+table_84_2[stat == "estimate", stat := "Estimate"]
+table_84_2[stat == "std.error", stat := "Std. Error"]
+setorder(table_84_2, term)
+
+setnames(table_84_2, c("Variable", "Statistic", "Car", "Truck"))
 
 kable(table_84_2)
 ```
@@ -3205,89 +3095,49 @@ end of do-file
 #### unit_quality.do
 
 ```{r ch8_ex4a}
-truck_7990 <- feenstra_88$truck_7990 %>%
-  filter(year < 86) %>%
-  mutate(ve = 2) %>%
-  rename(
-    quan_t = quan,
-    wdth_t = wdth,
-    hght_t = hght,
-    wght_t = weight,
-    hp_t = hp,
-    four_t = four,
-    tran_t = tran,
-    ps_t = ps,
-    ac_t = ac
-  )
+truck_7990 <- feenstra_88$truck_7990[year < 86]
+truck_7990[, ve := 2]
+setnames(truck_7990,
+         c("quan", "wdth", "hght", "weight", "hp", "four", "tran", "ps", "ac"),
+         c("quan_t", "wdth_t", "hght_t", "wght_t", "hp_t", "four_t", "tran_t", "ps_t", "ac_t"))
 
-car_7990 <- feenstra_88$car_7990 %>%
-  filter(year < 86) %>%
-  mutate(ve = 1) %>%
-  rename(
-    quan_c = quan,
-    wdth_c = wdth,
-    hght_c = hght,
-    wght_c = wght,
-    hp_c = hp,
-    four_c = four,
-    tran_c = tran,
-    ps_c = ps,
-    ac_c = ac
-  )
+car_7990 <- feenstra_88$car_7990[year < 86]
+car_7990[, ve := 1]
+setnames(car_7990,
+         c("quan", "wdth", "hght", "wght", "hp", "four", "tran", "ps", "ac"),
+         c("quan_c", "wdth_c", "hght_c", "wght_c", "hp_c", "four_c", "tran_c", "ps_c", "ac_c"))
 
-truck_7990 <- truck_7990 %>%
-  bind_rows(car_7990) %>%
-  mutate(
-    wdth_c = ifelse(is.na(wdth_c), 0, wdth_c),
-    hght_c = ifelse(is.na(hght_c), 0, hght_c),
-    wght_c = ifelse(is.na(wght_c), 0, wght_c),
-    hp_c = ifelse(is.na(hp_c), 0, hp_c),
-    four_c = ifelse(is.na(four_c), 0, four_c),
-    tran_c = ifelse(is.na(tran_c), 0, tran_c),
-    ps_c = ifelse(is.na(ps_c), 0, ps_c),
-    ac_c = ifelse(is.na(ac_c), 0, ac_c),
-    wdth_t = ifelse(is.na(wdth_t), 0, wdth_t),
-    hght_t = ifelse(is.na(hght_t), 0, hght_t),
-    wght_t = ifelse(is.na(wght_t), 0, wght_t),
-    hp_t = ifelse(is.na(hp_t), 0, hp_t),
-    four_t = ifelse(is.na(four_t), 0, four_t),
-    tran_t = ifelse(is.na(tran_t), 0, tran_t),
-    ps_t = ifelse(is.na(ps_t), 0, ps_t),
-    ac_t = ifelse(is.na(ac_t), 0, ac_t)
-  )
+truck_7990 <- rbindlist(list(truck_7990, car_7990), fill = TRUE)
 
-truck_7990 %>%
-  group_by(year) %>%
-  summarise(freq = n()) %>%
-  ungroup() %>%
-  mutate(
-    percent = freq / sum(freq) * 100,
-    cum = cumsum(percent)
-  )
+na_cols <- c("wdth_c", "hght_c", "wght_c", "hp_c", "four_c", "tran_c", "ps_c", "ac_c",
+             "wdth_t", "hght_t", "wght_t", "hp_t", "four_t", "tran_t", "ps_t", "ac_t")
+for (col in na_cols) {
+  truck_7990[is.na(get(col)), (col) := 0]
+}
 
-truck_7990 <- truck_7990 %>%
-  mutate(yd = as.factor(year - min(year) + 1))
+tab <- truck_7990[, .(freq = .N), by = year]
+tab[, percent := freq / sum(freq) * 100]
+tab[, cum := cumsum(percent)]
+tab
+
+truck_7990[, yd := as.factor(year - min(year) + 1)]
 
 truck_7990_dummy <- model.matrix(~ yd - 1, data = truck_7990)
+truck_7990_dummy <- as.data.table(truck_7990_dummy)
+truck_7990[, names(truck_7990_dummy) := truck_7990_dummy]
 
-truck_7990 <- truck_7990 %>%
-  bind_cols(as.data.frame(truck_7990_dummy))
-
-truck_7990 <- truck_7990 %>%
-  mutate(
-    cyd2 = ifelse(type == "JT", 0, yd2),
-    cyd3 = ifelse(type == "JT", 0, yd3),
-    cyd4 = ifelse(type == "JT", 0, yd4),
-    cyd5 = ifelse(type == "JT", 0, yd5),
-    cyd6 = ifelse(type == "JT", 0, yd6),
-    cyd7 = ifelse(type == "JT", 0, yd7),
-    tyd2 = ifelse(type != "JT", 0, yd2),
-    tyd3 = ifelse(type != "JT", 0, yd3),
-    tyd4 = ifelse(type != "JT", 0, yd4),
-    tyd5 = ifelse(type != "JT", 0, yd5),
-    tyd6 = ifelse(type != "JT", 0, yd6),
-    tyd7 = ifelse(type != "JT", 0, yd7)
-  )
+truck_7990[, cyd2 := fifelse(type == "JT", 0, yd2)]
+truck_7990[, cyd3 := fifelse(type == "JT", 0, yd3)]
+truck_7990[, cyd4 := fifelse(type == "JT", 0, yd4)]
+truck_7990[, cyd5 := fifelse(type == "JT", 0, yd5)]
+truck_7990[, cyd6 := fifelse(type == "JT", 0, yd6)]
+truck_7990[, cyd7 := fifelse(type == "JT", 0, yd7)]
+truck_7990[, tyd2 := fifelse(type != "JT", 0, yd2)]
+truck_7990[, tyd3 := fifelse(type != "JT", 0, yd3)]
+truck_7990[, tyd4 := fifelse(type != "JT", 0, yd4)]
+truck_7990[, tyd5 := fifelse(type != "JT", 0, yd5)]
+truck_7990[, tyd6 := fifelse(type != "JT", 0, yd6)]
+truck_7990[, tyd7 := fifelse(type != "JT", 0, yd7)]
 
 initial_values <- list(
   a3 = 1, a4 = 1, a5 = 1, a6 = 1, a7 = 1,
@@ -3315,26 +3165,21 @@ summary(fit)
 
 fit_coef <- coef(fit)
 
-truck_7990 <- truck_7990 %>%
-  mutate(
-    winv = case_when(
-      ve == 1 ~ 1 / exp(fit_coef["b2"] * cyd2 + fit_coef["b3"] * cyd3 +
-        fit_coef["b4"] * cyd4 + fit_coef["b5"] * cyd5 +
-        fit_coef["b6"] * cyd6 + fit_coef["b7"] * cyd7 +
-        fit_coef["c1"] * wght_c + fit_coef["c2"] * wdth_c +
-        fit_coef["c3"] * hght_c + fit_coef["c4"] * hp_c +
-        fit_coef["c5"] * tran_c + fit_coef["c6"] * ps_c +
-        fit_coef["c7"] * ac_c + fit_coef["c8"]),
-      ve == 2 ~ 1 / exp((fit_coef["b2"] + 0.16) * tyd2 +
-        (fit_coef["b3"] + 0.16) * tyd3 + (fit_coef["b4"] + 0.16) * tyd4 +
-        (fit_coef["b5"] + 0.16) * tyd5 + (fit_coef["b6"] + 0.16) * tyd6 +
-        fit_coef["c9"] * tyd7 + fit_coef["d1"] * wght_t +
-        fit_coef["d2"] * wdth_t + fit_coef["d3"] * hght_t +
-        fit_coef["d4"] * hp_t + fit_coef["d5"] * tran_t +
-        fit_coef["d6"] * ps_t + fit_coef["d7"] * four_t + fit_coef["d8"])
-    ),
-    nprice = price * winv
-  )
+truck_7990[ve == 1, winv := 1 / exp(fit_coef["b2"] * cyd2 + fit_coef["b3"] * cyd3 +
+    fit_coef["b4"] * cyd4 + fit_coef["b5"] * cyd5 +
+    fit_coef["b6"] * cyd6 + fit_coef["b7"] * cyd7 +
+    fit_coef["c1"] * wght_c + fit_coef["c2"] * wdth_c +
+    fit_coef["c3"] * hght_c + fit_coef["c4"] * hp_c +
+    fit_coef["c5"] * tran_c + fit_coef["c6"] * ps_c +
+    fit_coef["c7"] * ac_c + fit_coef["c8"])]
+truck_7990[ve == 2, winv := 1 / exp((fit_coef["b2"] + 0.16) * tyd2 +
+    (fit_coef["b3"] + 0.16) * tyd3 + (fit_coef["b4"] + 0.16) * tyd4 +
+    (fit_coef["b5"] + 0.16) * tyd5 + (fit_coef["b6"] + 0.16) * tyd6 +
+    fit_coef["c9"] * tyd7 + fit_coef["d1"] * wght_t +
+    fit_coef["d2"] * wdth_t + fit_coef["d3"] * hght_t +
+    fit_coef["d4"] * hp_t + fit_coef["d5"] * tran_t +
+    fit_coef["d6"] * ps_t + fit_coef["d7"] * four_t + fit_coef["d8"])]
+truck_7990[, nprice := price * winv]
 
 fit2 <- nlsLM(
   nprice ~ winv * (a3 * cyd3 + a4 * cyd4 + a5 * cyd5 + a6 * cyd6 + a7 * cyd7) +
@@ -3355,114 +3200,70 @@ fit2_coef <- coef(fit2)
 ```
 
 ```{r ch8_ex4b}
-truck_7990_2 <- truck_7990 %>%
-  filter(ve == 1) %>%
-  mutate(
-    quality = exp(fit2_coef["c8"] + fit2_coef["b2"] + fit2_coef["c1"] * wght_c +
-      fit2_coef["c2"] * wdth_c + fit2_coef["c3"] * hght_c +
-      fit2_coef["c4"] * hp_c + fit2_coef["c5"] * tran_c +
-      fit2_coef["c6"] * ps_c + fit2_coef["c7"] * ac_c),
-    nvalue = quality * quan_c
-  )
+truck_7990_2 <- truck_7990[ve == 1]
+truck_7990_2[, quality := exp(fit2_coef["c8"] + fit2_coef["b2"] +
+    fit2_coef["c1"] * wght_c + fit2_coef["c2"] * wdth_c +
+    fit2_coef["c3"] * hght_c + fit2_coef["c4"] * hp_c +
+    fit2_coef["c5"] * tran_c + fit2_coef["c6"] * ps_c + fit2_coef["c7"] * ac_c)]
+truck_7990_2[, nvalue := quality * quan_c]
 
-car_uquality <- truck_7990_2 %>%
-  group_by(year) %>%
-  summarise(
-    aquan = mean(quan_c),
-    anvalue = mean(nvalue)
-  ) %>%
-  ungroup() %>%
-  mutate(uquality = anvalue / aquan) %>%
-  group_by(year) %>%
-  summarise(mean_uquality = mean(uquality))
-
+car_uquality <- truck_7990_2[, .(aquan = mean(quan_c), anvalue = mean(nvalue)), by = year]
+car_uquality[, mean_uquality := anvalue / aquan]
+car_uquality <- car_uquality[, .(year, mean_uquality)]
 car_uquality
 
-truck_7990_3 <- truck_7990 %>%
-  filter(ve == 2) %>%
-  mutate(
-    quality = exp(fit2_coef["d8"] + fit2_coef["b2"] + fit2_coef["d1"] * wght_t +
-      fit2_coef["d2"] * wdth_t + fit2_coef["d3"] * hght_t +
-      fit2_coef["d4"] * hp_t + fit2_coef["d5"] * tran_t +
-      fit2_coef["d6"] * ps_t + fit2_coef["d7"] * four_t),
-    nvalue = quality * quan_t
-  )
+truck_7990_3 <- truck_7990[ve == 2]
+truck_7990_3[, quality := exp(fit2_coef["d8"] + fit2_coef["b2"] +
+    fit2_coef["d1"] * wght_t + fit2_coef["d2"] * wdth_t +
+    fit2_coef["d3"] * hght_t + fit2_coef["d4"] * hp_t +
+    fit2_coef["d5"] * tran_t + fit2_coef["d6"] * ps_t + fit2_coef["d7"] * four_t)]
+truck_7990_3[, nvalue := quality * quan_t]
 
-truck_uquality <- truck_7990_3 %>%
-  group_by(year) %>%
-  summarise(
-    aquan = mean(quan_t),
-    anvalue = mean(nvalue)
-  ) %>%
-  ungroup() %>%
-  mutate(uquality = anvalue / aquan) %>%
-  group_by(year) %>%
-  summarise(mean_uquality = mean(uquality))
-
+truck_uquality <- truck_7990_3[, .(aquan = mean(quan_t), anvalue = mean(nvalue)), by = year]
+truck_uquality[, mean_uquality := anvalue / aquan]
+truck_uquality <- truck_uquality[, .(year, mean_uquality)]
 truck_uquality
 ```
 
 #### qindex_c.do
 
 ```{r ch8_ex4c}
-car_7990_2_80 <- truck_7990_2 %>%
-  filter(year == 80) %>%
-  select(model, type, quality, quan_c) %>%
-  rename(
-    quality_80 = quality,
-    quan_80 = quan_c
-  )
+car_7990_2_80 <- truck_7990_2[year == 80, .(model, type, quality_80 = quality, quan_80 = quan_c)]
 
-car_qindex <- truck_7990_2 %>%
-  select(year, model, type, quality, quan_c) %>%
-  inner_join(car_7990_2_80, by = c("model", "type")) %>%
-  group_by(year, model) %>%
-  mutate(
-    value_80 = sum(quality_80 * quan_80),
-    value_cp = sum(quality * quan_80),
-    lasp = value_cp / value_80
-  ) %>%
-  group_by(year) %>%
-  mutate(
-    value_c = sum(quality * quan_c),
-    value_cq = sum(quality_80 * quan_c),
-    pasp = value_c / value_cq,
-    qindex = sqrt(lasp * pasp)
-  ) %>%
-  summarise(mean_qindex = mean(qindex))
+car_qindex <- truck_7990_2[, .(year, model, type, quality, quan_c)]
+car_qindex <- merge(car_qindex, car_7990_2_80, by = c("model", "type"))
 
+car_qindex[, value_80 := sum(quality_80 * quan_80), by = .(year, model)]
+car_qindex[, value_cp := sum(quality * quan_80), by = .(year, model)]
+car_qindex[, lasp := value_cp / value_80]
+
+car_qindex[, value_c := sum(quality * quan_c), by = year]
+car_qindex[, value_cq := sum(quality_80 * quan_c), by = year]
+car_qindex[, pasp := value_c / value_cq]
+car_qindex[, qindex := sqrt(lasp * pasp)]
+
+car_qindex <- car_qindex[, .(mean_qindex = mean(qindex)), by = year]
 car_qindex
 ```
 
 #### qindex_t.do
 
 ```{r ch8_ex4d}
-truck_7990_3_80 <- truck_7990_3 %>%
-  filter(year == 80) %>%
-  select(model, type, quality, quan_t) %>%
-  rename(
-    quality_80 = quality,
-    quan_80 = quan_t
-  )
+truck_7990_3_80 <- truck_7990_3[year == 80, .(model, type, quality_80 = quality, quan_80 = quan_t)]
 
-truck_qindex <- truck_7990_3 %>%
-  select(year, model, type, quality, quan_t) %>%
-  inner_join(truck_7990_3_80, by = c("model", "type")) %>%
-  group_by(year, model) %>%
-  mutate(
-    value_80 = sum(quality_80 * quan_80),
-    value_tp = sum(quality * quan_80),
-    lasp = value_tp / value_80
-  ) %>%
-  group_by(year) %>%
-  mutate(
-    value_t = sum(quality * quan_t),
-    value_tq = sum(quality_80 * quan_t),
-    pasp = value_t / value_tq,
-    qindex = sqrt(lasp * pasp)
-  ) %>%
-  summarise(mean_qindex = mean(qindex))
+truck_qindex <- truck_7990_3[, .(year, model, type, quality, quan_t)]
+truck_qindex <- merge(truck_qindex, truck_7990_3_80, by = c("model", "type"))
 
+truck_qindex[, value_80 := sum(quality_80 * quan_80), by = .(year, model)]
+truck_qindex[, value_tp := sum(quality * quan_80), by = .(year, model)]
+truck_qindex[, lasp := value_tp / value_80]
+
+truck_qindex[, value_t := sum(quality * quan_t), by = year]
+truck_qindex[, value_tq := sum(quality_80 * quan_t), by = year]
+truck_qindex[, pasp := value_t / value_tq]
+truck_qindex[, qindex := sqrt(lasp * pasp)]
+
+truck_qindex <- truck_qindex[, .(mean_qindex = mean(qindex)), by = year]
 truck_qindex
 ```
 
@@ -3471,33 +3272,34 @@ truck_qindex
 ```{r ch8_ex4e}
 # function to avoid code quadruplication
 reshape_qindex <- function(data, mean_qindex_col, group, measurement) {
-  data %>%
-    rename(mean_qindex = !!mean_qindex_col) %>%
-    mutate(
-      qindex_pct = (mean_qindex - lag(mean_qindex)) / mean_qindex
-    ) %>%
-    pivot_longer(
-      cols = c(mean_qindex, qindex_pct),
-      names_to = "metric",
-      values_to = "value"
-    ) %>%
-    pivot_wider(names_from = year, values_from = value) %>%
-    mutate(type = group) %>%
-    mutate(metric = c(measurement, paste(measurement, "(% Change)"))) %>%
-    select(type, metric, everything()) %>%
-    mutate_if(is.numeric, ~ round(., 3))
+  dt <- copy(data)
+  setnames(dt, mean_qindex_col, "mean_qindex")
+  setorder(dt, year)
+  dt[, qindex_pct := (mean_qindex - shift(mean_qindex)) / mean_qindex]
+
+  dt_long <- melt(dt, id.vars = "year",
+                  measure.vars = c("mean_qindex", "qindex_pct"),
+                  variable.name = "metric", value.name = "value")
+  dt_wide <- dcast(dt_long, metric ~ year, value.var = "value")
+
+  dt_wide[, type := group]
+  dt_wide[, metric := c(measurement, paste(measurement, "(% Change)"))]
+
+  year_cols <- setdiff(names(dt_wide), c("type", "metric"))
+  setcolorder(dt_wide, c("type", "metric", year_cols))
+
+  num_cols <- names(dt_wide)[sapply(dt_wide, is.numeric)]
+  dt_wide[, (num_cols) := lapply(.SD, round, 3), .SDcols = num_cols]
+
+  dt_wide
 }
 
-table83 <- reshape_qindex(car_uquality, "mean_uquality", "Japanese Cars", "Unit quality") %>%
-  bind_rows(
-    reshape_qindex(car_qindex, "mean_qindex", "Japanese Cars", "Quality index")
-  ) %>%
-  bind_rows(
-    reshape_qindex(truck_uquality, "mean_uquality", "Japanese Trucks", "Unit quality")
-  ) %>%
-  bind_rows(
-    reshape_qindex(truck_qindex, "mean_qindex", "Japanese Trucks", "Quality index")
-  )
+table83 <- rbindlist(list(
+  reshape_qindex(car_uquality, "mean_uquality", "Japanese Cars", "Unit quality"),
+  reshape_qindex(car_qindex, "mean_qindex", "Japanese Cars", "Quality index"),
+  reshape_qindex(truck_uquality, "mean_uquality", "Japanese Trucks", "Unit quality"),
+  reshape_qindex(truck_qindex, "mean_qindex", "Japanese Trucks", "Quality index")
+))
 
 colnames(table83) <- c("Type", "Metric", paste0("19", 79:85))
 
@@ -4406,83 +4208,57 @@ end of do-file
 #### system_nocom.do
 
 ```{r ch8_ex5a}
-truck_7990 <- feenstra_88$truck_7990 %>%
-  mutate(ve = 2) %>%
-  rename(
-    wdth_t = wdth, hght_t = hght, wght_t = weight, hp_t = hp, four_t = four,
-    tran_t = tran, ps_t = ps, ac_t = ac
-  )
+truck_7990 <- feenstra_88$truck_7990
+truck_7990[, ve := 2]
+setnames(truck_7990, c("wdth", "hght", "weight", "hp", "four", "tran", "ps", "ac"),
+         c("wdth_t", "hght_t", "wght_t", "hp_t", "four_t", "tran_t", "ps_t", "ac_t"))
 
-car_7990 <- feenstra_88$car_7990 %>%
-  mutate(ve = 1) %>%
-  rename(
-    wdth_c = wdth, hght_c = hght, wght_c = wght, hp_c = hp, four_c = four,
-    tran_c = tran, ps_c = ps, ac_c = ac
-  )
+car_7990 <- feenstra_88$car_7990
+car_7990[, ve := 1]
+setnames(car_7990, c("wdth", "hght", "wght", "hp", "four", "tran", "ps", "ac"),
+         c("wdth_c", "hght_c", "wght_c", "hp_c", "four_c", "tran_c", "ps_c", "ac_c"))
 
-truck_7990 <- truck_7990 %>%
-  bind_rows(car_7990) %>%
-  mutate(
-    wdth_c = ifelse(is.na(wdth_c), 0, wdth_c),
-    hght_c = ifelse(is.na(hght_c), 0, hght_c),
-    wght_c = ifelse(is.na(wght_c), 0, wght_c),
-    hp_c = ifelse(is.na(hp_c), 0, hp_c),
-    four_c = ifelse(is.na(four_c), 0, four_c),
-    tran_c = ifelse(is.na(tran_c), 0, tran_c),
-    ps_c = ifelse(is.na(ps_c), 0, ps_c),
-    ac_c = ifelse(is.na(ac_c), 0, ac_c),
-    wdth_t = ifelse(is.na(wdth_t), 0, wdth_t),
-    hght_t = ifelse(is.na(hght_t), 0, hght_t),
-    wght_t = ifelse(is.na(wght_t), 0, wght_t),
-    hp_t = ifelse(is.na(hp_t), 0, hp_t),
-    four_t = ifelse(is.na(four_t), 0, four_t),
-    tran_t = ifelse(is.na(tran_t), 0, tran_t),
-    ps_t = ifelse(is.na(ps_t), 0, ps_t),
-    ac_t = ifelse(is.na(ac_t), 0, ac_t)
-  )
+truck_7990 <- rbindlist(list(truck_7990, car_7990), fill = TRUE)
 
-truck_7990 %>%
-  group_by(year) %>%
-  summarise(freq = n()) %>%
-  ungroup() %>%
-  mutate(
-    percent = freq / sum(freq) * 100,
-    cum = cumsum(percent)
-  )
+na_cols <- c("wdth_c", "hght_c", "wght_c", "hp_c", "four_c", "tran_c", "ps_c", "ac_c",
+             "wdth_t", "hght_t", "wght_t", "hp_t", "four_t", "tran_t", "ps_t", "ac_t")
+for (col in na_cols) {
+  truck_7990[is.na(get(col)), (col) := 0]
+}
 
-truck_7990 <- truck_7990 %>%
-  mutate(yd = as.factor(year - min(year) + 1))
+tab <- truck_7990[, .(freq = .N), by = year]
+tab[, percent := freq / sum(freq) * 100]
+tab[, cum := cumsum(percent)]
+tab
+
+truck_7990[, yd := as.factor(year - min(year) + 1)]
 
 truck_7990_dummy <- model.matrix(~ yd - 1, data = truck_7990)
+truck_7990_dummy <- as.data.table(truck_7990_dummy)
+truck_7990[, names(truck_7990_dummy) := truck_7990_dummy]
 
-truck_7990 <- truck_7990 %>%
-  bind_cols(as.data.frame(truck_7990_dummy))
-
-truck_7990 <- truck_7990 %>%
-  mutate(
-    cyd2 = ifelse(type == "JT", 0, yd2),
-    cyd3 = ifelse(type == "JT", 0, yd3),
-    cyd4 = ifelse(type == "JT", 0, yd4),
-    cyd5 = ifelse(type == "JT", 0, yd5),
-    cyd6 = ifelse(type == "JT", 0, yd6),
-    cyd7 = ifelse(type == "JT", 12, yd7),
-    cyd8 = ifelse(type == "JT", 0, yd8),
-    cyd9 = ifelse(type == "JT", 0, yd9),
-    cyd10 = yd10,
-    cyd11 = yd11,
-    cyd12 = yd12,
-    tyd2 = ifelse(type != "JT", 0, yd2),
-    tyd3 = ifelse(type != "JT", 0, yd3),
-    tyd4 = ifelse(type != "JT", 0, yd4),
-    tyd5 = ifelse(type != "JT", 0, yd5),
-    tyd6 = ifelse(type != "JT", 0, yd6),
-    tyd7 = ifelse(type != "JT", 12, yd7),
-    tyd8 = ifelse(type != "JT", 0, yd8),
-    tyd9 = ifelse(type != "JT", 0, yd9),
-    tyd10 = yd10,
-    tyd11 = yd11,
-    tyd12 = yd12
-  )
+truck_7990[, cyd2  := fifelse(type == "JT", 0,  yd2)]
+truck_7990[, cyd3  := fifelse(type == "JT", 0,  yd3)]
+truck_7990[, cyd4  := fifelse(type == "JT", 0,  yd4)]
+truck_7990[, cyd5  := fifelse(type == "JT", 0,  yd5)]
+truck_7990[, cyd6  := fifelse(type == "JT", 0,  yd6)]
+truck_7990[, cyd7  := fifelse(type == "JT", 12, yd7)]
+truck_7990[, cyd8  := fifelse(type == "JT", 0,  yd8)]
+truck_7990[, cyd9  := fifelse(type == "JT", 0,  yd9)]
+truck_7990[, cyd10 := yd10]
+truck_7990[, cyd11 := yd11]
+truck_7990[, cyd12 := yd12]
+truck_7990[, tyd2  := fifelse(type != "JT", 0,  yd2)]
+truck_7990[, tyd3  := fifelse(type != "JT", 0,  yd3)]
+truck_7990[, tyd4  := fifelse(type != "JT", 0,  yd4)]
+truck_7990[, tyd5  := fifelse(type != "JT", 0,  yd5)]
+truck_7990[, tyd6  := fifelse(type != "JT", 0,  yd6)]
+truck_7990[, tyd7  := fifelse(type != "JT", 12, yd7)]
+truck_7990[, tyd8  := fifelse(type != "JT", 0,  yd8)]
+truck_7990[, tyd9  := fifelse(type != "JT", 0,  yd9)]
+truck_7990[, tyd10 := yd10]
+truck_7990[, tyd11 := yd11]
+truck_7990[, tyd12 := yd12]
 ```
 
 ```{r ch8_ex5b}
@@ -4520,28 +4296,23 @@ summary(fit)
 
 fit_coef <- coef(fit)
 
-truck_7990 <- truck_7990 %>%
-  mutate(
-    winv = case_when(
-      ve == 1 ~ 1 / exp(fit_coef["b2"] * cyd2 + fit_coef["b3"] * cyd3 +
-        fit_coef["b4"] * cyd4 + fit_coef["b5"] * cyd5 + fit_coef["b6"] * cyd6 +
-        fit_coef["b7"] * cyd7 + fit_coef["b8"] * cyd8 + fit_coef["b9"] * cyd9 +
-        fit_coef["b10"] * cyd10 + fit_coef["b11"] * cyd11 +
-        fit_coef["b12"] * cyd12 + fit_coef["c1"] * wght_c +
-        fit_coef["c2"] * wdth_c + fit_coef["c3"] * hght_c +
-        fit_coef["c4"] * hp_c + fit_coef["c5"] * tran_c +
-        fit_coef["c6"] * ps_c + fit_coef["c7"] * ac_c + fit_coef["c8"]),
-      ve == 2 ~ 1 / exp(fit_coef["e2"] * tyd2 + fit_coef["e3"] * tyd3 +
-        fit_coef["e4"] * tyd4 + fit_coef["e5"] * tyd5 + fit_coef["e6"] * tyd6 +
-        fit_coef["e7"] * tyd7 + fit_coef["e8"] * tyd8 + fit_coef["e9"] * tyd9 +
-        fit_coef["e10"] * tyd10 + fit_coef["e11"] * tyd11 +
-        fit_coef["e12"] * tyd12 + fit_coef["d1"] * wght_t +
-        fit_coef["d2"] * wdth_t + fit_coef["d3"] * hght_t +
-        fit_coef["d4"] * hp_t + fit_coef["d5"] * tran_t +
-        fit_coef["d6"] * ps_t + fit_coef["d7"] * four_t + fit_coef["d8"]),
-    ),
-    nprice = price * winv
-  )
+truck_7990[ve == 1, winv := 1 / exp(fit_coef["b2"] * cyd2 + fit_coef["b3"] * cyd3 +
+    fit_coef["b4"] * cyd4 + fit_coef["b5"] * cyd5 + fit_coef["b6"] * cyd6 +
+    fit_coef["b7"] * cyd7 + fit_coef["b8"] * cyd8 + fit_coef["b9"] * cyd9 +
+    fit_coef["b10"] * cyd10 + fit_coef["b11"] * cyd11 +
+    fit_coef["b12"] * cyd12 + fit_coef["c1"] * wght_c +
+    fit_coef["c2"] * wdth_c + fit_coef["c3"] * hght_c +
+    fit_coef["c4"] * hp_c + fit_coef["c5"] * tran_c +
+    fit_coef["c6"] * ps_c + fit_coef["c7"] * ac_c + fit_coef["c8"])]
+truck_7990[ve == 2, winv := 1 / exp(fit_coef["e2"] * tyd2 + fit_coef["e3"] * tyd3 +
+    fit_coef["e4"] * tyd4 + fit_coef["e5"] * tyd5 + fit_coef["e6"] * tyd6 +
+    fit_coef["e7"] * tyd7 + fit_coef["e8"] * tyd8 + fit_coef["e9"] * tyd9 +
+    fit_coef["e10"] * tyd10 + fit_coef["e11"] * tyd11 +
+    fit_coef["e12"] * tyd12 + fit_coef["d1"] * wght_t +
+    fit_coef["d2"] * wdth_t + fit_coef["d3"] * hght_t +
+    fit_coef["d4"] * hp_t + fit_coef["d5"] * tran_t +
+    fit_coef["d6"] * ps_t + fit_coef["d7"] * four_t + fit_coef["d8"])]
+truck_7990[, nprice := price * winv]
 
 fit2 <- nlsLM(
   nprice ~ winv * (a3 * cyd3 + a4 * cyd4 + a5 * cyd5 + a6 * cyd6 + a7 * cyd7 +
@@ -4609,30 +4380,18 @@ I need to replace variables such as "c1" with "Weight (tons)" to replicate Table
 ```{r ch8_ex5d}
 # function to avoid repeating the same code four times
 reshape_estimates <- function(fit, vehicle, term_prefix, term_mappings) {
-  tidy(fit) %>%
-    filter(term %in% paste0(term_prefix, 1:8)) %>%
-    mutate(
-      term = case_when(
-        term == paste0(term_prefix, "1") ~ term_mappings[1],
-        term == paste0(term_prefix, "2") ~ term_mappings[2],
-        term == paste0(term_prefix, "3") ~ term_mappings[3],
-        term == paste0(term_prefix, "4") ~ term_mappings[4],
-        term == paste0(term_prefix, "5") ~ term_mappings[5],
-        term == paste0(term_prefix, "6") ~ term_mappings[6],
-        term == paste0(term_prefix, "7") ~ term_mappings[7],
-        term == paste0(term_prefix, "8") ~ term_mappings[8]
-      )
-    ) %>%
-    select(term, estimate, std.error) %>%
-    pivot_longer(
-      cols = c(estimate, std.error), names_to = "stat",
-      values_to = "value"
-    ) %>%
-    mutate(
-      stat = if_else(stat == "estimate", "Estimate", "Std. Error"),
-      value = round(value, 3)
-    ) %>%
-    rename(!!sym(vehicle) := value)
+  coef_dt <- as.data.table(summary(fit)$coefficients, keep.rownames = "term")
+  setnames(coef_dt, c("term", "estimate", "std.error", "statistic", "p.value"))
+  coef_dt <- coef_dt[term %in% paste0(term_prefix, 1:8), .(term, estimate, std.error)]
+  for (i in seq_along(term_mappings)) {
+    coef_dt[term == paste0(term_prefix, i), term := term_mappings[i]]
+  }
+  coef_dt <- melt(coef_dt, id.vars = "term", measure.vars = c("estimate", "std.error"),
+                  variable.name = "stat", value.name = vehicle)
+  coef_dt[stat == "estimate", stat := "Estimate"]
+  coef_dt[stat == "std.error", stat := "Std. Error"]
+  coef_dt[, (vehicle) := round(get(vehicle), 3)]
+  coef_dt
 }
 
 car_vars <- c(
@@ -4648,23 +4407,22 @@ truck_vars <- c(
 ordered_vars <- unique(c(car_vars, truck_vars))
 ordered_vars <- c("Constant", ordered_vars[!ordered_vars %in% "Constant"])
 
-table_85 <- reshape_estimates(fit2, "cars", "c", car_vars) %>%
-  full_join(reshape_estimates(fit2, "trucks", "d", truck_vars)) %>%
-  full_join(reshape_estimates(fit4, "cars", "c", car_vars),
-    by = c("term", "stat")
-  ) %>%
-  full_join(reshape_estimates(fit4, "trucks", "d", truck_vars),
-    by = c("term", "stat")
-  ) %>%
-  mutate(
-    term = factor(term, levels = ordered_vars)
-  ) %>%
-  arrange(term)
+t1 <- reshape_estimates(fit2, "cars_nocon", "c", car_vars)
+t2 <- reshape_estimates(fit2, "trucks_nocon", "d", truck_vars)
+t3 <- reshape_estimates(fit4, "cars_wcon", "c", car_vars)
+t4 <- reshape_estimates(fit4, "trucks_wcon", "d", truck_vars)
 
-colnames(table_85) <- c(
+table_85 <- merge(t1, t2, by = c("term", "stat"), all = TRUE)
+table_85 <- merge(table_85, t3, by = c("term", "stat"), all = TRUE)
+table_85 <- merge(table_85, t4, by = c("term", "stat"), all = TRUE)
+
+table_85[, term := factor(term, levels = ordered_vars)]
+setorder(table_85, term)
+
+setnames(table_85, c(
   "Variable", "Statistic", "Cars (No Con)", "Trucks (No Con)",
   "Cars (W Con)", "Trucks (W Con)"
-)
+))
 
 kable(table_85)
 ```
