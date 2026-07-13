@@ -153,6 +153,7 @@ tinyplot(
   type = "b",
   pch = 19,
   main = "Relative wage of nonproduction / production workers, U.S. Manufacturing",
+  sub = "Source: NBER productivity database (Bartelsman and Gray 1996)",
   xlab = "Year",
   ylab = "Relative wage"
 )
@@ -162,9 +163,10 @@ tinyplot(
 tinyplot(
   npemp_pemp ~ year,
   data = employment_rates,
-  type = "b",
+  type = "b",    subtitle = "Source: NBER productivity database (Bartelsman and Gray 1996)",
   pch = 19,
   main = "Relative employment of nonproduction / production workers, U.S. Manufacturing",
+  sub = "Source: NBER productivity database (Bartelsman and Gray 1996)",
   xlab = "Year",
   ylab = "Relative employment"
 )
@@ -569,35 +571,36 @@ if (!dir.exists(dout)) {
 fout <- paste0(dout, "/datachp4.rds")
 
 if (!file.exists(fout)) {
-  datachp4 <- read_dta(paste0(dout, "/data_Chp4.dta"))
+  datachp4 <- as.data.table(read_dta(paste0(dout, "/data_Chp4.dta")))
   saveRDS(datachp4, fout)
-} else {
-  datachp4 <- readRDS(fout)
-  datachp4 <- datachp4[!year %in% c(1972, 1987)]
-  datachp4 <- datachp4[!sic72 %in% c(2067, 2794, 3483)]
-  datachp4[, wagebill := sum(pay), by = year]
-  datachp4[, share := pay / wagebill]
-  setorder(datachp4, sic72, year)
-  datachp4[, lagshare := shift(share), by = sic72]
-  datachp4[, ashare := (share + lagshare) / 2]
-  datachp4[, lagnwsh := shift(nwsh), by = sic72]
-  datachp4[, chanwsh := (nwsh - lagnwsh) * 100 / 11]
-  datachp4[, wchanwsh := chanwsh * ashare]
-  datachp4[, wdlky := dlky * ashare]
-  datachp4[, wdly := dly * ashare]
-  datachp4[, wdsimat1a := dsimat1a * ashare]
-  datachp4[, wdsimat1b := dsimat1a * ashare]
-  datachp4[, diffout := dsimat1a - dsimat1b]
-  datachp4[, wdiffout := (dsimat1a - dsimat1b) * ashare]
-  datachp4[, wcosh_exp := dofsh * ashare]
-  datachp4[, htsh_exp := dhtsh - dofsh]
-  datachp4[, whtsh_exp := (dhtsh - dofsh) * ashare]
-  datachp4[, wcosh_exa := dofsh1 * ashare]
-  datachp4[, htsh_exa := dhtsh1 - dofsh1]
-  datachp4[, whtsh_exa := (dhtsh1 - dofsh1) * ashare]
-  datachp4[, wcosh := ci * ashare]
-  datachp4[, whtsh := dhtsh * ashare]
 }
+
+datachp4 <- readRDS(fout)
+datachp4 <- datachp4[!year %in% c(1972, 1987) & !sic72 %in% c(2067, 2794, 3483)]
+
+datachp4[, share := pay / sum(pay), by = year]
+
+setorder(datachp4, sic72, year)
+datachp4[, ashare := (share + shift(share)) / 2, by = sic72]
+datachp4[, chanwsh := (nwsh - shift(nwsh)) * 100 / 11, by = sic72]
+
+datachp4[, `:=`(
+  wchanwsh  = chanwsh * ashare,
+  wdlky     = dlky * ashare,
+  wdly      = dly * ashare,
+  wdsimat1a = dsimat1a * ashare,
+  wdsimat1b = dsimat1a * ashare,
+  diffout   = dsimat1a - dsimat1b,
+  wdiffout  = (dsimat1a - dsimat1b) * ashare,
+  wcosh_exp = dofsh * ashare,
+  htsh_exp  = dhtsh - dofsh,
+  whtsh_exp = (dhtsh - dofsh) * ashare,
+  wcosh_exa = dofsh1 * ashare,
+  htsh_exa  = dhtsh1 - dofsh1,
+  whtsh_exa = (dhtsh1 - dofsh1) * ashare,
+  wcosh     = ci * ashare,
+  whtsh     = dhtsh * ashare
+)]
 
 # Check with the first column of Table 4.4 ----
 
@@ -1321,15 +1324,19 @@ end of do-file
 datachp4 <- readRDS(fout)
 datachp4 <- datachp4[year == 1990]
 datachp4 <- datachp4[!sic72 %in% c(2067, 2794, 3483)]
-datachp4[, etfp := ptfp - err]
-datachp4[, adj1 := 1 / (1 - amesh)]
-datachp4[, etfp1 := adj1 * etfp]
-datachp4[, dlpvad1 := adj1 * dlpvad]
-datachp4[, apsh1 := adj1 * apsh]
-datachp4[, ansh1 := adj1 * ansh]
-datachp4[, aksh1 := adj1 * aksh]
-datachp4[, mshxpr := amsh * dlpmx]
-datachp4[, eshxpr := aosh * dlpe]
+datachp4[, `:=`(
+  etfp   = ptfp - err,
+  adj1   = 1 / (1 - amesh),
+  mshxpr = amsh * dlpmx,
+  eshxpr = aosh * dlpe
+)]
+datachp4[, `:=`(
+  etfp1   = adj1 * etfp,
+  dlpvad1 = adj1 * dlpvad,
+  apsh1   = adj1 * apsh,
+  ansh1   = adj1 * ansh,
+  aksh1   = adj1 * aksh
+)]
 
 # Reproduce Table 4.5 ----
 
@@ -1392,14 +1399,18 @@ coeftest(reg5, vcov = vcovHC(reg5, type = "HC1"))
 datachp4 <- readRDS(fout)
 datachp4 <- datachp4[year == 1990]
 datachp4 <- datachp4[!sic72 %in% c(2067, 2794, 3483)]
-datachp4[, etfp := ptfp - err]
-datachp4[, adj1 := 1 / (1 - amesh)]
-datachp4[, etfp1 := adj1 * etfp]
-datachp4[, dlpvad1 := adj1 * dlpvad]
-datachp4[, apsh1 := adj1 * apsh]
-datachp4[, ansh1 := adj1 * ansh]
-datachp4[, aksh1 := adj1 * aksh]
-datachp4[, t4dlpvad := (dlpvad + etfp) * adj1]
+datachp4[, `:=`(
+  etfp = ptfp - err,
+  adj1 = 1 / (1 - amesh)
+)]
+datachp4[, `:=`(
+  etfp1    = adj1 * etfp,
+  dlpvad1  = adj1 * dlpvad,
+  apsh1    = adj1 * apsh,
+  ansh1    = adj1 * ansh,
+  aksh1    = adj1 * aksh,
+  t4dlpvad = (dlpvad + etfp) * adj1
+)]
 
 # Reproduce the first column of Table IV ----
 
@@ -1444,13 +1455,15 @@ coeftest(reg1, vcov = vcovCL(reg1, cluster = datachp4_2$sic2))
 # Reproduce Table V using the coefficients in column(1) of Table IV ----
 
 datachp4_2[, wt := sqrt(mvshipsh)]
-datachp4_2[, apsh5 := apsh1 * wt]
-datachp4_2[, ansh5 := ansh1 * wt]
-datachp4_2[, aksh5 := aksh1 * wt]
-datachp4_2[, narrout := dsimat1b * wt * coef(reg1)["dsimat1b"]]
-datachp4_2[, diffout := dsimatd1 * wt * coef(reg1)["dsimatd1"]]
-datachp4_2[, comsh := dofsh * wt * coef(reg1)["dofsh"]]
-datachp4_2[, difcom := dhtdsh * wt * coef(reg1)["dhtdsh"]]
+datachp4_2[, `:=`(
+  apsh5   = apsh1 * wt,
+  ansh5   = ansh1 * wt,
+  aksh5   = aksh1 * wt,
+  narrout = dsimat1b * wt * coef(reg1)["dsimat1b"],
+  diffout = dsimatd1 * wt * coef(reg1)["dsimatd1"],
+  comsh   = dofsh * wt * coef(reg1)["dofsh"],
+  difcom  = dhtdsh * wt * coef(reg1)["dhtdsh"]
+)]
 
 long2 <- melt(datachp4_2, measure.vars = c("narrout", "diffout", "comsh", "difcom"),
               variable.name = "var", value.name = "val")
@@ -1492,11 +1505,11 @@ summary(reg5)
 
 # Reproduce column (2) of Table IV ----
 
-## generating difference measure of outsourcing
-datachp4[, dsimatd1 := dsimat1a - dsimat1b]
-
-## generate difference measure of high tech share with ex ante rental price
-datachp4[, dhtdsh1 := dhtsh1 - dofsh1]
+## generating difference measure of outsourcing and high tech share with ex ante rental price
+datachp4[, `:=`(
+  dsimatd1 = dsimat1a - dsimat1b,
+  dhtdsh1  = dhtsh1 - dofsh1
+)]
 
 ## check whether we are using the right variable as described in table II
 

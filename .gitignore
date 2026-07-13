@@ -1,2 +1,4 @@
 /.quarto/
 stata11/
+
+**/*.quarto_ipynb

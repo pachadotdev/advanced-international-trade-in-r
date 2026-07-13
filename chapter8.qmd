@@ -510,12 +510,16 @@ car_80 <- car_7990[year == 80, .(model, type, price_80 = price, quan_80 = quan)]
 
 car_7990 <- merge(car_7990, car_80, by = c("model", "type"))
 
-car_7990[, value_80 := sum(price_80 * quan_80), by = year]
-car_7990[, value_cp := sum(price * quan_80), by = year]
+car_7990[, `:=`(
+  value_80 = sum(price_80 * quan_80),
+  value_cp = sum(price * quan_80)
+), by = year]
 car_7990[, lasp := value_cp / value_80]
 
-car_7990[, value_c := sum(price * quan), by = year]
-car_7990[, value_cq := sum(price_80 * quan), by = year]
+car_7990[, `:=`(
+  value_c  = sum(price * quan),
+  value_cq = sum(price_80 * quan)
+), by = year]
 car_7990[, pasp := value_c / value_cq]
 
 car_7990[, pindex := sqrt(lasp * pasp)]
@@ -532,12 +536,16 @@ truck_80 <- truck_7990[year == 80, .(model, type, price_80 = price, quan_80 = qu
 
 truck_7990 <- merge(truck_7990, truck_80, by = c("model", "type"))
 
-truck_7990[, value_80 := sum(price_80 * quan_80), by = year]
-truck_7990[, value_cp := sum(price * quan_80), by = year]
+truck_7990[, `:=`(
+  value_80 = sum(price_80 * quan_80),
+  value_cp = sum(price * quan_80)
+), by = year]
 truck_7990[, lasp := value_cp / value_80]
 
-truck_7990[, value_c := sum(price * quan), by = year]
-truck_7990[, value_cq := sum(price_80 * quan), by = year]
+truck_7990[, `:=`(
+  value_c  = sum(price * quan),
+  value_cq = sum(price_80 * quan)
+), by = year]
 truck_7990[, pasp := value_c / value_cq]
 
 truck_7990[, pindex := sqrt(lasp * pasp)]
@@ -549,14 +557,18 @@ truck_7990[, .(pindex = mean(pindex)), by = year]
 ```{r ch8_ex1c}
 car_7990 <- copy(feenstra_88$car_7990)
 car_7990[, value := price * quan]
-car_7990[, aquan := mean(quan), by = year]
-car_7990[, avalue := mean(value), by = year]
+car_7990[, `:=`(
+  aquan  = mean(quan),
+  avalue = mean(value)
+), by = year]
 car_7990[, uvalue := avalue / aquan]
 
 truck_7990 <- copy(feenstra_88$truck_7990)
 truck_7990[, value := price * quan]
-truck_7990[, aquan := mean(quan), by = year]
-truck_7990[, avalue := mean(value), by = year]
+truck_7990[, `:=`(
+  aquan  = mean(quan),
+  avalue = mean(value)
+), by = year]
 truck_7990[, uvalue := avalue / aquan]
 
 car_7990[, .(uvalue = mean(uvalue)), by = year]
@@ -1159,12 +1171,14 @@ car_7990[, winv := 1 / exp(fit_coef["b2"] * yd2 + fit_coef["b3"] * yd3 +
     fit_coef["b7"] * yd7 + fit_coef["c1"] * wght + fit_coef["c2"] * wdth +
     fit_coef["c3"] * hght + fit_coef["c4"] * hp + fit_coef["c5"] * tran +
     fit_coef["c6"] * ps + fit_coef["c7"] * ac + fit_coef["c8"])]
-car_7990[, nprice := price * winv]
-car_7990[, nyd3 := yd3 * winv]
-car_7990[, nyd4 := yd4 * winv]
-car_7990[, nyd5 := yd5 * winv]
-car_7990[, nyd6 := yd6 * winv]
-car_7990[, nyd7 := yd7 * winv]
+car_7990[, `:=`(
+  nprice = price * winv,
+  nyd3   = yd3 * winv,
+  nyd4   = yd4 * winv,
+  nyd5   = yd5 * winv,
+  nyd6   = yd6 * winv,
+  nyd7   = yd7 * winv
+)]
 
 fit2 <- nlsLM(
   nprice ~ a3 * nyd3 + a4 * nyd4 + a5 * nyd5 + a6 * nyd6 + a7 * nyd7 +
@@ -1187,8 +1201,10 @@ summary(fit2)
 ```{r ch8_ex2b}
 truck_7990 <- feenstra_88$truck_7990[year < 86]
 setnames(truck_7990, "weight", "wght")
-truck_7990[, lnprice := log(price)]
-truck_7990[, yd := factor(year)]
+truck_7990[, `:=`(
+  lnprice = log(price),
+  yd      = factor(year)
+)]
 truck_7990[, id := seq_len(.N), by = yd]
 
 tab <- truck_7990[, .(freq = .N), by = yd]
@@ -1949,18 +1965,20 @@ truck_7990[, names(truck_7990_dummy) := truck_7990_dummy]
 
 # generate the cyd and tyd variables
 
-truck_7990[, cyd2 := fifelse(type == "JT", 0, yd2)]
-truck_7990[, cyd3 := fifelse(type == "JT", 0, yd3)]
-truck_7990[, cyd4 := fifelse(type == "JT", 0, yd4)]
-truck_7990[, cyd5 := fifelse(type == "JT", 0, yd5)]
-truck_7990[, cyd6 := fifelse(type == "JT", 0, yd6)]
-truck_7990[, cyd7 := fifelse(type == "JT", 0, yd7)]
-truck_7990[, tyd2 := fifelse(type != "JT", 0, yd2)]
-truck_7990[, tyd3 := fifelse(type != "JT", 0, yd3)]
-truck_7990[, tyd4 := fifelse(type != "JT", 0, yd4)]
-truck_7990[, tyd5 := fifelse(type != "JT", 0, yd5)]
-truck_7990[, tyd6 := fifelse(type != "JT", 0, yd6)]
-truck_7990[, tyd7 := fifelse(type != "JT", 0, yd7)]
+truck_7990[, `:=`(
+  cyd2 = fifelse(type == "JT", 0, yd2),
+  cyd3 = fifelse(type == "JT", 0, yd3),
+  cyd4 = fifelse(type == "JT", 0, yd4),
+  cyd5 = fifelse(type == "JT", 0, yd5),
+  cyd6 = fifelse(type == "JT", 0, yd6),
+  cyd7 = fifelse(type == "JT", 0, yd7),
+  tyd2 = fifelse(type != "JT", 0, yd2),
+  tyd3 = fifelse(type != "JT", 0, yd3),
+  tyd4 = fifelse(type != "JT", 0, yd4),
+  tyd5 = fifelse(type != "JT", 0, yd5),
+  tyd6 = fifelse(type != "JT", 0, yd6),
+  tyd7 = fifelse(type != "JT", 0, yd7)
+)]
 
 # fit the models
 
@@ -3126,18 +3144,20 @@ truck_7990_dummy <- model.matrix(~ yd - 1, data = truck_7990)
 truck_7990_dummy <- as.data.table(truck_7990_dummy)
 truck_7990[, names(truck_7990_dummy) := truck_7990_dummy]
 
-truck_7990[, cyd2 := fifelse(type == "JT", 0, yd2)]
-truck_7990[, cyd3 := fifelse(type == "JT", 0, yd3)]
-truck_7990[, cyd4 := fifelse(type == "JT", 0, yd4)]
-truck_7990[, cyd5 := fifelse(type == "JT", 0, yd5)]
-truck_7990[, cyd6 := fifelse(type == "JT", 0, yd6)]
-truck_7990[, cyd7 := fifelse(type == "JT", 0, yd7)]
-truck_7990[, tyd2 := fifelse(type != "JT", 0, yd2)]
-truck_7990[, tyd3 := fifelse(type != "JT", 0, yd3)]
-truck_7990[, tyd4 := fifelse(type != "JT", 0, yd4)]
-truck_7990[, tyd5 := fifelse(type != "JT", 0, yd5)]
-truck_7990[, tyd6 := fifelse(type != "JT", 0, yd6)]
-truck_7990[, tyd7 := fifelse(type != "JT", 0, yd7)]
+truck_7990[, `:=`(
+  cyd2 = fifelse(type == "JT", 0, yd2),
+  cyd3 = fifelse(type == "JT", 0, yd3),
+  cyd4 = fifelse(type == "JT", 0, yd4),
+  cyd5 = fifelse(type == "JT", 0, yd5),
+  cyd6 = fifelse(type == "JT", 0, yd6),
+  cyd7 = fifelse(type == "JT", 0, yd7),
+  tyd2 = fifelse(type != "JT", 0, yd2),
+  tyd3 = fifelse(type != "JT", 0, yd3),
+  tyd4 = fifelse(type != "JT", 0, yd4),
+  tyd5 = fifelse(type != "JT", 0, yd5),
+  tyd6 = fifelse(type != "JT", 0, yd6),
+  tyd7 = fifelse(type != "JT", 0, yd7)
+)]
 
 initial_values <- list(
   a3 = 1, a4 = 1, a5 = 1, a6 = 1, a7 = 1,
@@ -3233,12 +3253,16 @@ car_7990_2_80 <- truck_7990_2[year == 80, .(model, type, quality_80 = quality, q
 car_qindex <- truck_7990_2[, .(year, model, type, quality, quan_c)]
 car_qindex <- merge(car_qindex, car_7990_2_80, by = c("model", "type"))
 
-car_qindex[, value_80 := sum(quality_80 * quan_80), by = .(year, model)]
-car_qindex[, value_cp := sum(quality * quan_80), by = .(year, model)]
+car_qindex[, `:=`(
+  value_80 = sum(quality_80 * quan_80),
+  value_cp = sum(quality * quan_80)
+), by = .(year, model)]
 car_qindex[, lasp := value_cp / value_80]
 
-car_qindex[, value_c := sum(quality * quan_c), by = year]
-car_qindex[, value_cq := sum(quality_80 * quan_c), by = year]
+car_qindex[, `:=`(
+  value_c  = sum(quality * quan_c),
+  value_cq = sum(quality_80 * quan_c)
+), by = year]
 car_qindex[, pasp := value_c / value_cq]
 car_qindex[, qindex := sqrt(lasp * pasp)]
 
@@ -3254,12 +3278,16 @@ truck_7990_3_80 <- truck_7990_3[year == 80, .(model, type, quality_80 = quality,
 truck_qindex <- truck_7990_3[, .(year, model, type, quality, quan_t)]
 truck_qindex <- merge(truck_qindex, truck_7990_3_80, by = c("model", "type"))
 
-truck_qindex[, value_80 := sum(quality_80 * quan_80), by = .(year, model)]
-truck_qindex[, value_tp := sum(quality * quan_80), by = .(year, model)]
+truck_qindex[, `:=`(
+  value_80 = sum(quality_80 * quan_80),
+  value_tp = sum(quality * quan_80)
+), by = .(year, model)]
 truck_qindex[, lasp := value_tp / value_80]
 
-truck_qindex[, value_t := sum(quality * quan_t), by = year]
-truck_qindex[, value_tq := sum(quality_80 * quan_t), by = year]
+truck_qindex[, `:=`(
+  value_t  = sum(quality * quan_t),
+  value_tq = sum(quality_80 * quan_t)
+), by = year]
 truck_qindex[, pasp := value_t / value_tq]
 truck_qindex[, qindex := sqrt(lasp * pasp)]
 

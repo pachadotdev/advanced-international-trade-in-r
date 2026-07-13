@@ -319,6 +319,10 @@ if (!file.exists(fout)) {
     col.names = c("country", "factor", "at", "v", "y", "b", "ypc", "pop")
   )
 
+  # fread reads b as integer64 (large integers); convert to numeric to avoid
+  # bit64 arithmetic overriding double operations downstream
+  trefler[, b := as.numeric(b)]
+
   # Transform ----
 
   # see https://www.stata.com/manuals/rsummarize.pdf
@@ -898,14 +902,20 @@ end of do-file
 trefler <- readRDS(fout)
 
 # Number of country in the dataset
-trefler[, c := max(indexc)]
-trefler[, f := max(indexf)]
+trefler[, `:=`(
+  c = max(indexc),
+  f = max(indexf)
+)]
 
 # Calculate the world level of Yw, Bw and Vw
-trefler[, yww := sum(y)]
-trefler[, yw := yww / f]
-trefler[, bww := sum(b)]
-trefler[, bw := bww / f]
+trefler[, `:=`(
+  yww = sum(y),
+  bww = sum(b)
+)]
+trefler[, `:=`(
+  yw = yww / f,
+  bw = bww / f
+)]
 trefler[, vfw := sum(v), by = indexf]
 
 # Calculate country share Sc
@@ -923,8 +933,10 @@ trefler[, sigmaf := sqrt(sigma2f)]
 trefler[, weight := sigmaf * sqrt(sc)]
 
 # Using the weight, convert all the data
-trefler[, trat := at / (sigmaf * sqrt(sc))]
-trefler[, athat2 := (v - sc * vfw) / weight]
+trefler[, `:=`(
+  trat   = at / (sigmaf * sqrt(sc)),
+  athat2 = (v - sc * vfw) / weight
+)]
 
 setorder(trefler, country)
 
@@ -1510,16 +1522,24 @@ end of do-file
 trefler <- readRDS(fout)
 
 # Number of country in the dataset
-trefler[, c := max(indexc)]
-trefler[, f := max(indexf)]
+trefler[, `:=`(
+  c = max(indexc),
+  f = max(indexf)
+)]
 
 # Calculate the world level of Yw, Bw and Vw
-trefler[, yww := sum(y)]
-trefler[, yw := yww / f]
-trefler[, bww := sum(b)]
-trefler[, bw := bww / f]
-trefler[, vfw := sum(v), by = indexf]
-trefler[, vw := sum(delta * v), by = indexf]
+trefler[, `:=`(
+  yww = sum(y),
+  bww = sum(b)
+)]
+trefler[, `:=`(
+  yw = yww / f,
+  bw = bww / f
+)]
+trefler[, `:=`(
+  vfw = sum(v),
+  vw  = sum(delta * v)
+), by = indexf]
 
 # Calculate country share Sc
 trefler[, sc := (y - b) / (yw - bw)]
@@ -1536,8 +1556,10 @@ trefler[, sigmaf := sqrt(sigma2f)]
 trefler[, weight := sigmaf * sqrt(sc)]
 
 # Using the weight, convert all the data
-trefler[, trat := delta * at / weight]
-trefler[, athat2 := (delta * v - sc * vw) / weight]
+trefler[, `:=`(
+  trat   = delta * at / weight,
+  athat2 = (delta * v - sc * vw) / weight
+)]
 
 # Correlation should be .41
 cor(trefler[, .(trat, athat2)])
@@ -2831,16 +2853,24 @@ end of do-file
 trefler <- readRDS(fout)
 
 # Number of country in the dataset
-trefler[, c := max(indexc)]
-trefler[, f := max(indexf)]
+trefler[, `:=`(
+  c = max(indexc),
+  f = max(indexf)
+)]
 
 # Calculate the world level of Yw, Bw and Vw
-trefler[, yww := sum(y)]
-trefler[, yw := yww / f]
-trefler[, bww := sum(b)]
-trefler[, bw := bww / f]
-trefler[, vfw := sum(v), by = indexf]
-trefler[, vw := sum(delta * v), by = indexf]
+trefler[, `:=`(
+  yww = sum(y),
+  bww = sum(b)
+)]
+trefler[, `:=`(
+  yw = yww / f,
+  bw = bww / f
+)]
+trefler[, `:=`(
+  vfw = sum(v),
+  vw  = sum(delta * v)
+), by = indexf]
 
 # Calculate country share Sc
 trefler[, sc := (y - b) / (yw - bw)]
@@ -2857,22 +2887,25 @@ trefler[, sigmaf := sqrt(sigma2f)]
 trefler[, weight := sigmaf * sqrt(sc)]
 
 # Using the weight, convert all the data
-trefler[, trat := delta * at / weight]
-trefler[, athat2 := (delta * v - sc * vw) / weight]
+trefler[, `:=`(
+  trat   = delta * at / weight,
+  athat2 = (delta * v - sc * vw) / weight
+)]
 
 # Construct Aggregate Labor Endowment
-trefler2 <- trefler[indexf %in% 7:9]
-trefler2[, en := fcase(indexf == 7, 2L, indexf == 8, 3L, indexf == 9, 4L)]
+non_labor <- c("capital", "cropland", "pasture")
+trefler2 <- trefler[factor %in% non_labor]
+trefler2[, en := fcase(factor == "capital", 2L, factor == "cropland", 3L, factor == "pasture", 4L)]
 trefler2 <- trefler2[, .(country, factor, at, v, en, indexc, sc)]
 
-trefler3_labor <- trefler[!(indexf %in% 7:9),
+trefler3_labor <- trefler[!(factor %in% non_labor),
   .(v = sum(v), at = sum(at), sc = mean(sc), indexc = mean(indexc)),
   by = country
 ]
 trefler3_labor[, en := 1L]
 trefler3_labor[, factor := "Labor"]
 
-trefler3 <- rbindlist(list(trefler2, trefler3_labor), fill = TRUE)
+trefler3 <- rbindlist(list(trefler2, trefler3_labor), use.names = TRUE)
 setorder(trefler3, indexc, en)
 
 # Compute Pi: factor productivity

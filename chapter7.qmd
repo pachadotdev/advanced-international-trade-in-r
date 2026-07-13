@@ -1222,7 +1222,7 @@ lag_est <- coef(mod1)[c("lag0", "lag1", "lag2")]
 estimate <- sum(lag_est * w)
 se <- std_error(w, mod1_vcov, c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
 
 # i = 2
 
@@ -1230,7 +1230,7 @@ w <- c(1, 2, 4)
 estimate <- sum(lag_est * w)
 se <- std_error(w, mod1_vcov, c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
 
 # i = 3
 
@@ -1238,7 +1238,7 @@ w <- c(1, 3, 9)
 estimate <- sum(lag_est * w)
 se <- std_error(w, mod1_vcov, c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
 
 # i = 4
 
@@ -1246,7 +1246,7 @@ w <- c(1, 4, 16)
 estimate <- sum(lag_est * w)
 se <- std_error(w, mod1_vcov, c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
 
 # summation of betai's
 
@@ -1254,7 +1254,7 @@ w <- c(5, 10, 30)
 estimate <- sum(lag_est * w)
 se <- std_error(w, mod1_vcov, c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, mod1_summ))
 
 ## Cycon ----
 
@@ -1278,7 +1278,7 @@ lag_est <- coef(mod2)[c("lag0", "lag1", "lag2")]
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod2), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
 
 # i = 2
 
@@ -1286,7 +1286,7 @@ w <- c(1, 2, 4)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod2), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
 
 # i = 3
 
@@ -1294,7 +1294,7 @@ w <- c(1, 3, 9)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod2), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
 
 # i = 4
 
@@ -1302,7 +1302,7 @@ w <- c(1, 4, 16)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod2), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
 
 # summation of betai's
 
@@ -1310,7 +1310,7 @@ w <- c(5, 10, 30)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod2), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2)))
 
 ## Cypool ----
 
@@ -1334,7 +1334,7 @@ lag_est <- coef(mod3)[c("lag0", "lag1", "lag2")]
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod3), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
 
 # i = 2
 
@@ -1342,7 +1342,7 @@ w <- c(1, 2, 4)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod3), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
 
 # i = 3
 
@@ -1350,7 +1350,7 @@ w <- c(1, 3, 9)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod3), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
 
 # i = 4
 
@@ -1358,7 +1358,7 @@ w <- c(1, 4, 16)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod3), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
 
 # summation of betai's
 
@@ -1366,7 +1366,7 @@ w <- c(5, 10, 30)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod3), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3)))
 
 ## Cyship ----
 
@@ -1390,7 +1390,7 @@ lag_est <- coef(mod4)[c("lag0", "lag1", "lag2")]
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod4), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
 
 # i = 2
 
@@ -1398,7 +1398,7 @@ w <- c(1, 2, 4)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod4), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
 
 # i = 3
 
@@ -1406,7 +1406,7 @@ w <- c(1, 3, 9)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod4), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
 
 # i = 4
 
@@ -1414,7 +1414,7 @@ w <- c(1, 4, 16)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod4), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
 
 # summation of betai's
 
@@ -1422,7 +1422,7 @@ w <- c(5, 10, 30)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod4), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4)))
 
 ## Trucks ----
 
@@ -1445,7 +1445,7 @@ lag_est <- coef(mod5)[c("lag0", "lag1", "lag2")]
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod5), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
 
 # i = 2
 
@@ -1453,7 +1453,7 @@ w <- c(1, 2, 4)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod5), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
 
 # i = 3
 
@@ -1461,7 +1461,7 @@ w <- c(1, 3, 9)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod5), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
 
 # i = 4
 
@@ -1469,7 +1469,7 @@ w <- c(1, 4, 16)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod5), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
 
 # summation of betai's
 
@@ -1477,7 +1477,7 @@ w <- c(5, 10, 30)
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod5), c("lag0", "lag1", "lag2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5)))
 ```
 
 ## Exercise 2
@@ -1507,7 +1507,7 @@ lag_est <- coef(mod1h)[c("z0", "z1", "z2")]
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod1h), c("z0", "z1", "z2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod1h)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod1h)))
 
 ## Cycon ----
 
@@ -1525,7 +1525,7 @@ lag_est <- coef(mod2h)[c("z0", "z1", "z2")]
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod2h), c("z0", "z1", "z2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2h)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod2h)))
 
 ## Cypool ----
 
@@ -1543,7 +1543,7 @@ lag_est <- coef(mod3h)[c("z0", "z1", "z2")]
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod3h), c("z0", "z1", "z2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3h)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod3h)))
 
 ## Cyship ----
 
@@ -1561,7 +1561,7 @@ lag_est <- coef(mod4h)[c("z0", "z1", "z2")]
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod4h), c("z0", "z1", "z2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4h)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod4h)))
 
 ## Trucks ----
 
@@ -1579,5 +1579,5 @@ lag_est <- coef(mod5h)[c("z0", "z1", "z2")]
 estimate <- sum(lag_est * w)
 se <- std_error(w, vcov(mod5h), c("z0", "z1", "z2"))
 stat <- estimate / se
-data.table(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5h)))
+c(estimate = estimate, std.error = se, statistic = stat, p.value = p_value(stat, summary(mod5h)))
 ```
