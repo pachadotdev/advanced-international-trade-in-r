@@ -1,18 +1,22 @@
-# Advanced International Trade in R
+# Solutions Manual for Advanced International Trade in R
 
-The links from [Feenstra's website](http://www.robertcfeenstra.com/graduate-text.html)
-are currently broken, so I went to the Internet Archive Wayback Machine to
-find the linked site (The Center for International Data) from 2005-03-08
-and I downloaded it with `wget` (i.e., I run `bash 00-download-wayback-backup.sh`).
+I tried to replicate Feenstra's results in R, because I had to learn a bit of Stata for the course ECO3300 (International Trade) taught by Prof. Dr. Peter Morrow at the University of Toronto. To organize my notes, I used Quarto to present my R outputs in a decently formatted HTML file.
 
-Then I started trying to replicate the same in R (with Quarto), because I do not
-know Stata very well.
+I have a printed copy of the first edition, so I am using the data and codes from the first edition.
 
-I have the first edition, so I am using the data from the first edition.
+The goal of these solutions is to provide a reference for those who come from Stata and want to learn R. I prioritized readability and simplicity over performance and elegance. There were parts of the code were it was challenging to stick to a literal code translation, and I had to use R idioms to make the code more readable. Here I privilege clarity over elegance.
 
-All the datasets and Stata codes are intellectual property of Dr. Robert C.
-Feenstra. The R codes are of my authorship, but these are a translation of the
-Stata codes, so I released them under Creative Commons Zero v1.0 Universal.
+There are tasks that are hard to write in Stata, but easy in R, and vice versa. As the exercises progress, I intentionally used more R idioms to make the code less repetitive while keeping the code as readable as possible. The first version of these solutions (Jun, 2025) used the Tidyverse but my preferences changed over time and the second version (Jul, 2026) uses data.table as I find it more practical.
 
-Please do not hesistate to email me if this is useful, or if you have any
-questions or suggestions. My email is on my GitHub profile.
+These notes have a public [GitHub repository](https://github.com/pachadotdev/advanced-international-trade-in-r). The repository has a detailed track of changes, but not all the codes outside the Quarto documents therein are required as of June, 2024.
+
+When I started this project (Sept, 2023), the links from [Prof. Feenstra's website](http://www.robertcfeenstra.com/graduate-text.html) were broken, so I went to the Internet Archive Wayback Machine to find the linked site (The Center for International Data) from 2005-03-08 and I downloaded it with `wget` (i.e., I ran `bash 00-download-wayback-backup.sh` from the repository). This is not needed anymore because:
+
+1. I added the data files to the repository.
+2. Prof. Feenstra's website is now working, and he was really kind to fix the links when I asked him for permission to use the data and codes that I recovered.
+
+All the datasets and Stata codes are intellectual property of Dr. Robert C. Feenstra. The R codes are of my authorship, but these are a translation of the Stata codes, so I released them under Creative Commons Zero v1.0 Universal.
+
+I appreciate the feedback that I received from Prof. Feenstra and Prof. Mingzhi "Jimmy" Xu.
+
+Please do not hesistate to email me if this is useful, or if you have any questions or suggestions. My email is `m.vargas.sepulveda@gmail.com`.

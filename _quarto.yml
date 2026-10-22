@@ -8,7 +8,7 @@ execute:
   message: false
   
 book:
-  title: "Advanced International Trade in R"
+  title: "Solutions Manual for Advanced International Trade in R"
   chapters:
     - index.qmd
     - chapter2.qmd
